@@ -13,6 +13,12 @@ public class Inventory : MonoBehaviour
     // ส่งสัญญาณเมื่อกระเป๋าเปลี่ยน (ไว้ให้ UI มาฟังทีหลัง)
     public event Action OnChanged;
 
+    // ให้ UI อ่านรายการของทั้งหมดได้ แต่แก้ไขจากภายนอกไม่ได้
+    public IReadOnlyDictionary<ItemData, int> Items => items;
+
+    // จำนวนช่องสูงสุด ให้ UI รู้ว่าต้องวาดช่องทั้งหมดกี่ช่อง
+    public int MaxSlots => maxSlots;
+
     // เพิ่มของเข้ากระเป๋า คืนค่า true ถ้าเพิ่มสำเร็จ
     public bool AddItem(ItemData item, int amount = 1)
     {

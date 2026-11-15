@@ -8,16 +8,21 @@ public class PlayerForager : MonoBehaviour
     [SerializeField] private float forageRange = 1.2f; // ระยะที่เก็บของได้
 
     private Inventory inventory;
+    private PlayerController playerController; // ใช้เช็กว่าตอนนี้ผู้เล่นถูกล็อกอยู่หรือไม่
 
     private void Awake()
     {
         inventory = GetComponent<Inventory>();
+        playerController = GetComponent<PlayerController>();
     }
 
     private void Update()
     {
+        // ถ้าผู้เล่นถูกล็อกอยู่ (เช่น เปิดกระเป๋า) ห้ามเก็บของ
+        bool canAct = playerController == null || playerController.CanMove;
+
         // กด E เพื่อเก็บของ (Keyboard.current อาจเป็น null ถ้าไม่มีคีย์บอร์ด)
-        if (Keyboard.current != null && Keyboard.current.eKey.wasPressedThisFrame)
+        if (canAct && Keyboard.current != null && Keyboard.current.eKey.wasPressedThisFrame)
         {
             TryForage();
         }

@@ -12,6 +12,9 @@ public class PlayerController : MonoBehaviour
     private InputAction moveAction;   // ตัวรับค่าปุ่มเดิน
     private Vector2 moveInput;        // ทิศทางที่ผู้เล่นกดอยู่ในเฟรมนี้
 
+    // ตอนนี้ผู้เล่นเดินได้หรือไม่ (ปิดไว้ตอนเปิดกระเป๋า/เมนู)
+    public bool CanMove { get; private set; } = true;
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -49,9 +52,31 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+        // ถ้าห้ามเดินอยู่ ไม่ต้องอ่านปุ่ม ให้ทิศทางเป็นศูนย์
+        if (!CanMove)
+        {
+            moveInput = Vector2.zero;
+            return;
+        }
+
         // อ่านค่าปุ่มทุกเฟรม และจำกัดความยาวไว้ไม่เกิน 1
         // เพื่อไม่ให้เดินเฉียงเร็วกว่าเดินตรง
         moveInput = Vector2.ClampMagnitude(moveAction.ReadValue<Vector2>(), 1f);
+    }
+
+    // เปิด/ปิดการเดิน ให้ระบบอื่นเรียกใช้ เช่น หน้าต่างกระเป๋า
+    public void SetCanMove(bool value)
+    {
+        CanMove = value;
+
+        if (!CanMove)
+        {
+            // หยุดตัวละครทันที ไม่ให้ไถลต่อด้วยความเร็วเดิม
+            moveInput = Vector2.zero;
+            rb.linearVelocity = Vector2.zero;
+        }
+
+        Debug.Log($"Player movement {(CanMove ? "enabled" : "disabled")}.");
     }
 
     private void FixedUpdate()
