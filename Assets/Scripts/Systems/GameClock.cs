@@ -72,6 +72,9 @@ public class GameClock : MonoBehaviour
     // ตัวจับเวลาสะสมวินาทีจริงจนครบหนึ่ง tick
     private float tickTimer = 0f;
 
+    // true = นาฬิกาเริ่มวันแรกไปแล้ว (หลัง Start)
+    private bool hasStarted = false;
+
     private void Awake()
     {
         // ป้องกันไม่ให้มีนาฬิกาซ้ำสองตัวในฉาก
@@ -87,6 +90,8 @@ public class GameClock : MonoBehaviour
     private void Start()
     {
         // เริ่มวันแรกใน Start เพื่อให้สคริปต์อื่นที่สมัคร event ใน OnEnable/Awake ได้รับ event ด้วย
+        // (ถ้ามีการโหลดเซฟ SaveManager จะตั้ง Day ไว้ก่อนแล้วผ่าน SetStartDay)
+        hasStarted = true;
         BeginDay(Day);
     }
 
@@ -249,6 +254,18 @@ public class GameClock : MonoBehaviour
 
         RaiseTimeChanged();
         UpdatePeriod(false);
+    }
+
+    // ตั้งวันที่จะเริ่มเล่น ใช้ตอนโหลดเซฟเท่านั้น ต้องเรียกก่อน Start ของนาฬิกา (ไม่ยิง event ใดๆ)
+    public void SetStartDay(int day)
+    {
+        if (hasStarted)
+        {
+            Debug.LogWarning("GameClock: SetStartDay was called after the clock started. Ignored.");
+            return;
+        }
+
+        Day = Mathf.Max(1, day);
     }
 
     // ตั้งเวลาตรงๆ (เตรียมไว้ให้ระบบโหลดเซฟ)

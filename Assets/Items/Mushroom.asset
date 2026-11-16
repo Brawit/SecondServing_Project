@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c14e69943c50aa441ab4cd930afdd6c8, type: 3}
   m_Name: Mushroom
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
+  itemId: mushroom
   itemName: Mushroom
   icon: {fileID: 0}
   description: A wild forest mushroom.

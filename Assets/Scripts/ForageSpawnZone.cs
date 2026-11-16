@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -16,6 +16,10 @@ public class ForageSpawnZone : MonoBehaviour
         [Tooltip("น้ำหนักการสุ่ม ยิ่งมากยิ่งออกบ่อย (0 = ไม่ออกเลย)")]
         [Min(0f)] public float weight = 1f;
     }
+
+    [Header("Save")]
+    [Tooltip("รหัสโซน ใช้ในไฟล์เซฟ ต้องไม่ซ้ำกับโซนอื่น (เว้นว่าง = ใช้ชื่อวัตถุ)")]
+    [SerializeField] private string zoneId;
 
     [Header("Zone Area")]
     [Tooltip("ขนาดโซน (กว้าง, สูง) หน่วยเป็น Unit โดยจุดกลางคือตำแหน่งของวัตถุนี้")]
@@ -47,12 +51,15 @@ public class ForageSpawnZone : MonoBehaviour
 
     // ---------- ค่าที่ ForageSpawner อ่านไปใช้ ----------
 
+    // รหัสโซนที่ใช้จริง (ถ้าไม่ได้กรอก ใช้ชื่อวัตถุแทน)
+    public string ZoneId => string.IsNullOrWhiteSpace(zoneId) ? gameObject.name : zoneId.Trim();
+
     public int MaxItems => maxItems;
     public int InitialItems => initialItems;
     public int MaxNewPerDay => maxNewPerDay;
     public float GrowChance => growChance;
 
-    // รายการของที่ยังอยู่ (เตรียมไว้ให้ระบบเซฟดึงไปใช้) ควรเรียก RemoveCollectedItems() ก่อนอ่าน
+    // รายการของที่ยังอยู่ (ระบบเซฟดึงไปใช้) ควรเรียก RemoveCollectedItems() ก่อนอ่าน
     public IReadOnlyList<ForageItem> AliveItems => aliveItems;
 
     // ตรวจค่าที่กรอกใน Inspector ไม่ให้ผิดจนเกมพัง
@@ -89,6 +96,30 @@ public class ForageSpawnZone : MonoBehaviour
         float x = UnityEngine.Random.Range(-size.x * 0.5f, size.x * 0.5f);
         float y = UnityEngine.Random.Range(-size.y * 0.5f, size.y * 0.5f);
         return new Vector3(center.x + x, center.y + y, 0f);
+    }
+
+    // หา Prefab ในตารางสุ่มที่ให้ไอเทมรหัสนี้ (ใช้ตอนโหลดเซฟ) คืนค่า null ถ้าไม่เจอ
+    public ForageItem FindPrefabByItemId(string itemId)
+    {
+        if (string.IsNullOrWhiteSpace(itemId))
+        {
+            return null;
+        }
+
+        foreach (SpawnEntry entry in entries)
+        {
+            if (entry == null || entry.prefab == null || entry.prefab.ItemData == null)
+            {
+                continue;
+            }
+
+            if (entry.prefab.ItemData.itemId == itemId)
+            {
+                return entry.prefab;
+            }
+        }
+
+        return null;
     }
 
     // สุ่ม Prefab ตามน้ำหนัก คืนค่า null ถ้าไม่มีแถวไหนใช้ได้

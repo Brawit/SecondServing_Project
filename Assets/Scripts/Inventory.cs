@@ -57,6 +57,31 @@ public class Inventory : MonoBehaviour
         return items.TryGetValue(item, out int count) ? count : 0;
     }
 
+    // ล้างกระเป๋าแล้วใส่ของชุดใหม่ทั้งหมด (ใช้ตอนโหลดเซฟ) แจ้ง OnChanged ครั้งเดียว
+    public void SetItems(IReadOnlyDictionary<ItemData, int> newItems)
+    {
+        items.Clear();
+
+        if (newItems != null)
+        {
+            foreach (KeyValuePair<ItemData, int> pair in newItems)
+            {
+                if (pair.Key == null || pair.Value <= 0) continue;
+
+                // ถ้าช่องเต็มแล้ว ของที่เหลือจะถูกข้าม
+                if (items.Count >= maxSlots)
+                {
+                    Debug.LogWarning($"Inventory: Slots full while loading. '{pair.Key.itemName}' was skipped.");
+                    continue;
+                }
+
+                items[pair.Key] = pair.Value;
+            }
+        }
+
+        OnChanged?.Invoke();
+    }
+
     // พิมพ์รายการในกระเป๋าลง Console (ใช้ทดสอบก่อนมี UI)
     public void PrintInventory()
     {

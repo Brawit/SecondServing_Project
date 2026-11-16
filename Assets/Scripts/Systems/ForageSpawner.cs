@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -29,14 +29,20 @@ public class ForageSpawner : MonoBehaviour
     [Tooltip("พิมพ์สรุปจำนวนของที่เกิดในแต่ละโซนลง Console")]
     [SerializeField] private bool logSpawns = true;
 
-    // โซนทั้งหมดที่เป็นลูกของวัตถุนี้
-    private ForageSpawnZone[] zones = new ForageSpawnZone[0];
+    // โซนทั้งหมดที่เป็นลูกของวัตถุนี้ (null = ยังไม่ได้ค้นหา)
+    private ForageSpawnZone[] zones;
+
+    // ตารางค้นหาโซนจากรหัส ใช้ตอนโหลดเซฟ
+    private readonly Dictionary<string, ForageSpawnZone> zonesById = new Dictionary<string, ForageSpawnZone>();
 
     // ช่องที่มีของวางอยู่แล้ว ใช้กันไม่ให้ของซ้อนกันในช่องเดียว
     private readonly HashSet<Vector3Int> occupiedCells = new HashSet<Vector3Int>();
 
     // วันล่าสุดที่ประมวลผลไปแล้ว (0 = ยังไม่เคย) ใช้กันไม่ให้งอกซ้ำในวันเดียวกัน
     private int lastProcessedDay = 0;
+
+    // true = ของบนพื้นถูกคืนจากไฟล์เซฟแล้ว จึงไม่ต้องเติมของเริ่มต้นอีก
+    private bool hasRestoredState = false;
 
     private bool hasStarted = false;
     private bool isSubscribed = false;
@@ -45,12 +51,7 @@ public class ForageSpawner : MonoBehaviour
     {
         hasStarted = true;
 
-        // หาโซนทั้งหมดที่เป็นลูกของวัตถุนี้
-        zones = GetComponentsInChildren<ForageSpawnZone>();
-        if (zones.Length == 0)
-        {
-            Debug.LogWarning("ForageSpawner: No ForageSpawnZone found in children.", this);
-        }
+        EnsureZones();
 
         if (groundTilemap == null)
         {
@@ -77,6 +78,33 @@ public class ForageSpawner : MonoBehaviour
     private void OnDisable()
     {
         Unsubscribe();
+    }
+
+    // ค้นหาโซนทั้งหมดครั้งเดียว (SaveManager อาจเรียกใช้ก่อน Start ของสคริปต์นี้)
+    private void EnsureZones()
+    {
+        if (zones != null)
+        {
+            return;
+        }
+
+        zones = GetComponentsInChildren<ForageSpawnZone>();
+        zonesById.Clear();
+
+        if (zones.Length == 0)
+        {
+            Debug.LogWarning("ForageSpawner: No ForageSpawnZone found in children.", this);
+        }
+
+        foreach (ForageSpawnZone zone in zones)
+        {
+            if (zonesById.ContainsKey(zone.ZoneId))
+            {
+                Debug.LogWarning($"ForageSpawner: Duplicate zone id '{zone.ZoneId}'. Rename the zone or set a unique Zone Id, otherwise saved items may load into the wrong zone.", zone);
+                continue;
+            }
+            zonesById.Add(zone.ZoneId, zone);
+        }
     }
 
     // สมัครรับ event เริ่มวันใหม่จากนาฬิกา
@@ -116,7 +144,7 @@ public class ForageSpawner : MonoBehaviour
         ProcessDay(day);
     }
 
-    // ประมวลผลหนึ่งวัน: ครั้งแรกสุดจะเติมของเริ่มต้น ครั้งต่อไปจะงอกเพิ่มตามโอกาส
+    // ประมวลผลหนึ่งวัน: ครั้งแรกสุดจะเติมของเริ่มต้น (ถ้าไม่ได้โหลดเซฟ) ครั้งต่อไปจะงอกเพิ่มตามโอกาส
     private void ProcessDay(int day)
     {
         // วันนี้ทำไปแล้ว ไม่ทำซ้ำ
@@ -125,13 +153,13 @@ public class ForageSpawner : MonoBehaviour
             return;
         }
 
-        bool isInitialFill = lastProcessedDay == 0;
+        bool isInitialFill = lastProcessedDay == 0 && !hasRestoredState;
         lastProcessedDay = day;
 
         GrowAllZones(isInitialFill, day);
     }
 
-    // ให้ทุกโซนงอกของ (isInitialFill = เติมของเริ่มต้นตอนเริ่มเกม)
+    // ให้ทุกโซนงอกของ (isInitialFill = เติมของเริ่มต้นตอนเริ่มเกมใหม่)
     private void GrowAllZones(bool isInitialFill, int day)
     {
         if (groundTilemap == null)
@@ -139,6 +167,7 @@ public class ForageSpawner : MonoBehaviour
             return;
         }
 
+        EnsureZones();
         RebuildOccupiedCells();
 
         foreach (ForageSpawnZone zone in zones)
@@ -228,28 +257,33 @@ public class ForageSpawner : MonoBehaviour
         {
             Vector3Int cell = WorldToGroundCell(zone.GetRandomPoint());
 
-            if (!IsCellValid(cell))
+            if (!IsCellValid(cell, true))
             {
                 continue;
             }
 
-            // วางที่กลางช่อง Tile
-            Vector3 position = groundTilemap.GetCellCenterWorld(cell);
-            position.z = 0f;
-
-            Transform parent = spawnedParent != null ? spawnedParent : transform;
-            ForageItem item = Instantiate(prefab, position, Quaternion.identity, parent);
-
-            zone.RegisterItem(item);
-            occupiedCells.Add(cell);
+            PlaceItem(zone, prefab, cell);
             return true;
         }
 
         return false;
     }
 
-    // ช่องนี้วางของได้หรือไม่
-    private bool IsCellValid(Vector3Int cell)
+    // สร้างของจริงที่กลางช่อง Tile แล้วจดไว้ในโซน
+    private void PlaceItem(ForageSpawnZone zone, ForageItem prefab, Vector3Int cell)
+    {
+        Vector3 position = groundTilemap.GetCellCenterWorld(cell);
+        position.z = 0f;
+
+        Transform parent = spawnedParent != null ? spawnedParent : transform;
+        ForageItem item = Instantiate(prefab, position, Quaternion.identity, parent);
+
+        zone.RegisterItem(item);
+        occupiedCells.Add(cell);
+    }
+
+    // ช่องนี้วางของได้หรือไม่ (checkPlayer = เช็กช่องที่ผู้เล่นยืนด้วย)
+    private bool IsCellValid(Vector3Int cell, bool checkPlayer)
     {
         // ต้องมีพื้น (ถ้าไม่มี Tile แปลว่าอยู่นอกแผนที่)
         if (!groundTilemap.HasTile(cell))
@@ -270,7 +304,7 @@ public class ForageSpawner : MonoBehaviour
         }
 
         // ต้องไม่ใช่ช่องที่ผู้เล่นยืนอยู่
-        if (player != null && WorldToGroundCell(player.position) == cell)
+        if (checkPlayer && player != null && WorldToGroundCell(player.position) == cell)
         {
             return false;
         }
@@ -284,6 +318,112 @@ public class ForageSpawner : MonoBehaviour
         Vector3Int cell = groundTilemap.WorldToCell(worldPosition);
         cell.z = 0;
         return cell;
+    }
+
+    // ---------- ระบบเซฟ ----------
+
+    // เก็บข้อมูลของบนพื้นทุกชิ้นเพื่อเขียนลงไฟล์เซฟ
+    public List<GroundItemSave> CaptureState()
+    {
+        List<GroundItemSave> result = new List<GroundItemSave>();
+
+        if (groundTilemap == null)
+        {
+            return result;
+        }
+
+        EnsureZones();
+
+        foreach (ForageSpawnZone zone in zones)
+        {
+            if (zone == null)
+            {
+                continue;
+            }
+
+            zone.RemoveCollectedItems();
+
+            foreach (ForageItem item in zone.AliveItems)
+            {
+                if (item.ItemData == null || string.IsNullOrWhiteSpace(item.ItemData.itemId))
+                {
+                    Debug.LogWarning($"ForageSpawner: Ground item '{item.name}' has no ItemData or itemId and will not be saved.", item);
+                    continue;
+                }
+
+                Vector3Int cell = WorldToGroundCell(item.transform.position);
+
+                GroundItemSave save = new GroundItemSave();
+                save.zoneId = zone.ZoneId;
+                save.itemId = item.ItemData.itemId;
+                save.cellX = cell.x;
+                save.cellY = cell.y;
+                result.Add(save);
+            }
+        }
+
+        return result;
+    }
+
+    // คืนของบนพื้นจากไฟล์เซฟ (SaveManager เรียกตอนเปิดเกม ก่อนวันแรกเริ่ม)
+    public void RestoreState(List<GroundItemSave> savedItems)
+    {
+        // จดไว้ก่อนเลยว่าโหลดเซฟแล้ว แม้จะคืนของไม่ได้ ก็จะไม่เติมของเริ่มต้นซ้ำ
+        hasRestoredState = true;
+
+        if (groundTilemap == null)
+        {
+            Debug.LogError("ForageSpawner: Ground Tilemap is not assigned. Saved ground items cannot be restored.", this);
+            return;
+        }
+
+        if (savedItems == null)
+        {
+            return;
+        }
+
+        EnsureZones();
+        RebuildOccupiedCells();
+
+        int restored = 0;
+
+        foreach (GroundItemSave save in savedItems)
+        {
+            if (save == null)
+            {
+                continue;
+            }
+
+            if (!zonesById.TryGetValue(save.zoneId ?? string.Empty, out ForageSpawnZone zone))
+            {
+                Debug.LogWarning($"ForageSpawner: Zone '{save.zoneId}' not found. Saved item '{save.itemId}' skipped.");
+                continue;
+            }
+
+            ForageItem prefab = zone.FindPrefabByItemId(save.itemId);
+            if (prefab == null)
+            {
+                Debug.LogWarning($"ForageSpawner: No prefab for item '{save.itemId}' in zone '{save.zoneId}'. Skipped.", zone);
+                continue;
+            }
+
+            Vector3Int cell = new Vector3Int(save.cellX, save.cellY, 0);
+
+            // ถ้าแผนที่เปลี่ยนไปจนช่องนี้วางไม่ได้แล้ว ให้ข้าม (ไม่เช็กผู้เล่น เพราะผู้เล่นยังไม่ได้เดิน)
+            if (!IsCellValid(cell, false))
+            {
+                Debug.LogWarning($"ForageSpawner: Cell {cell} is no longer valid for '{save.itemId}'. Skipped.", zone);
+                continue;
+            }
+
+            PlaceItem(zone, prefab, cell);
+            restored++;
+        }
+
+        if (logSpawns)
+        {
+            Debug.Log($"ForageSpawner: Restored {restored}/{savedItems.Count} ground items from save.");
+        }
     }
 
     // ---------- Debug ----------
