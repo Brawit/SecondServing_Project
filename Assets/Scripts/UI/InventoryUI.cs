@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -32,6 +32,9 @@ public class InventoryUI : MonoBehaviour
 
     [Tooltip("ห้ามผู้เล่นเดินระหว่างเปิดกระเป๋า")]
     [SerializeField] private bool blockMovementWhileOpen = true;
+
+    [Tooltip("ข้อความแจ้งเตือนตอนเปิดกระเป๋าไม่ได้ (เช่น ระหว่างเปิดร้าน)")]
+    [SerializeField] private string unavailableMessage = "You can't open your bag right now.";
 
     // หน้าต่างเปิดอยู่หรือไม่
     public bool IsOpen { get; private set; }
@@ -115,6 +118,13 @@ public class InventoryUI : MonoBehaviour
     {
         if (IsOpen) return;
 
+        // ห้ามเปิดกระเป๋าระหว่างเปิดร้าน และระหว่างหน้าสรุปวัน
+        if (!CanOpenInventory())
+        {
+            NotificationUI.Post(unavailableMessage);
+            return;
+        }
+
         IsOpen = true;
         Refresh();
         SetWindowVisible(true);
@@ -156,6 +166,22 @@ public class InventoryUI : MonoBehaviour
         }
 
         Debug.Log("Inventory closed.");
+    }
+
+    // ตอนนี้เปิดกระเป๋าได้หรือไม่ (เปิดได้เฉพาะตอนสำรวจ)
+    public bool CanOpenInventory()
+    {
+        if (ShopManager.Instance != null && ShopManager.Instance.IsServing)
+        {
+            return false;
+        }
+
+        if (DayEndManager.Instance != null && DayEndManager.Instance.IsDayEnding)
+        {
+            return false;
+        }
+
+        return true;
     }
 
     private void SetWindowVisible(bool visible)

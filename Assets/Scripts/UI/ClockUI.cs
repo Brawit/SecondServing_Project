@@ -18,6 +18,7 @@ public class ClockUI : MonoBehaviour
     [SerializeField] private Color morningColor = new Color(1f, 0.85f, 0.4f);
     [SerializeField] private Color afternoonColor = new Color(1f, 0.6f, 0.3f);
     [SerializeField] private Color eveningColor = new Color(0.6f, 0.65f, 1f);
+    [SerializeField] private Color nightColor = new Color(0.45f, 0.4f, 0.8f);
 
     // นาฬิกาที่กำลังฟังอยู่
     private GameClock clock;
@@ -126,8 +127,10 @@ public class ClockUI : MonoBehaviour
     {
         if (timeText != null)
         {
+            // หลังเที่ยงคืนนาฬิกาส่งชั่วโมงแบบนับต่อ (25 = ตี 1) จึงต้อง % 24 ก่อนแสดง
             // :00 คือเติมเลข 0 ข้างหน้าให้ครบ 2 หลัก เช่น 6 -> 06
-            timeText.text = $"{hour:00}:{minute:00}";
+            int displayHour = hour % 24;
+            timeText.text = $"{displayHour:00}:{minute:00}";
         }
     }
 
@@ -153,6 +156,8 @@ public class ClockUI : MonoBehaviour
                 return afternoonColor;
             case DayPeriod.Evening:
                 return eveningColor;
+            case DayPeriod.Night:
+                return nightColor;
             default:
                 return Color.white;
         }

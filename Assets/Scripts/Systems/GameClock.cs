@@ -7,10 +7,12 @@ public enum DayPeriod
 {
     Morning,
     Afternoon,
-    Evening
+    Evening,
+    Night
 }
 
-// นาฬิกาในเกม: นับเวลา แบ่งช่วงเช้า/บ่าย/เย็น และแจ้ง event ให้ระบบอื่นรู้
+// นาฬิกาในเกม: นับเวลา แบ่งช่วงเช้า/บ่าย/เย็น/ดึก และแจ้ง event ให้ระบบอื่นรู้
+// วันจะไม่จบเอง ต้องมีคนเรียก EndDay() (เช่น ตอนนอน) ถ้าเลยเวลาสลบ จะยิง OnPassedOut แล้วหยุดรอ
 public class GameClock : MonoBehaviour
 {
     // ให้สคริปต์อื่นเข้าถึงนาฬิกาได้ผ่าน GameClock.Instance
@@ -20,8 +22,8 @@ public class GameClock : MonoBehaviour
     [Tooltip("ชั่วโมงที่วันเริ่มต้น (0-23)")]
     [SerializeField] private int startHour = 6;
 
-    [Tooltip("ชั่วโมงที่วันสิ้นสุด (24 = เที่ยงคืน)")]
-    [SerializeField] private int endHour = 24;
+    [Tooltip("ชั่วโมงที่ผู้เล่นสลบถ้ายังไม่นอน นับต่อจาก 24 (27 = ตี 3 ของคืนนั้น)")]
+    [SerializeField] private int passOutHour = 27;
 
     [Tooltip("เวลาในเกมที่เดินต่อหนึ่งครั้ง (นาที)")]
     [SerializeField] private int minutesPerTick = 10;
@@ -32,6 +34,9 @@ public class GameClock : MonoBehaviour
     [Header("Period Boundaries (Hour)")]
     [SerializeField] private int afternoonStartHour = 12;
     [SerializeField] private int eveningStartHour = 17;
+
+    [Tooltip("ชั่วโมงที่เริ่มช่วงดึก (24 = เที่ยงคืน)")]
+    [SerializeField] private int nightStartHour = 24;
 
     [Header("Debug")]
     [Tooltip("พิมพ์เวลาลง Console ทุกครั้งที่เวลาเดิน")]
@@ -45,19 +50,25 @@ public class GameClock : MonoBehaviour
     // วันที่ในเกม เริ่มที่ 1
     public int Day { get; private set; } = 1;
 
-    // เวลาเก็บเป็น "นาทีนับจากเที่ยงคืน" เช่น 06:30 = 390
+    // เวลาเก็บเป็น "นาทีนับจากเที่ยงคืนของวันนั้น" เช่น 06:30 = 390, ตี 1 ของคืนนั้น = 1500
     public int TotalMinutes { get; private set; }
 
-    // แปลงเป็นชั่วโมงและนาทีให้อ่านง่าย
+    // ชั่วโมงแบบนับต่อ (หลังเที่ยงคืนจะเป็น 24, 25, 26) ใช้คำนวณ
     public int Hour => TotalMinutes / 60;
     public int Minute => TotalMinutes % 60;
+
+    // ชั่วโมงสำหรับแสดงผล (0-23) เช่น 25 -> 1
+    public int DisplayHour => Hour % 24;
 
     public DayPeriod CurrentPeriod { get; private set; }
     public bool IsPaused { get; private set; }
 
+    // true = ถึงเวลาสลบแล้ว นาฬิกาหยุดเดินและรอให้มีคนเรียก EndDay()
+    public bool IsWaitingForDayEnd { get; private set; }
+
     // ---------- Events ----------
 
-    // ส่ง (ชั่วโมง, นาที) ทุกครั้งที่เวลาเปลี่ยน
+    // ส่ง (ชั่วโมงแบบนับต่อ, นาที) ทุกครั้งที่เวลาเปลี่ยน ถ้าจะแสดงผลให้ใช้ hour % 24
     public event Action<int, int> OnTimeChanged;
 
     // ส่งช่วงเวลาใหม่เมื่อเปลี่ยนช่วง เช่น บ่าย -> เย็น
@@ -66,8 +77,11 @@ public class GameClock : MonoBehaviour
     // ส่งหมายเลขวันเมื่อเริ่มวันใหม่
     public event Action<int> OnDayStarted;
 
-    // ส่งหมายเลขวันที่เพิ่งจบ
+    // ส่งหมายเลขวันที่เพิ่งจบ (ยิงก่อนเริ่มวันใหม่ ระบบเซฟฟังตัวนี้)
     public event Action<int> OnDayEnded;
+
+    // ส่งหมายเลขวันเมื่อถึงเวลาสลบ (ผู้เล่นไม่ได้นอน)
+    public event Action<int> OnPassedOut;
 
     // ตัวจับเวลาสะสมวินาทีจริงจนครบหนึ่ง tick
     private float tickTimer = 0f;
@@ -107,7 +121,7 @@ public class GameClock : MonoBehaviour
     private void OnValidate()
     {
         startHour = Mathf.Clamp(startHour, 0, 23);
-        endHour = Mathf.Clamp(endHour, startHour + 1, 24);
+        passOutHour = Mathf.Clamp(passOutHour, startHour + 1, startHour + 24);
         minutesPerTick = Mathf.Max(1, minutesPerTick);
         realSecondsPerTick = Mathf.Max(0.01f, realSecondsPerTick);
         fastForwardMultiplier = Mathf.Max(1f, fastForwardMultiplier);
@@ -117,7 +131,8 @@ public class GameClock : MonoBehaviour
     {
         HandleDebugInput();
 
-        if (IsPaused)
+        // หยุดอยู่ หรือรอจบวันอยู่ เวลาไม่เดิน
+        if (IsPaused || IsWaitingForDayEnd)
         {
             return;
         }
@@ -132,8 +147,8 @@ public class GameClock : MonoBehaviour
             tickTimer -= realSecondsPerTick;
             AdvanceMinutes(minutesPerTick);
 
-            // ถ้าวันเพิ่งจบใน tick นี้ ให้หยุดลูปไว้ก่อน
-            if (TotalMinutes == startHour * 60)
+            // ถ้าเพิ่งถึงเวลาสลบ หรือมีระบบอื่นสั่งหยุด/จบวันระหว่าง tick ให้หยุดลูป
+            if (IsWaitingForDayEnd || IsPaused)
             {
                 tickTimer = 0f;
                 break;
@@ -146,17 +161,17 @@ public class GameClock : MonoBehaviour
     // เพิ่มเวลาตามจำนวนนาทีที่กำหนด
     private void AdvanceMinutes(int minutes)
     {
-        TotalMinutes += minutes;
-
-        // ถึงเวลาจบวันแล้ว
-        if (TotalMinutes >= endHour * 60)
-        {
-            EndDay();
-            return;
-        }
+        int passOutMinutes = passOutHour * 60;
+        TotalMinutes = Mathf.Min(TotalMinutes + minutes, passOutMinutes);
 
         RaiseTimeChanged();
         UpdatePeriod(false);
+
+        // ถึงเวลาสลบแล้ว
+        if (TotalMinutes >= passOutMinutes)
+        {
+            TriggerPassOut();
+        }
     }
 
     // เริ่มวันใหม่: ตั้งเวลาเป็นเวลาเริ่มต้นและแจ้ง event
@@ -165,6 +180,7 @@ public class GameClock : MonoBehaviour
         Day = day;
         TotalMinutes = startHour * 60;
         tickTimer = 0f;
+        IsWaitingForDayEnd = false;
 
         Debug.Log($"Day {Day} started.");
         OnDayStarted?.Invoke(Day);
@@ -173,18 +189,36 @@ public class GameClock : MonoBehaviour
         UpdatePeriod(true);
     }
 
-    // จบวันปัจจุบันแล้วเริ่มวันถัดไป (ชั่วคราว จนกว่าจะมีระบบนอน)
-    private void EndDay()
+    // ถึงเวลาสลบ: หยุดเวลาแล้วแจ้งระบบจบวัน
+    private void TriggerPassOut()
     {
-        Debug.Log($"Day {Day} ended.");
-        OnDayEnded?.Invoke(Day);
+        if (IsWaitingForDayEnd)
+        {
+            return;
+        }
 
-        BeginDay(Day + 1);
+        IsWaitingForDayEnd = true;
+        tickTimer = 0f;
+        Debug.Log($"Day {Day}: Player passed out ({GetTimeString()}).");
+
+        // ถ้าไม่มีระบบไหนรับเรื่องสลบเลย ให้จบวันเองทันที เกมจะได้ไม่ค้าง
+        if (OnPassedOut == null)
+        {
+            Debug.LogWarning("GameClock: No listener for OnPassedOut. Ending the day automatically.");
+            EndDay();
+            return;
+        }
+
+        OnPassedOut.Invoke(Day);
     }
 
-    // คำนวณช่วงเวลาจากชั่วโมงปัจจุบัน
+    // คำนวณช่วงเวลาจากชั่วโมงแบบนับต่อ
     private DayPeriod CalculatePeriod(int hour)
     {
+        if (hour >= nightStartHour)
+        {
+            return DayPeriod.Night;
+        }
         if (hour >= eveningStartHour)
         {
             return DayPeriod.Evening;
@@ -234,26 +268,64 @@ public class GameClock : MonoBehaviour
         Debug.Log("Clock resumed.");
     }
 
-    // ข้ามไปช่วงถัดไป ถ้าเป็นช่วงเย็นแล้วจะจบวัน
+    // จบวันปัจจุบันแล้วเริ่มวันถัดไปที่เวลาเริ่มต้น (เรียกจากระบบนอน/สลบ)
+    // ลำดับ: OnDayEnded (ระบบเซฟทำงานตรงนี้) -> OnDayStarted ของวันใหม่
+    public void EndDay()
+    {
+        Debug.Log($"Day {Day} ended.");
+        OnDayEnded?.Invoke(Day);
+
+        BeginDay(Day + 1);
+    }
+
+    // ข้ามเวลาไปข้างหน้าภายในวันเดียวกัน (เช่น ปิดร้านแล้วข้ามไป 22:00)
+    // ยิง OnPeriodChanged เฉพาะตอนช่วงเปลี่ยนจริง ไม่ยิงซ้ำ
+    public void AdvanceTo(int targetTotalMinutes)
+    {
+        int passOutMinutes = passOutHour * 60;
+        targetTotalMinutes = Mathf.Min(targetTotalMinutes, passOutMinutes);
+
+        if (targetTotalMinutes <= TotalMinutes)
+        {
+            Debug.LogWarning($"GameClock: AdvanceTo({targetTotalMinutes}) is not ahead of current time ({TotalMinutes}). Ignored.");
+            return;
+        }
+
+        TotalMinutes = targetTotalMinutes;
+        tickTimer = 0f;
+
+        RaiseTimeChanged();
+        UpdatePeriod(false);
+
+        if (TotalMinutes >= passOutMinutes)
+        {
+            TriggerPassOut();
+        }
+    }
+
+    // ข้ามไปช่วงถัดไป ถ้าเป็นช่วงดึกแล้วจะข้ามไปเวลาสลบ
     public void SkipToNextPeriod()
     {
-        tickTimer = 0f;
+        if (IsWaitingForDayEnd)
+        {
+            return;
+        }
 
         switch (CurrentPeriod)
         {
             case DayPeriod.Morning:
-                TotalMinutes = afternoonStartHour * 60;
+                AdvanceTo(afternoonStartHour * 60);
                 break;
             case DayPeriod.Afternoon:
-                TotalMinutes = eveningStartHour * 60;
+                AdvanceTo(eveningStartHour * 60);
                 break;
             case DayPeriod.Evening:
-                EndDay();
-                return;
+                AdvanceTo(nightStartHour * 60);
+                break;
+            case DayPeriod.Night:
+                AdvanceTo(passOutHour * 60);
+                break;
         }
-
-        RaiseTimeChanged();
-        UpdatePeriod(false);
     }
 
     // ตั้งวันที่จะเริ่มเล่น ใช้ตอนโหลดเซฟเท่านั้น ต้องเรียกก่อน Start ของนาฬิกา (ไม่ยิง event ใดๆ)
@@ -272,8 +344,9 @@ public class GameClock : MonoBehaviour
     public void SetTime(int day, int totalMinutes)
     {
         Day = Mathf.Max(1, day);
-        TotalMinutes = Mathf.Clamp(totalMinutes, startHour * 60, endHour * 60 - 1);
+        TotalMinutes = Mathf.Clamp(totalMinutes, startHour * 60, passOutHour * 60 - 1);
         tickTimer = 0f;
+        IsWaitingForDayEnd = false;
 
         RaiseTimeChanged();
         UpdatePeriod(true);
@@ -282,7 +355,7 @@ public class GameClock : MonoBehaviour
     // คืนข้อความเวลา เช่น "Day 1 - 06:00 (Morning)"
     public string GetTimeString()
     {
-        return $"Day {Day} - {Hour:00}:{Minute:00} ({CurrentPeriod})";
+        return $"Day {Day} - {DisplayHour:00}:{Minute:00} ({CurrentPeriod})";
     }
 
     // ---------- Debug Input ----------
@@ -298,7 +371,7 @@ public class GameClock : MonoBehaviour
         // T = พิมพ์เวลาปัจจุบัน
         if (keyboard.tKey.wasPressedThisFrame)
         {
-            Debug.Log($"Current time: {GetTimeString()}{(IsPaused ? " [PAUSED]" : "")}");
+            Debug.Log($"Current time: {GetTimeString()}{(IsPaused ? " [PAUSED]" : "")}{(IsWaitingForDayEnd ? " [WAITING FOR DAY END]" : "")}");
         }
 
         // P = สลับหยุด/เดิน

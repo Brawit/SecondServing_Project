@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 
-public class ForageItem : MonoBehaviour
+// ของป่าบนพื้น ผู้เล่นกด E เก็บผ่าน PlayerInteractor
+public class ForageItem : MonoBehaviour, IInteractable
 {
     [Header("Item")]
     [SerializeField] private ItemData itemData; // วัตถุดิบชนิดไหน
@@ -10,7 +11,21 @@ public class ForageItem : MonoBehaviour
     public ItemData ItemData => itemData;
     public int Amount => amount;
 
-    // ผู้เล่นเรียกใช้ตอนกดเก็บ คืนค่า true ถ้าเก็บสำเร็จ
+    // ---------- IInteractable ----------
+
+    public bool CanInteract(PlayerInteractor interactor)
+    {
+        return itemData != null && interactor != null && interactor.Inventory != null;
+    }
+
+    public void Interact(PlayerInteractor interactor)
+    {
+        Collect(interactor.Inventory);
+    }
+
+    // ---------- การเก็บ ----------
+
+    // เก็บของเข้ากระเป๋า คืนค่า true ถ้าเก็บสำเร็จ
     public bool Collect(Inventory inventory)
     {
         if (itemData == null)
