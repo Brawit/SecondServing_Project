@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56897c6864cfda9489a79f1ac3a363d1, type: 3}
+  m_Name: jp_curry_rice
+  m_EditorClassIdentifier: Assembly-CSharp::RecipeData
+  recipeId: jp_curry_rice
+  recipeName: Japanese Curry Rice
+  nameTh: "\u0E02\u0E49\u0E32\u0E27\u0E41\u0E01\u0E07\u0E01\u0E30\u0E2B\u0E23\u0E35\u0E48\u0E0D\u0E35\u0E48\u0E1B\u0E38\u0E48\u0E19"
+  icon: {fileID: 0}
+  cuisine: 1
+  course: 0
+  isSecret: 0
+  inDemo: 0
+  ingredients:
+  - {fileID: 11400000, guid: c586b1e0d2bb8464799139217f0d0f3a, type: 2}
+  - {fileID: 11400000, guid: eba9bcb2df8988a429318bdc6cbfac95, type: 2}
+  - {fileID: 11400000, guid: c569b2d805d94674a947716b97cb0653, type: 2}
+  - {fileID: 11400000, guid: 5b9f3c7acd3bfa04ab5fadbbf2e8be4d, type: 2}
+  fullIngredientsText: "\u0E02\u0E49\u0E32\u0E27\u0E0D\u0E35\u0E48\u0E1B\u0E38\u0E48\u0E19,
+    \u0E40\u0E19\u0E37\u0E49\u0E2D\u0E27\u0E31\u0E27, \u0E21\u0E31\u0E19\u0E1D\u0E23\u0E31\u0E48\u0E07,
+    \u0E41\u0E04\u0E23\u0E2D\u0E17, \u0E2B\u0E2D\u0E21\u0E2B\u0E31\u0E27\u0E43\u0E2B\u0E0D\u0E48,
+    \u0E01\u0E49\u0E2D\u0E19\u0E41\u0E01\u0E07\u0E01\u0E30\u0E2B\u0E23\u0E35\u0E48\u0E0D\u0E35\u0E48\u0E1B\u0E38\u0E48\u0E19,
+    \u0E19\u0E49\u0E33\u0E21\u0E31\u0E19\u0E1E\u0E37\u0E0A"
+  sellPrice: 0

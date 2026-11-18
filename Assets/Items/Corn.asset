@@ -14,5 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   itemId: corn
   itemName: Corn
+  nameTh: "\u0E02\u0E49\u0E32\u0E27\u0E42\u0E1E\u0E14"
   icon: {fileID: 0}
   description: A corn form something fantasy
+  category: 2
+  source: 0
+  sellPrice: 0

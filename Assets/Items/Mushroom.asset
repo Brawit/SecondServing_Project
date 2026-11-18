@@ -14,5 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   itemId: mushroom
   itemName: Mushroom
+  nameTh: "\u0E40\u0E2B\u0E47\u0E14"
   icon: {fileID: 0}
   description: A wild forest mushroom.
+  category: 2
+  source: 0
+  sellPrice: 0

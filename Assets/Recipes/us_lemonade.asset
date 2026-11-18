@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56897c6864cfda9489a79f1ac3a363d1, type: 3}
+  m_Name: us_lemonade
+  m_EditorClassIdentifier: Assembly-CSharp::RecipeData
+  recipeId: us_lemonade
+  recipeName: Lemonade
+  nameTh: "\u0E40\u0E25\u0E21\u0E2D\u0E19\u0E40\u0E19\u0E14"
+  icon: {fileID: 0}
+  cuisine: 4
+  course: 2
+  isSecret: 0
+  inDemo: 0
+  ingredients:
+  - {fileID: 11400000, guid: 359c187fe1d9c0e4a9319ef6ac51fca8, type: 2}
+  fullIngredientsText: "\u0E40\u0E25\u0E21\u0E2D\u0E19, \u0E19\u0E49\u0E33\u0E15\u0E32\u0E25,
+    \u0E19\u0E49\u0E33, \u0E19\u0E49\u0E33\u0E41\u0E02\u0E47\u0E07"
+  sellPrice: 0

@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56897c6864cfda9489a79f1ac3a363d1, type: 3}
+  m_Name: mx_flan
+  m_EditorClassIdentifier: Assembly-CSharp::RecipeData
+  recipeId: mx_flan
+  recipeName: Flan
+  nameTh: "\u0E1F\u0E25\u0E32\u0E19"
+  icon: {fileID: 0}
+  cuisine: 5
+  course: 1
+  isSecret: 0
+  inDemo: 0
+  ingredients:
+  - {fileID: 11400000, guid: 8e729bf9bf6496a48bb5d6f009d276fa, type: 2}
+  - {fileID: 11400000, guid: f846e2bdaf60a384a8d1227452f12634, type: 2}
+  fullIngredientsText: "\u0E44\u0E02\u0E48\u0E44\u0E01\u0E48, \u0E19\u0E21\u0E02\u0E49\u0E19\u0E2B\u0E27\u0E32\u0E19,
+    \u0E19\u0E21\u0E2A\u0E14, \u0E19\u0E49\u0E33\u0E15\u0E32\u0E25, \u0E27\u0E32\u0E19\u0E34\u0E25\u0E25\u0E32"
+  sellPrice: 0

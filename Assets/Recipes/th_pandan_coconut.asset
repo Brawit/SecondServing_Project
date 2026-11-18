@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56897c6864cfda9489a79f1ac3a363d1, type: 3}
+  m_Name: th_pandan_coconut
+  m_EditorClassIdentifier: Assembly-CSharp::RecipeData
+  recipeId: th_pandan_coconut
+  recipeName: Pandan Coconut Drink
+  nameTh: "\u0E19\u0E49\u0E33\u0E43\u0E1A\u0E40\u0E15\u0E22\u0E01\u0E30\u0E17\u0E34\u0E2A\u0E14"
+  icon: {fileID: 0}
+  cuisine: 0
+  course: 2
+  isSecret: 1
+  inDemo: 0
+  ingredients:
+  - {fileID: 11400000, guid: ae8f27e164d498545b68fa50a58e0a1c, type: 2}
+  - {fileID: 11400000, guid: d3cf91581ebc3594abfbbb726d73e552, type: 2}
+  fullIngredientsText: "\u0E43\u0E1A\u0E40\u0E15\u0E22, \u0E01\u0E30\u0E17\u0E34,
+    \u0E19\u0E49\u0E33\u0E15\u0E32\u0E25, \u0E40\u0E01\u0E25\u0E37\u0E2D, \u0E19\u0E49\u0E33\u0E41\u0E02\u0E47\u0E07"
+  sellPrice: 0

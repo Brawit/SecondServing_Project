@@ -27,8 +27,8 @@ public class PlayerInteractor : MonoBehaviour
         Teleporter = GetComponent<PlayerTeleporter>();
 
         // รวม Collider แบบ Trigger ด้วย เพราะของป่า/ประตูใช้ Trigger
-        contactFilter = new ContactFilter2D();
-        contactFilter.NoFilter();
+        // ContactFilter2D.noFilter = ไม่กรองอะไรเลย (เวอร์ชันใหม่แทน NoFilter() ที่เลิกใช้แล้ว)
+        contactFilter = ContactFilter2D.noFilter;
         contactFilter.useTriggers = true;
 
         if (Teleporter == null)

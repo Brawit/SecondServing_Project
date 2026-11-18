@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56897c6864cfda9489a79f1ac3a363d1, type: 3}
+  m_Name: house_grandma_tea
+  m_EditorClassIdentifier: Assembly-CSharp::RecipeData
+  recipeId: house_grandma_tea
+  recipeName: Grandma's Secret Tea
+  nameTh: Grandma's Secret Tea
+  icon: {fileID: 0}
+  cuisine: 6
+  course: 2
+  isSecret: 1
+  inDemo: 0
+  ingredients:
+  - {fileID: 11400000, guid: 7eda83e77326c6b428c0f13fde84996e, type: 2}
+  - {fileID: 11400000, guid: 11aaab9cfc2a68b439dd993f7cff4f84, type: 2}
+  - {fileID: 11400000, guid: 0496d1580eb958943a674e54dee23063, type: 2}
+  - {fileID: 11400000, guid: 308ae2a319dd0cc42b2e3794adce0d5d, type: 2}
+  fullIngredientsText: "\u0E0A\u0E32, \u0E41\u0E2D\u0E1B\u0E40\u0E1B\u0E34\u0E25,
+    \u0E2D\u0E1A\u0E40\u0E0A\u0E22, \u0E19\u0E49\u0E33\u0E1C\u0E36\u0E49\u0E07, \u0E19\u0E49\u0E33,
+    \u0E21\u0E30\u0E19\u0E32\u0E27"
+  sellPrice: 0

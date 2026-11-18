@@ -77,6 +77,12 @@ public class ItemDatabase : ScriptableObject
     [ContextMenu("Find All Items")]
     private void FindAllItems()
     {
+        RefreshFromProject();
+    }
+
+    // ให้ตัว import เรียกได้ หลังสร้างไอเทมใหม่ คืนค่าจำนวนไอเทมที่เจอ
+    public int RefreshFromProject()
+    {
         items.Clear();
 
         string[] guids = UnityEditor.AssetDatabase.FindAssets("t:ItemData");
@@ -93,6 +99,7 @@ public class ItemDatabase : ScriptableObject
         BuildLookup();
         UnityEditor.EditorUtility.SetDirty(this);
         Debug.Log($"ItemDatabase: Found {items.Count} items.");
+        return items.Count;
     }
 #endif
 }

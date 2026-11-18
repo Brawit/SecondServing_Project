@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56897c6864cfda9489a79f1ac3a363d1, type: 3}
+  m_Name: cn_xiao_long_bao
+  m_EditorClassIdentifier: Assembly-CSharp::RecipeData
+  recipeId: cn_xiao_long_bao
+  recipeName: Xiao Long Bao
+  nameTh: "\u0E40\u0E2A\u0E35\u0E48\u0E22\u0E27\u0E2B\u0E25\u0E07\u0E40\u0E1B\u0E32"
+  icon: {fileID: 0}
+  cuisine: 2
+  course: 0
+  isSecret: 1
+  inDemo: 0
+  ingredients:
+  - {fileID: 11400000, guid: 5fcf718d896f9b14493b3891b3e9993d, type: 2}
+  - {fileID: 11400000, guid: 202d5895fbfdc1349871e02af866bebd, type: 2}
+  - {fileID: 11400000, guid: 834240f8d3897c247989097d934c1253, type: 2}
+  - {fileID: 11400000, guid: 298e1d21ca33a6642a3208d5e1f56f3b, type: 2}
+  fullIngredientsText: "\u0E41\u0E1B\u0E49\u0E07\u0E2A\u0E32\u0E25\u0E35, \u0E2B\u0E21\u0E39\u0E2A\u0E31\u0E1A,
+    \u0E2B\u0E19\u0E31\u0E07\u0E2B\u0E21\u0E39\u0E40\u0E08\u0E25\u0E32\u0E15\u0E34\u0E19\u0E2B\u0E23\u0E37\u0E2D\u0E19\u0E49\u0E33\u0E0B\u0E38\u0E1B\u0E40\u0E02\u0E49\u0E21\u0E02\u0E49\u0E19,
+    \u0E02\u0E34\u0E07, \u0E15\u0E49\u0E19\u0E2B\u0E2D\u0E21, \u0E0B\u0E35\u0E2D\u0E34\u0E4A\u0E27\u0E02\u0E32\u0E27,
+    \u0E19\u0E49\u0E33\u0E21\u0E31\u0E19\u0E07\u0E32"
+  sellPrice: 0

@@ -1,0 +1,102 @@
+﻿using System.Collections.Generic;
+using UnityEngine;
+
+// ประเทศ/สัญชาติของเมนู
+// หมายเหตุ: เพิ่มค่าใหม่ต่อท้ายเท่านั้น ห้ามสลับลำดับ เพราะ Unity เก็บเป็นตัวเลข
+public enum Cuisine
+{
+    Thailand,
+    Japan,
+    China,
+    Italy,
+    USA,
+    Mexico,
+    HouseSpecial
+}
+
+// ประเภทของเมนู
+// หมายเหตุ: เพิ่มค่าใหม่ต่อท้ายเท่านั้น ห้ามสลับลำดับ
+public enum DishCourse
+{
+    Main,
+    Dessert,
+    Drink
+}
+
+// สูตรอาหาร 1 เมนู สร้างได้จาก Assets > Create > Cozy > Recipe Data
+// หรือสร้าง/อัปเดตทั้งหมดจาก CSV ผ่านเมนู Tools > Second Serving > Import Recipes & Ingredients
+[CreateAssetMenu(fileName = "NewRecipe", menuName = "Cozy/Recipe Data")]
+public class RecipeData : ScriptableObject
+{
+    // จำนวนวัตถุดิบหลักสูงสุดต่อสูตร
+    public const int MaxIngredients = 4;
+
+    [Header("Save")]
+    [Tooltip("รหัสประจำสูตร ใช้ในไฟล์เซฟ ต้องไม่ซ้ำ และไม่ควรเปลี่ยนหลังปล่อยเกม (เว้นว่างไว้ จะถูกตั้งจากชื่อไฟล์ให้อัตโนมัติ)")]
+    public string recipeId;
+
+    [Header("Info")]
+    [Tooltip("ชื่อที่แสดงในเกม (ตอนนี้ใช้ชื่ออังกฤษ จนกว่าจะมีฟอนต์ไทย)")]
+    public string recipeName = "New Recipe";
+
+    [Tooltip("ชื่อภาษาไทย (เก็บไว้ใช้ตอนมีฟอนต์ไทยใน TMP)")]
+    public string nameTh;
+
+    public Sprite icon;
+
+    public Cuisine cuisine = Cuisine.Thailand;
+    public DishCourse course = DishCourse.Main;
+
+    [Tooltip("สูตรลับ (ต้องปลดล็อกพิเศษ)")]
+    public bool isSecret = false;
+
+    [Tooltip("ใส่ในเดโมบนเว็บ (Vertical Slice)")]
+    public bool inDemo = false;
+
+    [Header("Ingredients")]
+    [Tooltip("วัตถุดิบหลักที่ต้องใช้ อย่างละ 1 ชิ้น ใส่ซ้ำได้ถ้าต้องใช้มากกว่า 1 ชิ้น (สูงสุด 4 ช่อง)")]
+    public List<ItemData> ingredients = new List<ItemData>();
+
+    [Tooltip("รายการวัตถุดิบเต็มสำหรับแสดงในสมุดสูตร (ของในตู้กับข้าวไม่ต้องมีจริง)")]
+    [TextArea(2, 5)] public string fullIngredientsText;
+
+    [Header("Economy")]
+    [Tooltip("ราคาขายในร้าน (0 = ยังไม่ได้ตั้ง)")]
+    [Min(0)] public int sellPrice = 0;
+
+    // นับว่าแต่ละวัตถุดิบต้องใช้กี่ชิ้น (รวมช่องที่ใส่ซ้ำ) ข้ามช่องว่าง
+    public Dictionary<ItemData, int> GetRequiredCounts()
+    {
+        Dictionary<ItemData, int> result = new Dictionary<ItemData, int>();
+
+        foreach (ItemData item in ingredients)
+        {
+            if (item == null)
+            {
+                continue;
+            }
+
+            result.TryGetValue(item, out int current);
+            result[item] = current + 1;
+        }
+
+        return result;
+    }
+
+#if UNITY_EDITOR
+    private void OnValidate()
+    {
+        // ถ้ายังไม่มีรหัส ให้ตั้งจากชื่อไฟล์
+        if (string.IsNullOrWhiteSpace(recipeId) && !string.IsNullOrEmpty(name))
+        {
+            recipeId = name.Trim().ToLowerInvariant().Replace(' ', '_');
+            UnityEditor.EditorUtility.SetDirty(this);
+        }
+
+        if (ingredients.Count > MaxIngredients)
+        {
+            Debug.LogWarning($"RecipeData '{name}': Has {ingredients.Count} ingredients (max {MaxIngredients}).", this);
+        }
+    }
+#endif
+}

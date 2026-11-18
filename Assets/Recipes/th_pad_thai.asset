@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56897c6864cfda9489a79f1ac3a363d1, type: 3}
+  m_Name: th_pad_thai
+  m_EditorClassIdentifier: Assembly-CSharp::RecipeData
+  recipeId: th_pad_thai
+  recipeName: Pad Thai
+  nameTh: "\u0E1C\u0E31\u0E14\u0E44\u0E17\u0E22"
+  icon: {fileID: 0}
+  cuisine: 0
+  course: 0
+  isSecret: 0
+  inDemo: 0
+  ingredients:
+  - {fileID: 11400000, guid: e0f95113dfc6fe04d9e7848c4aa74eae, type: 2}
+  - {fileID: 11400000, guid: 53b41677c6af8e742bc752a377829aa9, type: 2}
+  - {fileID: 11400000, guid: 242f90011a3aa8d439b37ca198199c1a, type: 2}
+  - {fileID: 11400000, guid: 0cbb8e2a7b840014493d01e1d3812b54, type: 2}
+  fullIngredientsText: "\u0E40\u0E2A\u0E49\u0E19\u0E08\u0E31\u0E19\u0E17\u0E4C, \u0E01\u0E38\u0E49\u0E07,
+    \u0E40\u0E15\u0E49\u0E32\u0E2B\u0E39\u0E49\u0E41\u0E02\u0E47\u0E07, \u0E44\u0E02\u0E48\u0E44\u0E01\u0E48,
+    \u0E16\u0E31\u0E48\u0E27\u0E07\u0E2D\u0E01, \u0E01\u0E38\u0E22\u0E0A\u0E48\u0E32\u0E22,
+    \u0E16\u0E31\u0E48\u0E27\u0E25\u0E34\u0E2A\u0E07, \u0E2B\u0E31\u0E27\u0E44\u0E0A\u0E42\u0E1B\u0E4A,
+    \u0E19\u0E49\u0E33\u0E21\u0E30\u0E02\u0E32\u0E21\u0E40\u0E1B\u0E35\u0E22\u0E01,
+    \u0E19\u0E49\u0E33\u0E1B\u0E25\u0E32, \u0E19\u0E49\u0E33\u0E15\u0E32\u0E25\u0E1B\u0E35\u0E4A\u0E1A,
+    \u0E19\u0E49\u0E33\u0E21\u0E31\u0E19\u0E1E\u0E37\u0E0A"
+  sellPrice: 0

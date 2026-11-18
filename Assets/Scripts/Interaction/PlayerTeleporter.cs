@@ -38,6 +38,16 @@ public class PlayerTeleporter : MonoBehaviour
         rb.position = target;
         transform.position = target;
 
+        // ถ้าลากวัตถุ Tilemap มาใส่ ช่องนี้อาจได้ Tilemap Collider 2D แทน Composite ให้ใช้ Composite ที่อยู่บนวัตถุเดียวกันแทน
+        if (cameraBounds != null && !(cameraBounds is CompositeCollider2D))
+        {
+            CompositeCollider2D composite = cameraBounds.GetComponent<CompositeCollider2D>();
+            if (composite != null)
+            {
+                cameraBounds = composite;
+            }
+        }
+
         // เปลี่ยนขอบกล้อง
         if (confiner != null && cameraBounds != null && confiner.BoundingShape2D != cameraBounds)
         {
