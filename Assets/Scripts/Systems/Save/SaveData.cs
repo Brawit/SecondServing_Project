@@ -5,8 +5,10 @@ using System.Collections.Generic;
 [Serializable]
 public class SaveData
 {
-    // เวอร์ชันของรูปแบบไฟล์เซฟ เพิ่มเลขเมื่อเปลี่ยนโครงสร้าง จะได้แปลงเซฟเก่าได้ในอนาคต
-    public const int CurrentVersion = 1;
+    // เวอร์ชันของรูปแบบไฟล์เซฟ เพิ่มเลขเมื่อเปลี่ยนโครงสร้าง จะได้แปลงเซฟเก่าได้
+    // 1 = วัน กระเป๋า ของบนพื้น
+    // 2 = เพิ่มไอเทมที่เคยเจอ สูตรที่รู้ และระดับกระเป๋า
+    public const int CurrentVersion = 2;
 
     public int version = CurrentVersion;
 
@@ -18,6 +20,15 @@ public class SaveData
 
     // ของป่าที่วางอยู่บนพื้นในแต่ละโซน
     public List<GroundItemSave> groundItems = new List<GroundItemSave>();
+
+    // [v2] รหัสไอเทมที่เคยเจอแล้ว (ใช้แสดงแบบ Collectibles)
+    public List<string> discoveredItems = new List<string>();
+
+    // [v2] รหัสสูตรที่รู้แล้ว
+    public List<string> knownRecipes = new List<string>();
+
+    // [v2] ระดับกระเป๋า (1 = ระดับแรก)
+    public int bagLevel = 1;
 }
 
 // ของหนึ่งชนิดในกระเป๋า

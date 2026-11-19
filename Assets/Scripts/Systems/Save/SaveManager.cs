@@ -24,6 +24,12 @@ public class SaveManager : MonoBehaviour
     [Tooltip("ตัวสุ่มของป่า ใช้เก็บและคืนของบนพื้น")]
     [SerializeField] private ForageSpawner forageSpawner;
 
+    [Tooltip("ไฟล์ข้อมูลรวมสูตรอาหาร ใช้แปลงรหัสสูตรกลับเป็นสูตร")]
+    [SerializeField] private RecipeDatabase recipeDatabase;
+
+    [Tooltip("สมุดสูตรของผู้เล่น (คอมโพเนนต์ RecipeBook บนตัว Player)")]
+    [SerializeField] private RecipeBook playerRecipeBook;
+
     [Header("Settings")]
     [Tooltip("ชื่อไฟล์เซฟ")]
     [SerializeField] private string fileName = "save.json";
@@ -76,6 +82,10 @@ public class SaveManager : MonoBehaviour
         if (forageSpawner == null)
         {
             Debug.LogWarning("SaveManager: Forage Spawner is not assigned. Ground items will not be saved.", this);
+        }
+        if (recipeDatabase == null || playerRecipeBook == null)
+        {
+            Debug.LogWarning("SaveManager: Recipe Database or Player Recipe Book is not assigned. Known recipes will not be saved.", this);
         }
 
         Debug.Log($"SaveManager: Save path = {SavePath}");
@@ -176,6 +186,14 @@ public class SaveManager : MonoBehaviour
             data.groundItems = forageSpawner.CaptureState();
         }
 
+        // [v2] ไอเทมที่เคยเจอ ระดับกระเป๋า และสูตรที่รู้
+        if (playerInventory != null)
+        {
+            data.discoveredItems = CaptureDiscoveredItems();
+            data.bagLevel = playerInventory.BagLevel;
+        }
+        data.knownRecipes = CaptureKnownRecipes();
+
         string json = JsonUtility.ToJson(data, true);
 
         try
@@ -229,6 +247,51 @@ public class SaveManager : MonoBehaviour
             entry.itemId = pair.Key.itemId;
             entry.amount = pair.Value;
             result.Add(entry);
+        }
+
+        return result;
+    }
+
+    // แปลงไอเทมที่เคยเจอเป็นรายการรหัส
+    private List<string> CaptureDiscoveredItems()
+    {
+        List<string> result = new List<string>();
+
+        foreach (ItemData item in playerInventory.DiscoveredItems)
+        {
+            if (item != null && !string.IsNullOrWhiteSpace(item.itemId))
+            {
+                result.Add(item.itemId);
+            }
+        }
+
+        return result;
+    }
+
+    // แปลงสูตรที่รู้เป็นรายการรหัส
+    private List<string> CaptureKnownRecipes()
+    {
+        List<string> result = new List<string>();
+
+        if (playerRecipeBook == null)
+        {
+            return result;
+        }
+
+        foreach (RecipeData recipe in playerRecipeBook.KnownRecipes)
+        {
+            if (recipe == null)
+            {
+                continue;
+            }
+
+            if (string.IsNullOrWhiteSpace(recipe.recipeId))
+            {
+                Debug.LogWarning($"SaveManager: Recipe '{recipe.name}' has no recipeId and will not be saved.", recipe);
+                continue;
+            }
+
+            result.Add(recipe.recipeId);
         }
 
         return result;
@@ -290,9 +353,27 @@ public class SaveManager : MonoBehaviour
             forageSpawner.RestoreState(data.groundItems);
         }
 
+        // 4) [v2] ไอเทมที่เคยเจอ ระดับกระเป๋า และสูตรที่รู้
+        // เซฟ v1 ไม่มีข้อมูลนี้: ไอเทมที่เคยเจอ = ของที่อยู่ในกระเป๋า, กระเป๋าระดับ 1, รู้แค่สูตรเริ่มต้น
+        if (data.version >= 2)
+        {
+            RestoreDiscoveredItems(data.discoveredItems);
+
+            if (playerInventory != null)
+            {
+                playerInventory.SetBagLevel(data.bagLevel);
+            }
+
+            RestoreKnownRecipes(data.knownRecipes);
+        }
+        else
+        {
+            Debug.Log($"SaveManager: Save version {data.version} has no discovered items or recipes. Using defaults.");
+        }
+
         int inventoryCount = data.inventory != null ? data.inventory.Count : 0;
         int groundCount = data.groundItems != null ? data.groundItems.Count : 0;
-        Debug.Log($"SaveManager: Game loaded (day {data.day}, {inventoryCount} inventory entries, {groundCount} ground items).");
+        Debug.Log($"SaveManager: Game loaded (version {data.version}, day {data.day}, {inventoryCount} inventory entries, {groundCount} ground items).");
         return true;
     }
 
@@ -326,6 +407,58 @@ public class SaveManager : MonoBehaviour
         }
 
         playerInventory.SetItems(items);
+    }
+
+    // แปลงรายการรหัสกลับเป็นไอเทมที่เคยเจอ
+    private void RestoreDiscoveredItems(List<string> itemIds)
+    {
+        if (playerInventory == null || itemDatabase == null || itemIds == null)
+        {
+            return;
+        }
+
+        List<ItemData> result = new List<ItemData>();
+
+        foreach (string itemId in itemIds)
+        {
+            ItemData item = itemDatabase.GetById(itemId);
+            if (item != null)
+            {
+                result.Add(item);
+            }
+            else
+            {
+                Debug.LogWarning($"SaveManager: Unknown discovered itemId '{itemId}' in save. Skipped.");
+            }
+        }
+
+        playerInventory.SetDiscovered(result);
+    }
+
+    // แปลงรายการรหัสกลับเป็นสูตรที่รู้
+    private void RestoreKnownRecipes(List<string> recipeIds)
+    {
+        if (playerRecipeBook == null || recipeDatabase == null || recipeIds == null)
+        {
+            return;
+        }
+
+        List<RecipeData> result = new List<RecipeData>();
+
+        foreach (string recipeId in recipeIds)
+        {
+            RecipeData recipe = recipeDatabase.GetById(recipeId);
+            if (recipe != null)
+            {
+                result.Add(recipe);
+            }
+            else
+            {
+                Debug.LogWarning($"SaveManager: Unknown recipeId '{recipeId}' in save. Skipped.");
+            }
+        }
+
+        playerRecipeBook.SetKnown(result);
     }
 
     // ---------- ลบเซฟ ----------

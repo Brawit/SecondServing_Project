@@ -17,6 +17,7 @@ MonoBehaviour:
   nameTh: "\u0E40\u0E1A\u0E2D\u0E23\u0E4C\u0E23\u0E35"
   icon: {fileID: 0}
   description: 
+  itemType: 0
   category: 3
   source: 0
   sellPrice: 0

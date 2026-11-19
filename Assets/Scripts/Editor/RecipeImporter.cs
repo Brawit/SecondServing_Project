@@ -9,6 +9,7 @@ using UnityEngine;
 // ใช้งาน: เมนู Tools > Second Serving > Import Recipes & Ingredients
 // - อ่าน Assets/Data/Ingredients.csv แล้วสร้าง/อัปเดต ItemData (หาไฟล์เดิมจาก itemId ทั้งโปรเจกต์)
 // - อ่าน Assets/Data/Recipes.csv แล้วสร้าง/อัปเดต RecipeData ใน Assets/Recipes
+// - สร้าง/อัปเดตไอเทมจานอาหาร (ItemType.Dish) ของทุกสูตรใน Assets/Items/Dishes (itemId = recipe_id)
 // - ไม่เขียนทับ icon และ description ที่ใส่เอง
 // - หาคอลัมน์จากชื่อหัวคอลัมน์ ไม่ใช่ลำดับ (ย้ายคอลัมน์ได้ แต่ห้ามเปลี่ยนชื่อหัว)
 public static class RecipeImporter
@@ -18,6 +19,7 @@ public static class RecipeImporter
     private const string IngredientsCsvPath = "Assets/Data/Ingredients.csv";
     private const string RecipesCsvPath = "Assets/Data/Recipes.csv";
     private const string NewItemFolder = "Assets/Items";
+    private const string DishFolder = "Assets/Items/Dishes";
     private const string RecipeFolder = "Assets/Recipes";
     private const string RecipeDatabasePath = "Assets/Recipes/RecipeDatabase.asset";
 
@@ -151,6 +153,7 @@ public static class RecipeImporter
                 item.itemName = nameEn;
             }
             item.nameTh = Cell(row, colTh);
+            item.itemType = ItemType.Ingredient;
 
             string categoryText = Cell(row, colCategory);
             if (!string.IsNullOrEmpty(categoryText))
@@ -308,8 +311,49 @@ public static class RecipeImporter
                 report.Warn($"Recipes.csv row {r + 1} ({id}): Recipe has no ingredients.");
             }
 
+            // ไอเทมจานอาหารของสูตรนี้
+            recipe.dishItem = CreateOrUpdateDish(recipe, items, report);
+
             EditorUtility.SetDirty(recipe);
         }
+    }
+
+    // สร้าง/อัปเดตไอเทมจานอาหารของสูตร (itemId = recipeId) ไม่แตะ icon และ description
+    private static ItemData CreateOrUpdateDish(RecipeData recipe, Dictionary<string, ItemData> items, ImportReport report)
+    {
+        string dishId = recipe.recipeId;
+
+        if (items.TryGetValue(dishId, out ItemData dish))
+        {
+            // กันรหัสชนกับวัตถุดิบ
+            if (dish.itemType != ItemType.Dish)
+            {
+                report.Warn($"Dish id '{dishId}' is already used by a non-dish item ({dish.name}). Dish was not created.");
+                return null;
+            }
+
+            report.DishesUpdated++;
+        }
+        else
+        {
+            EnsureFolder(DishFolder);
+            dish = ScriptableObject.CreateInstance<ItemData>();
+            dish.itemId = dishId;
+            string fileName = MakeFileName(string.IsNullOrEmpty(recipe.recipeName) ? dishId : recipe.recipeName);
+            string path = AssetDatabase.GenerateUniqueAssetPath($"{DishFolder}/{fileName}.asset");
+            AssetDatabase.CreateAsset(dish, path);
+            items.Add(dishId, dish);
+            report.DishesCreated++;
+        }
+
+        dish.itemType = ItemType.Dish;
+        dish.itemName = recipe.recipeName;
+        dish.nameTh = recipe.nameTh;
+        dish.category = ItemCategory.Other;
+        dish.sellPrice = recipe.sellPrice;
+
+        EditorUtility.SetDirty(dish);
+        return dish;
     }
 
     // ---------- ฐานข้อมูล ----------
@@ -638,6 +682,8 @@ public static class RecipeImporter
         public int ItemsUpdated;
         public int RecipesCreated;
         public int RecipesUpdated;
+        public int DishesCreated;
+        public int DishesUpdated;
         public int ItemDatabaseCount;
         public int RecipeDatabaseCount;
         private readonly List<string> warnings = new List<string>();
@@ -653,6 +699,7 @@ public static class RecipeImporter
             StringBuilder sb = new StringBuilder();
             sb.AppendLine($"Items: {ItemsCreated} created, {ItemsUpdated} updated (ItemDatabase: {ItemDatabaseCount}).");
             sb.AppendLine($"Recipes: {RecipesCreated} created, {RecipesUpdated} updated (RecipeDatabase: {RecipeDatabaseCount}).");
+            sb.AppendLine($"Dishes: {DishesCreated} created, {DishesUpdated} updated.");
             sb.Append(warnings.Count == 0 ? "No warnings." : $"{warnings.Count} warning(s). See Console.");
             return sb.ToString();
         }

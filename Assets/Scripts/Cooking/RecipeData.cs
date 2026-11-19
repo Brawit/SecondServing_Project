@@ -53,6 +53,10 @@ public class RecipeData : ScriptableObject
     [Tooltip("ใส่ในเดโมบนเว็บ (Vertical Slice)")]
     public bool inDemo = false;
 
+    [Header("Result")]
+    [Tooltip("ไอเทมจานอาหารที่ได้เมื่อทำสูตรนี้ (ตัว import สร้างให้อัตโนมัติ)")]
+    public ItemData dishItem;
+
     [Header("Ingredients")]
     [Tooltip("วัตถุดิบหลักที่ต้องใช้ อย่างละ 1 ชิ้น ใส่ซ้ำได้ถ้าต้องใช้มากกว่า 1 ชิ้น (สูงสุด 4 ช่อง)")]
     public List<ItemData> ingredients = new List<ItemData>();

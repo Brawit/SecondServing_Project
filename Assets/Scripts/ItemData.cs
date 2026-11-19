@@ -23,6 +23,18 @@ public enum ItemCategory
     SeaProduct
 }
 
+// ประเภทหลักของไอเทม ใช้แบ่งแท็บในกระเป๋า
+// หมายเหตุ: เพิ่มค่าใหม่ต่อท้ายเท่านั้น ห้ามสลับลำดับ
+public enum ItemType
+{
+    Ingredient, // วัตถุดิบ
+    Dish,       // อาหารที่ทำแล้ว
+    Tool,       // เครื่องมือ เช่น จอบ บัวรดน้ำ
+    Weapon,     // อาวุธ เช่น ดาบ คทา ธนู
+    Equipment,  // ของสวมใส่ เช่น หมวก เสื้อ รองเท้า
+    Accessory   // เครื่องประดับ เช่น แหวน สร้อย
+}
+
 // แหล่งที่มาของวัตถุดิบ
 // หมายเหตุ: เพิ่มค่าใหม่ต่อท้ายเท่านั้น ห้ามสลับลำดับ
 public enum ItemSource
@@ -53,6 +65,9 @@ public class ItemData : ScriptableObject
     [TextArea] public string description; // คำอธิบายสั้นๆ
 
     [Header("Classification")]
+    [Tooltip("ประเภทหลักของไอเทม (กำหนดว่าอยู่แท็บไหนในกระเป๋า)")]
+    public ItemType itemType = ItemType.Ingredient;
+
     [Tooltip("หมวดของวัตถุดิบ")]
     public ItemCategory category = ItemCategory.Other;
 

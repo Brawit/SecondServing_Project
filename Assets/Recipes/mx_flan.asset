@@ -20,6 +20,7 @@ MonoBehaviour:
   course: 1
   isSecret: 0
   inDemo: 0
+  dishItem: {fileID: 11400000, guid: 7afca1bc8cd2d5a4c8c6b67f25f05204, type: 2}
   ingredients:
   - {fileID: 11400000, guid: 8e729bf9bf6496a48bb5d6f009d276fa, type: 2}
   - {fileID: 11400000, guid: f846e2bdaf60a384a8d1227452f12634, type: 2}

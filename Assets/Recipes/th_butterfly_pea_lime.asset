@@ -19,7 +19,8 @@ MonoBehaviour:
   cuisine: 0
   course: 2
   isSecret: 0
-  inDemo: 1
+  inDemo: 0
+  dishItem: {fileID: 11400000, guid: a22a528924f30ac4781478179bf49696, type: 2}
   ingredients:
   - {fileID: 11400000, guid: 47582d3999af3ed4884bc8689f6160dd, type: 2}
   - {fileID: 11400000, guid: 308ae2a319dd0cc42b2e3794adce0d5d, type: 2}
