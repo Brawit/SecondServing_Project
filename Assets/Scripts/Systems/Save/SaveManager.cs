@@ -36,6 +36,12 @@ public class SaveManager : MonoBehaviour
     [Tooltip("ค่าสถานะของผู้เล่น (คอมโพเนนต์ PlayerStats บนตัว Player) เว้นว่างไว้ จะหาจาก Player Inventory")]
     [SerializeField] private PlayerStats playerStats;
 
+    [Tooltip("ของที่ผู้เล่นสวมอยู่ (คอมโพเนนต์ PlayerEquipment บนตัว Player) เว้นว่างไว้ จะหาจาก Player Inventory")]
+    [SerializeField] private PlayerEquipment playerEquipment;
+
+    [Tooltip("เมนูประจำวัน (คอมโพเนนต์ DailyMenu) เว้นว่างไว้ จะหาในฉากเอง")]
+    [SerializeField] private DailyMenu dailyMenu;
+
     [Header("Settings")]
     [Tooltip("ชื่อไฟล์เซฟ")]
     [SerializeField] private string fileName = "save.json";
@@ -102,6 +108,22 @@ public class SaveManager : MonoBehaviour
         if (playerStats == null && playerInventory != null)
         {
             playerStats = playerInventory.GetComponent<PlayerStats>();
+        }
+        if (playerEquipment == null && playerInventory != null)
+        {
+            playerEquipment = playerInventory.GetComponent<PlayerEquipment>();
+        }
+        if (playerEquipment == null)
+        {
+            Debug.LogWarning("SaveManager: Player Equipment is not assigned. Equipped items will not be saved.", this);
+        }
+        if (dailyMenu == null)
+        {
+            dailyMenu = FindFirstObjectByType<DailyMenu>(FindObjectsInactive.Include);
+        }
+        if (dailyMenu == null)
+        {
+            Debug.LogWarning("SaveManager: Daily Menu not found. The last menu will not be saved.", this);
         }
         if (playerHotbar == null)
         {
@@ -229,6 +251,18 @@ public class SaveManager : MonoBehaviour
             data.bonusMaxHealth = playerStats.GetBonusMax(StatType.Health);
             data.bonusMaxStamina = playerStats.GetBonusMax(StatType.Stamina);
             data.bonusMaxMana = playerStats.GetBonusMax(StatType.Mana);
+        }
+
+        // [v4] ของที่สวมอยู่
+        if (playerEquipment != null)
+        {
+            data.equippedItems = playerEquipment.CaptureSlotIds();
+        }
+
+        // [v5] เมนูที่ตั้งไว้ล่าสุด
+        if (dailyMenu != null)
+        {
+            dailyMenu.CaptureMenu(data.menuRecipes, data.menuServings);
         }
 
         string json = JsonUtility.ToJson(data, true);
@@ -420,6 +454,19 @@ public class SaveManager : MonoBehaviour
             Debug.Log($"SaveManager: Save version {data.version} has no hotbar or FEVER data. Using defaults.");
         }
 
+        // 6) [v4] ของที่สวมอยู่ (เซฟ v1–v3 = ไม่ได้สวมอะไร ค่าตั้งต้นอยู่แล้ว)
+        // ต้องทำหลังคืนกระเป๋า เพราะของที่ใส่ช่องไม่ได้แล้วจะถูกคืนเข้ากระเป๋า
+        if (data.version >= 4)
+        {
+            RestoreEquipment(data.equippedItems);
+        }
+
+        // 7) [v5] เมนูที่ตั้งไว้ล่าสุด (เซฟ v1–v4 = เมนูว่าง) จำนวนจานจะถูกตรวจกับของในกระเป๋าตอนเปิดหน้าต่างเมนู
+        if (data.version >= 5)
+        {
+            RestoreMenu(data.menuRecipes, data.menuServings);
+        }
+
         int inventoryCount = data.inventory != null ? data.inventory.Count : 0;
         int groundCount = data.groundItems != null ? data.groundItems.Count : 0;
         Debug.Log($"SaveManager: Game loaded (version {data.version}, day {data.day}, {inventoryCount} inventory entries, {groundCount} ground items).");
@@ -539,6 +586,62 @@ public class SaveManager : MonoBehaviour
         }
 
         playerHotbar.SetAllSlots(result);
+    }
+
+    // แปลงรายการรหัสกลับเป็นของที่สวมอยู่ (ช่องว่างหรือรหัสที่หาไม่เจอ = ช่องว่าง)
+    private void RestoreEquipment(List<string> itemIds)
+    {
+        if (playerEquipment == null || itemDatabase == null || itemIds == null)
+        {
+            return;
+        }
+
+        List<ItemData> result = new List<ItemData>(PlayerEquipment.SlotCount);
+
+        for (int i = 0; i < PlayerEquipment.SlotCount; i++)
+        {
+            string itemId = i < itemIds.Count ? itemIds[i] : "";
+            ItemData item = null;
+
+            if (!string.IsNullOrWhiteSpace(itemId))
+            {
+                item = itemDatabase.GetById(itemId);
+                if (item == null)
+                {
+                    Debug.LogWarning($"SaveManager: Unknown equipped itemId '{itemId}' in slot {(EquipSlot)i}. Slot left empty. Is it in the Item Database?");
+                }
+            }
+
+            result.Add(item);
+        }
+
+        playerEquipment.SetAllSlots(result);
+    }
+
+    // แปลงรหัสสูตรกลับเป็นเมนูที่ตั้งไว้ (รหัสที่หาไม่เจอ = ช่องว่าง)
+    private void RestoreMenu(List<string> recipeIds, List<int> servings)
+    {
+        if (dailyMenu == null || recipeDatabase == null || recipeIds == null)
+        {
+            return;
+        }
+
+        List<RecipeData> recipes = new List<RecipeData>(recipeIds.Count);
+        foreach (string recipeId in recipeIds)
+        {
+            RecipeData recipe = null;
+            if (!string.IsNullOrWhiteSpace(recipeId))
+            {
+                recipe = recipeDatabase.GetById(recipeId);
+                if (recipe == null)
+                {
+                    Debug.LogWarning($"SaveManager: Unknown menu recipeId '{recipeId}' in save. Slot left empty.");
+                }
+            }
+            recipes.Add(recipe);
+        }
+
+        dailyMenu.RestoreMenu(recipes, servings);
     }
 
     // คืน FEVER และค่าสูงสุดที่เพิ่มถาวร แล้วเติม Health/Stamina/Mana ให้เต็มค่าสูงสุดใหม่ (โหลด = เริ่มวันใหม่)

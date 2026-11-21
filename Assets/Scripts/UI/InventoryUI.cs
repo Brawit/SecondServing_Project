@@ -76,6 +76,13 @@ public class InventoryUI : MonoBehaviour
     [Tooltip("รายละเอียดของสิ่งที่เลือก")]
     [SerializeField] private TMP_Text detailBodyText;
 
+    [Header("Equipment")]
+    [Tooltip("แผงช่องสวมใส่ (แสดงเฉพาะแท็บ Equipment / Accessory) เว้นว่างได้")]
+    [SerializeField] private EquipmentPanelUI equipmentPanel;
+
+    [Tooltip("ตอนแสดงแผงช่องสวมใส่ ให้เลื่อนขอบบนของแผงรายละเอียดลงเท่าไร (ให้พอดีใต้แผงสวมใส่)")]
+    [Min(0f)] [SerializeField] private float detailShiftWithEquipment = 330f;
+
     [Header("Settings")]
     [Tooltip("หยุดนาฬิกาในเกมระหว่างเปิดกระเป๋า")]
     [SerializeField] private bool pauseClockWhileOpen = true;
@@ -112,6 +119,13 @@ public class InventoryUI : MonoBehaviour
     // สิ่งที่ผู้เล่นคลิกเลือกไว้
     private ItemData selectedItem;
     private RecipeData selectedRecipe;
+
+    // ช่องสวมใส่ที่คลิกเลือกไว้ (ใช้แสดงรายละเอียดของช่องว่าง)
+    private EquipmentSlotUI selectedEquipSlot;
+
+    // ขอบบนเดิมของแผงรายละเอียด (ใช้คืนค่าตอนออกจากแท็บที่มีแผงสวมใส่)
+    private RectTransform detailRect;
+    private float detailOriginalTop;
 
     // ต้องวาดใหม่ตอนเปิดหน้าต่างครั้งหน้าหรือไม่ (ระหว่างปิดอยู่จะไม่วาด เพื่อประหยัด)
     private bool isDirty = true;
@@ -154,6 +168,25 @@ public class InventoryUI : MonoBehaviour
         }
 
         CurrentTab = startingTab;
+
+        // จำขอบบนเดิมของแผงรายละเอียดไว้
+        if (detailPanel != null)
+        {
+            detailRect = detailPanel.GetComponent<RectTransform>();
+            if (detailRect != null)
+            {
+                detailOriginalTop = detailRect.offsetMax.y;
+            }
+        }
+
+        if (equipmentPanel != null)
+        {
+            equipmentPanel.OnSlotClicked += HandleEquipSlotClicked;
+            if (equipmentPanel.Equipment == null)
+            {
+                Debug.LogWarning("InventoryUI: Equipment Panel has no Player Equipment assigned.", this);
+            }
+        }
     }
 
     private void OnEnable()
@@ -166,6 +199,10 @@ public class InventoryUI : MonoBehaviour
         {
             recipeBook.OnChanged += MarkDirty;
         }
+        if (equipmentPanel != null && equipmentPanel.Equipment != null)
+        {
+            equipmentPanel.Equipment.OnChanged += MarkDirty;
+        }
     }
 
     private void OnDisable()
@@ -177,6 +214,18 @@ public class InventoryUI : MonoBehaviour
         if (recipeBook != null)
         {
             recipeBook.OnChanged -= MarkDirty;
+        }
+        if (equipmentPanel != null && equipmentPanel.Equipment != null)
+        {
+            equipmentPanel.Equipment.OnChanged -= MarkDirty;
+        }
+    }
+
+    private void OnDestroy()
+    {
+        if (equipmentPanel != null)
+        {
+            equipmentPanel.OnSlotClicked -= HandleEquipSlotClicked;
         }
     }
 
@@ -306,6 +355,12 @@ public class InventoryUI : MonoBehaviour
             return false;
         }
 
+        // ระหว่างเปิดหน้าต่างเลือกเมนู
+        if (MenuSelectionUI.IsAnyOpen)
+        {
+            return false;
+        }
+
         return true;
     }
 
@@ -326,6 +381,7 @@ public class InventoryUI : MonoBehaviour
             CurrentTab = tab;
             selectedItem = null;
             selectedRecipe = null;
+            selectedEquipSlot = null;
         }
 
         Refresh();
@@ -377,6 +433,7 @@ public class InventoryUI : MonoBehaviour
 
         UpdateTabButtons();
         UpdateBagLevelText();
+        UpdateEquipmentPanel();
 
         int shown;
         if (CurrentTab == BagTab.Recipes)
@@ -429,7 +486,7 @@ public class InventoryUI : MonoBehaviour
 
             slots[i].gameObject.SetActive(true);
             slots[i].SetItemEntry(item, count, state);
-            slots[i].SetSelected(item == selectedItem);
+            slots[i].SetSelected(item == selectedItem && selectedEquipSlot == null);
         }
 
         if (progressText != null)
@@ -590,6 +647,35 @@ public class InventoryUI : MonoBehaviour
         }
     }
 
+    // แท็บนี้แสดงแผงช่องสวมใส่หรือไม่
+    private static bool TabShowsEquipment(BagTab tab)
+    {
+        return tab == BagTab.Equipment || tab == BagTab.Accessory;
+    }
+
+    // เปิด/ปิดแผงสวมใส่ตามแท็บ และเลื่อนแผงรายละเอียดลงไปอยู่ใต้แผงสวมใส่
+    private void UpdateEquipmentPanel()
+    {
+        bool show = equipmentPanel != null && TabShowsEquipment(CurrentTab);
+
+        if (equipmentPanel != null)
+        {
+            equipmentPanel.gameObject.SetActive(show);
+            if (show)
+            {
+                equipmentPanel.Refresh();
+                equipmentPanel.SetSelectedSlot(selectedEquipSlot);
+            }
+        }
+
+        if (detailRect != null)
+        {
+            Vector2 max = detailRect.offsetMax;
+            max.y = show ? detailOriginalTop - detailShiftWithEquipment : detailOriginalTop;
+            detailRect.offsetMax = max;
+        }
+    }
+
     private void UpdateBagLevelText()
     {
         if (bagLevelText == null || inventory == null)
@@ -618,10 +704,36 @@ public class InventoryUI : MonoBehaviour
     {
         selectedItem = slot.CurrentItem;
         selectedRecipe = slot.CurrentRecipe;
+        selectedEquipSlot = null;
 
         foreach (InventorySlotUI s in slots)
         {
             s.SetSelected(s == slot);
+        }
+
+        if (equipmentPanel != null)
+        {
+            equipmentPanel.SetSelectedSlot(null);
+        }
+
+        UpdateDetails();
+    }
+
+    // คลิกช่องสวมใส่: ดูรายละเอียดของที่สวมอยู่ (หรือบอกว่าช่องนี้รับของประเภทไหน ถ้าช่องว่าง)
+    private void HandleEquipSlotClicked(EquipmentSlotUI slot)
+    {
+        selectedEquipSlot = slot;
+        selectedItem = slot != null ? slot.CurrentItem : null;
+        selectedRecipe = null;
+
+        foreach (InventorySlotUI s in slots)
+        {
+            s.SetSelected(false);
+        }
+
+        if (equipmentPanel != null)
+        {
+            equipmentPanel.SetSelectedSlot(slot);
         }
 
         UpdateDetails();
@@ -629,7 +741,13 @@ public class InventoryUI : MonoBehaviour
 
     private void UpdateDetails()
     {
-        bool hasSelection = selectedItem != null || selectedRecipe != null;
+        // ช่องสวมใส่ที่เลือกไว้: อ่านของในช่องใหม่ทุกครั้ง (เผื่อเพิ่งสวม/ถอด)
+        if (selectedEquipSlot != null)
+        {
+            selectedItem = selectedEquipSlot.CurrentItem;
+        }
+
+        bool hasSelection = selectedItem != null || selectedRecipe != null || selectedEquipSlot != null;
 
         if (detailPanel != null)
         {
@@ -645,10 +763,21 @@ public class InventoryUI : MonoBehaviour
         {
             ShowItemDetails(selectedItem);
         }
-        else
+        else if (selectedRecipe != null)
         {
             ShowRecipeDetails(selectedRecipe);
         }
+        else
+        {
+            ShowEmptyEquipSlotDetails(selectedEquipSlot.Slot);
+        }
+    }
+
+    private void ShowEmptyEquipSlotDetails(EquipSlot slot)
+    {
+        string kind = PlayerEquipment.IsStatSlot(slot) ? "Stat slot" : "Fashion slot (looks only)";
+        SetDetailText($"{PlayerEquipment.GetSlotLabel(slot)} (empty)",
+            $"{kind}\n\nDrag a {PlayerEquipment.GetAcceptedType(slot)} item here from your bag to equip it.");
     }
 
     private void ShowItemDetails(ItemData item)
@@ -674,6 +803,20 @@ public class InventoryUI : MonoBehaviour
         }
 
         sb.AppendLine($"Owned: {count} / {inventory.StackCap}");
+
+        // ของสวมใส่: บอกช่องที่ใส่ได้ และจำนวนที่สวมอยู่ (ของที่สวมอยู่ไม่นับในกระเป๋า)
+        if (item.IsEquippable)
+        {
+            bool isStat = item.equipType == EquipType.Shoes || item.equipType == EquipType.Ring || item.equipType == EquipType.Necklace;
+            sb.AppendLine($"Equip slot: {item.equipType} ({(isStat ? "stat" : "fashion")})");
+
+            PlayerEquipment equipment = equipmentPanel != null ? equipmentPanel.Equipment : null;
+            int equipped = equipment != null ? equipment.CountEquipped(item) : 0;
+            if (equipped > 0)
+            {
+                sb.AppendLine($"Equipped: {equipped}");
+            }
+        }
 
         if (item.sellPrice > 0)
         {

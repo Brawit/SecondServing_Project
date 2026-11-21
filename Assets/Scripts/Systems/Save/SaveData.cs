@@ -9,7 +9,9 @@ public class SaveData
     // 1 = วัน กระเป๋า ของบนพื้น
     // 2 = เพิ่มไอเทมที่เคยเจอ สูตรที่รู้ และระดับกระเป๋า
     // 3 = เพิ่มช่อง Hotbar, FEVER และค่าสูงสุดที่เพิ่มถาวร
-    public const int CurrentVersion = 3;
+    // 4 = เพิ่มของที่สวมอยู่ (8 ช่อง)
+    // 5 = เพิ่มเมนูประจำวันล่าสุด (ใช้เป็นค่าเริ่มต้นของวันถัดไป)
+    public const int CurrentVersion = 5;
 
     public int version = CurrentVersion;
 
@@ -41,6 +43,14 @@ public class SaveData
     public int bonusMaxHealth = 0;
     public int bonusMaxStamina = 0;
     public int bonusMaxMana = 0;
+
+    // [v4] รหัสไอเทมที่สวมอยู่ เรียงตาม EquipSlot: Shoes, Ring1, Ring2, Necklace, Head, Top, Bottom, Back (ช่องว่าง = "")
+    // ของที่สวมอยู่ไม่อยู่ใน inventory (สวม = ย้ายออกจากกระเป๋า)
+    public List<string> equippedItems = new List<string>();
+
+    // [v5] เมนูที่ตั้งไว้ล่าสุด ทีละช่อง: รหัสสูตร (ช่องว่าง = "") และจำนวนจานที่ตั้งไว้
+    public List<string> menuRecipes = new List<string>();
+    public List<int> menuServings = new List<int>();
 }
 
 // ของหนึ่งชนิดในกระเป๋า

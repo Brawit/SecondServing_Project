@@ -35,6 +35,21 @@ public enum ItemType
     Accessory   // เครื่องประดับ เช่น แหวน สร้อย
 }
 
+// ของสวมใส่ชิ้นนี้ใส่ช่องประเภทไหนได้ (None = สวมใส่ไม่ได้)
+// ช่องเพิ่มค่าสถานะ: Shoes, Ring, Necklace / ช่องแฟชัน (แค่หน้าตา): Head, Top, Bottom, Back
+// หมายเหตุ: เพิ่มค่าใหม่ต่อท้ายเท่านั้น ห้ามสลับลำดับ
+public enum EquipType
+{
+    None,
+    Shoes,    // รองเท้า (เพิ่มค่าสถานะ)
+    Ring,     // แหวน ใส่ได้ 2 วง (เพิ่มค่าสถานะ)
+    Necklace, // สร้อยคอ (เพิ่มค่าสถานะ)
+    Head,     // หมวก/ทรงผม (แฟชัน)
+    Top,      // เสื้อ (แฟชัน)
+    Bottom,   // กางเกง/กระโปรง (แฟชัน)
+    Back      // ของบนหลัง เช่น กระเป๋า ปีก ผ้าคลุม (แฟชัน)
+}
+
 // แหล่งที่มาของวัตถุดิบ
 // หมายเหตุ: เพิ่มค่าใหม่ต่อท้ายเท่านั้น ห้ามสลับลำดับ
 public enum ItemSource
@@ -74,6 +89,10 @@ public class ItemData : ScriptableObject
     [Tooltip("ได้วัตถุดิบนี้มาจากไหน")]
     public ItemSource source = ItemSource.Forage;
 
+    [Header("Equip")]
+    [Tooltip("สวมใส่ที่ช่องประเภทไหน (None = สวมใส่ไม่ได้)\nแนะนำ: รองเท้าและของแฟชัน ใช้ Item Type = Equipment / แหวนและสร้อย ใช้ Item Type = Accessory")]
+    public EquipType equipType = EquipType.None;
+
     [Header("Economy")]
     [Tooltip("ราคาที่ร้านค้ารับซื้อจากผู้เล่น (0 = ยังไม่ได้ตั้ง)")]
     [Min(0)] public int sellPrice = 0;
@@ -96,6 +115,9 @@ public class ItemData : ScriptableObject
     public bool IsEdible =>
         (itemType == ItemType.Ingredient || itemType == ItemType.Dish) &&
         (restoreHealth > 0 || restoreStamina > 0 || restoreMana > 0 || restoreFever > 0);
+
+    // สวมใส่ได้หรือไม่
+    public bool IsEquippable => equipType != EquipType.None;
 
 #if UNITY_EDITOR
     // ถ้ายังไม่มีรหัส ให้ตั้งจากชื่อไฟล์เป็นตัวพิมพ์เล็ก เช่น "Mushroom" -> "mushroom"

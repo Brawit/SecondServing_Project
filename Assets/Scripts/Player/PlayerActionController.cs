@@ -96,8 +96,8 @@ public class PlayerActionController : MonoBehaviour
         Keyboard keyboard = Keyboard.current;
         Mouse mouse = Mouse.current;
 
-        // ระหว่างเปิดกระเป๋า / หน้าสรุปวัน: ไม่รับปุ่มใดๆ ของ Hotbar
-        if (IsInventoryOpen() || IsDayEnding())
+        // ระหว่างเปิดกระเป๋า / หน้าสรุปวัน / หน้าต่างเลือกเมนู: ไม่รับปุ่มใดๆ ของ Hotbar
+        if (IsInventoryOpen() || IsDayEnding() || MenuSelectionUI.IsAnyOpen)
         {
             StopBlocking();
             return;

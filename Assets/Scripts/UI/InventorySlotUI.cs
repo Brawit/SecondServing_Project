@@ -14,6 +14,7 @@ public enum SlotState
 
 // ช่อง 1 ช่องในหน้าต่างกระเป๋า: แสดงไอคอน ชื่อ และจำนวน (มุมขวาบน) คลิกเพื่อดูรายละเอียด
 // ลากไอเทมไปวางที่ Hotbar ได้ (เฉพาะของที่ใส่ Hotbar ได้: อาวุธ เครื่องมือ ของกินได้)
+// ลากของสวมใส่ไปวางที่ช่องสวมใส่ได้ (ต้องมีในกระเป๋าอย่างน้อย 1 ชิ้น)
 // ถ้าลากช่องที่ลากไม่ได้ จะส่งการลากต่อให้ Scroll View (เลื่อนรายการได้ตามเดิม)
 public class InventorySlotUI : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
@@ -194,9 +195,15 @@ public class InventorySlotUI : MonoBehaviour, IPointerClickHandler, IBeginDragHa
         CurrentState != SlotState.Undiscovered &&
         Hotbar.CanAssign(CurrentItem);
 
+    // ช่องนี้ลากไปสวมได้หรือไม่ (ต้องมีของจริงในกระเป๋า เพราะสวม = ย้ายออกจากกระเป๋า)
+    public bool CanDragToEquipment =>
+        CurrentItem != null &&
+        CurrentState == SlotState.Owned &&
+        CurrentItem.IsEquippable;
+
     public void OnBeginDrag(PointerEventData eventData)
     {
-        isDraggingItem = eventData.button == PointerEventData.InputButton.Left && CanDragToHotbar;
+        isDraggingItem = eventData.button == PointerEventData.InputButton.Left && (CanDragToHotbar || CanDragToEquipment);
 
         if (isDraggingItem)
         {
@@ -234,7 +241,7 @@ public class InventorySlotUI : MonoBehaviour, IPointerClickHandler, IBeginDragHa
     {
         if (isDraggingItem)
         {
-            // การวางจริงจัดการที่ HotbarSlotUI.OnDrop (ถูกเรียกก่อนฟังก์ชันนี้)
+            // การวางจริงจัดการที่ HotbarSlotUI.OnDrop / EquipmentSlotUI.OnDrop (ถูกเรียกก่อนฟังก์ชันนี้)
             isDraggingItem = false;
             DragIconUI.End();
             return;

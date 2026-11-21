@@ -1,7 +1,7 @@
 # Second Serving – HANDOFF
 
 > ไฟล์นี้สรุปสถานะโปรเจกต์ให้ Claude ในแชทใหม่อ่านต่อได้ทันที
-> อัปเดตล่าสุด: 21 พฤศจิกายน 2026 (จบขั้น B ทั้งหมด: B1–B4 / ถัดไปขั้น C Equipment Slots)
+> อัปเดตล่าสุด: 21 พฤศจิกายน 2026 (จบขั้น D เมนูประจำวัน / ถัดไปขั้น 2.4 ลูกค้า AI)
 > ตำแหน่งไฟล์: `D:\SecondServing_Project\Docs\HANDOFF.md` (อยู่นอก Assets ตั้งใจไม่ให้ Unity import)
 
 ---
@@ -104,6 +104,11 @@
 - เพดานต่อชนิดตามระดับกระเป๋า: 30 → 99 → 300 → 999 (ระดับ 4 ได้จากบอสหรือเควสต์)
 - จานอาหารเป็นไอเทม ไม่เน่า ทำนอกเวลาเปิดร้านได้ ใช้ให้ NPC / กิน / ขาย
 - **ระบบผสม (เมนูประจำวัน):** เลือกได้ 3 เมนู (อัปเกรดเพิ่มได้) กด +/- ตั้งจำนวนจาน นับจากจานที่ทำไว้แล้วในกระเป๋า + วัตถุดิบที่จองไว้ วัตถุดิบหักตอนทำจริง ขายไม่หมดก็คืนเข้ากระเป๋า
+  - (ขั้น D) เลือกเมนูโดย**กด E ที่เคาน์เตอร์ช่วง 17:00–19:00** → หน้าต่างเลือกเมนู → ปุ่ม Open Shop (ต้องมีอย่างน้อย 1 จาน) / Esc หรือ Cancel ปิด
+  - ของที่จอง**ยังอยู่ในกระเป๋า** ช่วงล็อก = ตั้งแต่เปิดร้านถึงปิดร้าน (ซึ่งกระเป๋า/Hotbar ใช้ไม่ได้อยู่แล้ว) จึงไม่ได้แก้ตัวกระเป๋า
+  - เสิร์ฟใช้จานที่ทำไว้แล้วก่อน แล้วค่อยหักวัตถุดิบ / สองเมนูใช้วัตถุดิบเดียวกัน = max ของแต่ละช่องหักส่วนที่ช่องอื่นจอง
+  - **จำเมนูเมื่อวานเป็นค่าเริ่มต้น** (เซฟ v5) เปิดหน้าต่างแล้วจำนวนถูกลดตามของที่มี / สูตรที่ไม่รู้ถูกล้าง
+  - ระหว่างเปิดหน้าต่างเมนู: นาฬิกาหยุด เดินไม่ได้ เปิดกระเป๋าไม่ได้ ใช้ Hotbar ไม่ได้
 - **Hotbar 10 ช่อง** ด้านล่างจอ: เลือกด้วยลูกกลิ้งเมาส์ / ปุ่ม 1–9, 0 / คลิกที่ช่อง ลากของจากกระเป๋ามาใส่ได้ (เป็นทางลัด ไม่ได้ย้ายของออกจากกระเป๋า) ไอเทมชนิดเดียวกันอยู่ได้ทีละช่อง
   - ใส่ได้เฉพาะ อาวุธ / เครื่องมือ / ของที่กินได้ (`Hotbar.CanAssign`)
   - ลากช่องไปช่อง = สลับ / ลากออกนอกแถบ = เอาทางลัดออก
@@ -130,7 +135,13 @@
 - ตื่นนอน (ทั้งนอนปกติและสลบ): Health / Stamina / Mana เต็ม FEVER คงเดิม (บทลงโทษสลบทำทีหลัง)
 - ค่าสูงสุดเพิ่มถาวรได้ (อาหารบอส) ผ่าน `SetBonusMax`
 - ต้นทุนท่าตอนนี้เป็นค่าชั่วคราวใน `PlayerActionController`: Attack 5 ST / Heavy 15 ST / Block 3 ST / Skill 20 MP / เครื่องมือ 4 ST
-- Equipment Slots บนตัวละคร: หมวก เสื้อ รองเท้า แหวน 2 ช่อง
+- **Equipment Slots 8 ช่อง** (ขั้น C):
+  - ช่องเพิ่มค่าสถานะ 4 ช่อง: Shoes, Ring ×2, Necklace (ยังไม่มีผล เฟส 3 จะใช้ `SetBonusMax` / `SetManaRegenSource`)
+  - ช่องแฟชัน 4 ช่อง (แค่หน้าตา): Head, Top, Bottom, Back (กระเป๋า ปีก ผ้าคลุม) → หมวกและเสื้อเป็นแฟชัน ไม่เพิ่มค่าสถานะ
+  - แผงอยู่ในหน้าต่างกระเป๋ามุมขวาบน แสดงเฉพาะแท็บ Equipment / Accessory (แผงรายละเอียดเลื่อนลงไปอยู่ใต้)
+  - ใส่/ถอดด้วยการลากอย่างเดียว: ลากจากกระเป๋า = สวม, ลากช่องไปช่อง = สลับ (แหวน 1 ↔ 2), ลากออก = ถอด
+  - สวม = **ย้ายของ 1 ชิ้นออกจากกระเป๋า** / ถอด = กลับเข้ากระเป๋า (กระเป๋าเต็มเพดาน = ถอดไม่ได้) / สวมทับ = ของเดิมกลับเข้ากระเป๋า
+  - ItemData มี `equipType` (None/Shoes/Ring/Necklace/Head/Top/Bottom/Back) แนะนำ: รองเท้าและแฟชัน = ItemType.Equipment, แหวน/สร้อย = Accessory
 - ระบบต่อสู้ (เฟส 3): มอนสเตอร์ในป่าและถ้ำ บอสประจำพื้นที่ อาวุธ ดาบ / คทา / ธนู รางวัลบอสคือของวิเศษ อาวุธ หรืออาหารเพิ่มค่าสถานะถาวร
 
 ## 7. สคริปต์ที่มีอยู่ (Assets/Scripts)
@@ -152,24 +163,34 @@ Player/PlayerStats.cs       Health/Stamina/Mana/Fever, Restore, TrySpend, TryUse
 Player/Hotbar.cs            10 ช่อง (ItemData), SelectedIndex, CanAssign, SetSlot (ย้ายถ้าซ้ำ), ClearSlot, SwapSlots, Select/SelectOffset,
                             CaptureSlotIds / SetAllSlots (ใช้ตอนเซฟ/โหลด), Debug: Give Test Items + Fill Hotbar,
                             Debug: Give Item By Id (กรอกช่อง Debug Item Id / Debug Amount ใน Inspector ก่อน)
+Player/PlayerEquipment.cs   enum EquipSlot (Shoes, Ring1, Ring2, Necklace, Head, Top, Bottom, Back), GetSlot, CountEquipped,
+                            IsStatSlot, GetAcceptedType, CanEquipInSlot, TryEquip / TryUnequip / TrySwap, CaptureSlotIds / SetAllSlots, OnChanged,
+                            Debug: Give All Equippable Items / Print Equipment / Unequip All
 Player/PlayerActionController.cs  รับปุ่มเลือกช่องและใช้ของตามตารางควบคุม, IsBlocking, cooldown, events OnAttack/OnHeavyAttack/
                             OnBlockStarted/OnBlockEnded/OnSkill/OnUltimate/OnToolUsed/OnItemEaten (ให้ระบบต่อสู้เฟส 3 มาฟัง)
 Cooking/RecipeData.cs     recipeId, recipeName, nameTh, icon, cuisine, course, isSecret, inDemo, dishItem,
                           ingredients (≤4), fullIngredientsText, sellPrice, GetRequiredCounts()
 Cooking/RecipeDatabase.cs GetById, CanCook, GetMaxServings, GetCookable, RefreshFromProject
+Cooking/DailyMenu.cs      singleton (วัตถุ DailyMenu ในฉาก): MenuEntry (Recipe, Planned, Remaining, Sold), SlotCount = base 3 + SetBonusSlots,
+                          TryAddRecipe, ClearEntry, SetPlanned/ChangePlanned, GetMaxServings, GetAvailableServings, GetDishesInBag,
+                          GetReservedCount, Revalidate, TryConfirmAndOpenShop, IsActive, CanServe(recipe), TryTakeServing(recipe) ← ขั้น 2.5 เรียกตอนเสิร์ฟ,
+                          GetTotalSold, ฟัง OnShopClosed, CaptureMenu/RestoreMenu, events OnMenuChanged / OnServingTaken,
+                          Debug: Print Menu / Serve One Of Each / Add Menu Slot
 Cooking/RecipeBook.cs     สูตรที่รู้ (บน Player): เริ่มด้วยสูตร inDemo, Knows, Learn, SetKnown, Debug: Learn All Recipes
 Interaction/IInteractable.cs, PlayerInteractor.cs (กด E ใช้ของที่ใกล้สุดชิ้นเดียว), PlayerTeleporter.cs (วาร์ป + สลับ Confiner),
-            Door.cs, ShopCounter.cs, Bed.cs (กด E สองครั้ง)
+            Door.cs, ShopCounter.cs (ช่วง CanOpen เปิด MenuSelectionUI / ไม่มีหน้าต่าง = เปิดร้านทันที), Bed.cs (กด E สองครั้ง)
 Systems/GameClock.cs      singleton, วันไม่จบเอง, passOutHour 27 (03:00), ช่วง Morning/Afternoon/Evening/Night,
                           EndDay(), AdvanceTo(), OnPassedOut, Debug: T เวลา, P หยุด, F ค้างเร่ง, N ข้ามช่วง
 Systems/ShopManager.cs    ShopState (BeforeOpening/CanOpen/Serving/ClosedForDay), TryOpenShop, Register/UnregisterCustomer,
                           OnShopOpened/OnServiceTimeUp/OnShopClosed, F8 ปิดร้านทันที
 Systems/DayEndManager.cs  นอน/สลบ → สรุป → EndDay (เซฟ) → ตื่นที่เตียง/โรงพยาบาล
 Systems/ForageSpawner.cs  ของงอกรายวัน, CaptureState/RestoreState
-Systems/Save/SaveData.cs     version 3: day, inventory, groundItems, discoveredItems, knownRecipes, bagLevel,
+Systems/Save/SaveData.cs     version 5: day, inventory, groundItems, discoveredItems, knownRecipes, bagLevel,
                              [v3] hotbarItems (itemId 10 ช่อง, ว่าง = ""), fever, bonusMaxHealth/Stamina/Mana
-Systems/Save/SaveManager.cs  เซฟตอน OnDayEnded, โหลดตอนเปิดเกม, รองรับเซฟ v1/v2 (Hotbar ว่าง, FEVER 0, โบนัส 0), F9 ลบเซฟ
-                             ผูก playerHotbar / playerStats (ว่างไว้จะหาบนตัว Player เอง) โหลดแล้วตั้งโบนัส → FEVER → RefillForNewDay
+                             [v4] equippedItems (8 ช่องตามลำดับ EquipSlot, ของที่สวมไม่อยู่ใน inventory)
+                             [v5] menuRecipes / menuServings (เมนูที่ตั้งไว้ล่าสุดทีละช่อง)
+Systems/Save/SaveManager.cs  เซฟตอน OnDayEnded, โหลดตอนเปิดเกม, รองรับเซฟ v1–v4 (Hotbar ว่าง, FEVER 0, โบนัส 0, ไม่ได้สวมอะไร, เมนูว่าง), F9 ลบเซฟ
+                             ผูก playerHotbar / playerStats / playerEquipment / dailyMenu (ว่างไว้จะหาเอง) โหลดแล้วตั้งโบนัส → FEVER → RefillForNewDay
                              ไม่เซฟค่าปัจจุบัน HP/ST/MP (โหลด = วันใหม่ เต็มเสมอ) / ไอเทม Hotbar ต้องอยู่ใน ItemDatabase
 UI/ClockUI.cs, NotificationUI.cs (NotificationUI.Post), DaySummaryUI.cs
 UI/InventoryUI.cs      กระเป๋า 5 แท็บ: I เปิด/ปิด, Esc ปิด, Q/E เปลี่ยนแท็บ, คลิกช่องดูรายละเอียด,
@@ -179,32 +200,43 @@ UI/InventorySlotUI.cs  SlotState (Owned/DiscoveredEmpty/Undiscovered), ตัว
 UI/StatsUI.cs          แถบ HP/ST/MP/FEVER (ยืด/หดด้วย Anchor Max X ไม่ใช้ Image Filled), FEVER เต็มแล้วกะพริบ
 UI/HotbarUI.cs         แถบ 10 ช่อง + ชื่อไอเทมที่เลือก, จางตอนเปิดร้าน (CanvasGroup)
 UI/HotbarSlotUI.cs     ไอคอน/จำนวน/เลขปุ่ม/กรอบเลือก, คลิกเลือก, OnDrop (จากกระเป๋า = ใส่, จาก Hotbar = สลับ), ลากออก = เอาออก
+UI/EquipmentPanelUI.cs แผงช่องสวมใส่ 8 ช่อง (แถวบน Stats แถวล่าง Fashion), OnSlotClicked, SetSelectedSlot
+UI/EquipmentSlotUI.cs  ช่องสวมใส่ 1 ช่อง: OnDrop (จากกระเป๋า = สวม, จากช่องอื่น = สลับ), ลากออก = ถอด, คลิก = ดูรายละเอียด
+UI/MenuSelectionUI.cs  หน้าต่างเลือกเมนู (static Instance / IsAnyOpen): Open, Close, ปุ่ม Open Shop / Cancel, Esc, Shift = ±5
+UI/MenuSlotRowUI.cs    แถวช่องเมนู (ชื่อ, ready+cook, −/+, X) สร้างจาก MenuSlotTemplate
+UI/MenuRecipeItemUI.cs รายการสูตรฝั่งขวา (คลิก = ใส่ช่องว่าง) สร้างจาก RecipeItemTemplate
 UI/DragIconUI.cs       ไอคอนลอยตามเมาส์ตอนลาก สร้างตัวเองบน Canvas หลัก (ไม่ต้องวางในฉาก)
 Editor/RecipeImporter.cs           Tools > Second Serving > Import Recipes & Ingredients
 Editor/InventoryLayoutBuilder.cs   Tools > Second Serving > Build Inventory Window Layout (จัดหน้าต่างกระเป๋าอัตโนมัติ)
 Editor/HudLayoutBuilder.cs         Tools > Second Serving > Build Stats HUD (มุมซ้ายบน) / Build Hotbar HUD (กลางล่าง)
                                    ใส่คอมโพเนนต์ที่ขาดให้ Player และผูกช่องให้ กดซ้ำได้
+Editor/MenuLayoutBuilder.cs        Tools > Second Serving > Build Daily Menu Window (สร้าง DailyMenu + MenuSelectionUI/MenuWindow + ผูก SaveManager)
+Editor/EquipmentLayoutBuilder.cs   Tools > Second Serving > Build Equipment Panel (สร้างแผง + PlayerEquipment + ผูก InventoryUI/SaveManager)
+                                   / Create Test Equipment Items (ของทดสอบ 8 ชิ้นใน Assets/Items/TestEquipment + อัปเดต ItemDatabase)
 ```
 
 `SaveSync.jslib` (FS.syncfs สำหรับเว็บ) ยังไม่เจอใน Scripts/Systems/Save ต้องเช็กตอนทำเดโมเว็บว่าย้ายไป `Assets/Plugins/WebGL` แล้วหรือยัง
 
 ## 8. การตั้งค่าในฉาก (SampleScene)
 
-- **Player:** Box Collider 2D, Rigidbody2D, Inventory, RecipeBook, PlayerController, PlayerInteractor, PlayerTeleporter, PlayerStats, Hotbar, PlayerActionController
+- **Player:** Box Collider 2D, Rigidbody2D, Inventory, RecipeBook, PlayerController, PlayerInteractor, PlayerTeleporter, PlayerStats, Hotbar, PlayerActionController, PlayerEquipment
 - **กล้อง:** Main Camera (Cinemachine Brain) + PlayerFollowCam (Position Composer, Ortho 5, Confiner 2D)
 - **Grid:** Ground, Obstacles, CameraBoundsMap, CameraBounds_Shop
 - **ร้าน:** ประตู 4 บาน (Door), ShopCounter, Bed และจุดวาร์ป ShopEntry_Front/Back, Outside_Front/Back, BedWakePoint, HospitalWakePoint
-- **ระบบ:** GameClock, ShopManager, DayEndManager, ForageSpawner, SaveManager (ItemDatabase, Inventory, ForageSpawner, RecipeDatabase, RecipeBook, Hotbar, PlayerStats)
-- **Canvas:** ClockUI, NotificationUI, DaySummaryUI, InventoryUI → InventoryWindow (TitleText, ProgressText, BagLevelText, TabBar ที่มีปุ่ม 5 แท็บ, SlotScrollView/Viewport/Content, DetailPanel, SlotGrid เดิมถูกปิดไว้),
-  **StatsHUD** (StatsUI, แถว HealthRow/StaminaRow/ManaRow/FeverRow), **HotbarHUD** (HotbarUI, Slot_1–Slot_10, SelectedNameText)
+- **ระบบ:** GameClock, ShopManager, DailyMenu, DayEndManager, ForageSpawner, SaveManager (ItemDatabase, Inventory, ForageSpawner, RecipeDatabase, RecipeBook, Hotbar, PlayerStats, PlayerEquipment, DailyMenu)
+- **Canvas:** ClockUI, NotificationUI, DaySummaryUI, InventoryUI → InventoryWindow (TitleText, ProgressText, BagLevelText, TabBar ที่มีปุ่ม 5 แท็บ, SlotScrollView/Viewport/Content, DetailPanel, **EquipmentPanel** (EquipSlot_Shoes … EquipSlot_Back), SlotGrid เดิมถูกปิดไว้),
+  **StatsHUD** (StatsUI, แถว HealthRow/StaminaRow/ManaRow/FeverRow), **HotbarHUD** (HotbarUI, Slot_1–Slot_10, SelectedNameText),
+  **MenuSelectionUI** → MenuWindow (SlotList + MenuSlotTemplate, RecipeScrollView + RecipeItemTemplate, TotalText, CancelButton, OpenShopButton) อยู่บนสุดของ Canvas
 - หน้าต่างกระเป๋า 1500x860 กลางจอ (ขอบล่างอยู่ที่ y=110) Hotbar สูง 72 ห่างขอบล่าง 16 จึงไม่ทับกัน
-- **ของทดสอบ:** ผู้ใช้สร้าง `TestSword` (Weapon) และ `TestHoe` (Tool) ไว้ใน `Assets/Items`
+- **ของทดสอบ:** ผู้ใช้สร้าง `TestSword` (Weapon) และ `TestHoe` (Tool) ไว้ใน `Assets/Items` / ของสวมใส่ทดสอบ 8 ชิ้นใน `Assets/Items/TestEquipment` (test_boots, test_ring_ruby, test_ring_jade, test_necklace, test_hat, test_top, test_bottom, test_wings)
 - **กล้อง:** Ortho Size 5 (จอประมาณ 17.8 x 10 หน่วย) Position Composer Damping 0.5, Confiner 2D Damping 0.5 / Slowing Distance 5
   - เคยมีปัญหากล้องกระโดดในร้าน เพราะ `CameraBounds_Shop` เป็น 2 ห้องเชื่อมด้วยช่องแคบกว่าจอ (Confiner แยกเป็น 2 เกาะ) ผู้ใช้รู้วิธีแก้และจัดการเอง
   - `CameraBoundsMap` กว้าง 17 หน่วย แคบกว่าจอ กล้องข้างนอกจึงเลื่อนซ้ายขวาไม่ได้ ตอนขยายแผนที่ต้องกว้างกว่า 18 หน่วย
 - **Prefab:** `Assets/Prefabs/InventorySlot` (มี SelectionFrame), `Assets/Prefabs/Mushroom_Pickup`
 
 ## 9. Roadmap
+
+UI ทั้งหมดตอนนี้เป็นแบบใช้งานได้ ผู้ใช้จะ polish หน้าตาทีหลัง (เฟส 4)
 
 ประมาณการคิดที่ 1 วันทำงาน ≈ 3–4 ชั่วโมง รวมทั้งโปรเจกต์ประมาณ **14–21 เดือน** (เฟส 2 เหลือประมาณ 8–11 สัปดาห์)
 
@@ -218,14 +250,14 @@ Editor/HudLayoutBuilder.cs         Tools > Second Serving > Build Stats HUD (ม
 - **ขั้น B2:** Hotbar 10 ช่อง + HotbarUI + เลือกช่อง + กิน + รับปุ่ม Attack/Heavy/Block/Skill/Ultimate (ยังไม่มีผลจริง)
 - **ขั้น B3:** ลากของจากกระเป๋าลง Hotbar, สลับช่อง, ลากออก
 - **ขั้น B4:** เซฟ v3 (ช่อง Hotbar, FEVER, ค่าสูงสุดถาวร) + ซ่อนจานของสูตรลับที่ยังไม่รู้ในแท็บ Dishes + Debug ให้ไอเทมตาม itemId
+- **ขั้น D = 2.3:** เมนูประจำวัน (DailyMenu + หน้าต่างเลือกเมนูที่เคาน์เตอร์ + จอง/เสิร์ฟ/ปิดร้าน + เซฟ v5) ผู้ใช้ทดสอบแล้วใช้ได้ (UI จะ polish ทีหลัง)
+- **ขั้น C:** Equipment Slots 8 ช่อง (Stats 4 + Fashion 4) ในหน้าต่างกระเป๋า ลากใส่/ถอด/สลับ + เซฟ v4 (ผู้ใช้ทดสอบเบื้องต้นแล้ว ใช้งานได้)
 
 **⬜ เฟส 2 (เหลือประมาณ 8–11 สัปดาห์)**
 
 | ขั้น | งาน | เวลา |
 |---|---|---|
-| **C** ← ถัดไป | Equipment Slots (UI และข้อมูล ยังไม่มีผลกับค่าสถานะ) | 2–3 วัน |
-| D = 2.3 | เมนูประจำวัน (DailyMenu + MenuSelectionUI) ตามระบบผสม | 3–4 วัน |
-| 2.4 | ลูกค้า AI (เลือกระบบหาเส้นทางก่อน) + ลูกค้าอยากกินเมนูเฉพาะ | 8–12 วัน |
+| **2.4** ← ถัดไป | ลูกค้า AI (เลือกระบบหาเส้นทางก่อน) + ลูกค้าอยากกินเมนูเฉพาะ | 8–12 วัน |
 | 2.5 | ทำอาหารและเสิร์ฟ + เตาในครัวที่ใช้ได้ทุกเวลา + โหมดลองผสม (ค้นพบสูตร Rumor) | 9–13 วัน |
 | 2.6 | เงิน ชื่อเสียง ราคาจากต้นทุน ความชำนาญ โบนัสความหลากหลาย | 3–4 วัน |
 | 2.6b | ร้านค้าพื้นฐาน (ซื้อ/ขาย) + อัปเกรดกระเป๋า | 4–6 วัน |
@@ -241,23 +273,19 @@ NPC และบทสนทนา, ความสนิทและรสน�
 **⬜ เฟส 4 (ประมาณ 4–7 เดือน)**
 ภาพ (ไอคอนประมาณ 170 ชิ้น), เสียง, เมนูหลัก, ปรับสมดุล, ฟอนต์ไทย, เช็กภาพสั่น (Interpolate), เดโมเว็บ (SaveSync.jslib), หน้า Steam (ควรขึ้นช่วงกลางเฟส 3), ปล่อยเกม
 
-## 10. ขั้นถัดไป: ขั้น C – Equipment Slots (ยังไม่เริ่ม)
+## 10. ขั้นถัดไป: ขั้น 2.4 ลูกค้า AI (กำลังเริ่ม)
 
-ขั้น B1–B4 ผู้ใช้ทดสอบใน Unity ผ่านแล้ว (B4: เซฟ/โหลด Hotbar + FEVER ผ่าน, ซ่อนจานสูตรลับในแท็บ Dishes ผ่าน)
+ขั้น D ผู้ใช้ทดสอบแล้วใช้ได้
 
-**ขั้น C ต้องทำ (UI และข้อมูลเท่านั้น ยังไม่มีผลกับค่าสถานะ)**
-- ช่องสวมใส่บนตัวละคร: หมวก / เสื้อ / รองเท้า / แหวน 2 ช่อง (ตามข้อ 6)
-- ต้องตัดสินใจกับผู้ใช้ก่อนเขียนโค้ด (plan first) เช่น
-  - แยกประเภทช่องอย่างไร (ItemType ตอนนี้มีแค่ Equipment / Accessory ต้องมี field บอกว่าเป็นหมวก/เสื้อ/รองเท้า/แหวนไหม)
-  - ใส่/ถอดด้วยวิธีไหน (ลากจากกระเป๋าแบบ Hotbar หรือคลิกในแผงรายละเอียด) และ UI อยู่ตรงไหน (ในหน้าต่างกระเป๋า หรือหน้าต่างแยก)
-  - ของที่สวมอยู่ยังนับอยู่ในกระเป๋าไหม (Hotbar เป็นทางลัด ไม่ย้ายของออก)
-- เซฟ: ต้องเพิ่มช่องที่สวมใส่ใน SaveData → **version 4** (เซฟ v1–v3 โหลดแล้วไม่ได้สวมอะไร)
-- ตอนผลกับค่าสถานะจริง (เฟส 3) ใช้ `PlayerStats.SetBonusMax` / `SetManaRegenSource` ได้
-- จบขั้น C แล้ว: สรุป roadmap ในแชท + อัปเดต HANDOFF.md แล้วไปขั้น D (เมนูประจำวัน)
+**ข้อมูลที่ต้องรู้**
+- ร้านเป็นพื้นที่ภายในที่วาร์ปเข้า (ประตู DoorFront/Back + จุด ShopEntryFront/Back) อยู่ฉากเดียวกับแผนที่ Tilemap ชื่อ `Obstables` (สะกดผิดในฉาก) และ `Ground`
+- ระบบลูกค้าต้องเรียก `ShopManager.RegisterCustomer` / `UnregisterCustomer` (ร้านปิดเมื่อหมดเวลาและลูกค้าออกหมด) และดู `IsAcceptingCustomers`
+- เลือกอาหารจาก `DailyMenu.CanServe` / เสิร์ฟจริงด้วย `DailyMenu.TryTakeServing` (ขั้น 2.5 จะทำการทำอาหาร/เสิร์ฟของผู้เล่น)
+- ต้องเลือกระบบหาเส้นทางกับผู้ใช้ก่อน (มีแพ็กเกจ com.unity.ai.navigation ติดตั้งอยู่แต่เป็น 3D)
 
 **วิธีทดสอบที่ใช้อยู่**
-- คลิกขวาที่หัวคอมโพเนนต์ (PlayerStats / Hotbar) ระหว่าง Play เพื่อใช้เมนู Debug
-- อยากได้ไอเทมใดๆ: ที่คอมโพเนนต์ Hotbar กรอก `Debug Item Id` (+ `Debug Amount`) แล้วคลิกขวาหัว > `Debug: Give Item By Id` (หาจาก ItemData ทุกตัวในโปรเจกต์)
-- ของที่กินดิบไม่ได้ใช้ทดสอบได้ เช่น เห็ด (ทุกค่าเป็น 0)
-- `Give Test Items + Fill Hotbar` อาจแจกจานสูตรลับมาด้วย จานนั้นจะถูกนับว่าเคยได้แล้ว (ไม่ถูกซ่อน) ทดสอบใหม่จากศูนย์ให้กด F9 ลบเซฟ
-- ไอเทมใหม่ (เช่น TestSword) ต้องกด Find All Items ที่ ItemDatabase ก่อน ไม่งั้นโหลด Hotbar กลับไม่ได้
+- คลิกขวาที่หัวคอมโพเนนต์ (PlayerStats / Hotbar / PlayerEquipment / DailyMenu) ระหว่าง Play เพื่อใช้เมนู Debug
+- อยากได้ไอเทมใดๆ: ที่คอมโพเนนต์ Hotbar กรอก `Debug Item Id` (+ `Debug Amount`) แล้วคลิกขวาหัว > `Debug: Give Item By Id`
+- สูตรทั้งหมด: คลิกขวาหัว RecipeBook > `Debug: Learn All Recipes`
+- เร่งเวลา F7 (ค้าง) / ปิดร้านทันที F8 / ลบเซฟ F9
+- ไอเทมใหม่ต้องกด Find All Items ที่ ItemDatabase ก่อน ไม่งั้นโหลดเซฟกลับไม่ได้
