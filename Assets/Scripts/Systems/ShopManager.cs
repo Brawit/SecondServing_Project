@@ -36,6 +36,7 @@ public class ShopManager : MonoBehaviour
     [SerializeField] private string missedMessage = "Too late to open the shop today.";
     [SerializeField] private string openedMessage = "The shop is open!";
     [SerializeField] private string lastCallMessage = "Last call! No more new customers.";
+    [SerializeField] private string soldOutMessage = "Sold out! The shop closes once the last customers leave.";
     [SerializeField] private string closedMessage = "The shop is closed for the night.";
     [SerializeField] private string tooEarlyMessage = "The shop opens at 17:00.";
     [SerializeField] private string alreadyClosedMessage = "The shop is closed for today.";
@@ -63,6 +64,12 @@ public class ShopManager : MonoBehaviour
 
     // เวลารอบขายที่เหลือ (วินาที)
     public float ServiceTimeRemaining { get; private set; }
+
+    // ปิดรับลูกค้าเพราะขายหมดก่อนหมดเวลา (ไม่ใช่เพราะหมดเวลา) ใช้แสดงผลบนหน้าจอจับเวลา
+    public bool EndedBySellOut { get; private set; }
+
+    // ระยะเวลารอบขายทั้งหมด (วินาทีจริง)
+    public float ServiceDuration => serviceDurationSeconds;
 
     // ---------- Events ----------
 
@@ -259,6 +266,7 @@ public class ShopManager : MonoBehaviour
         // State == CanOpen
         OpenedToday = true;
         IsServiceTimeUp = false;
+        EndedBySellOut = false;
         ActiveCustomers = 0;
         ServiceTimeRemaining = serviceDurationSeconds;
 
@@ -300,6 +308,22 @@ public class ShopManager : MonoBehaviour
         Debug.Log("ShopManager: Shop closed.");
         NotificationUI.Post(closedMessage);
         OnShopClosed?.Invoke();
+    }
+
+    // ขายหมดก่อนหมดเวลา: หยุดรับลูกค้าใหม่ทันที แล้วปิดร้านเมื่อลูกค้าในร้านออกหมด (CustomerManager เรียก)
+    public void EndServiceBySellOut()
+    {
+        if (!IsServing || IsServiceTimeUp)
+        {
+            return;
+        }
+
+        IsServiceTimeUp = true;
+        EndedBySellOut = true;
+        ServiceTimeRemaining = 0f;
+        Debug.Log($"ShopManager: Sold out. Waiting for {ActiveCustomers} customer(s) to leave.");
+        NotificationUI.Post(soldOutMessage);
+        OnServiceTimeUp?.Invoke();
     }
 
     // ปิดร้านทันทีโดยไม่รอลูกค้า (ใช้ทดสอบ หรือเหตุการณ์พิเศษในอนาคต)
