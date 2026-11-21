@@ -13,7 +13,9 @@ public enum SlotState
 }
 
 // ช่อง 1 ช่องในหน้าต่างกระเป๋า: แสดงไอคอน ชื่อ และจำนวน (มุมขวาบน) คลิกเพื่อดูรายละเอียด
-public class InventorySlotUI : MonoBehaviour, IPointerClickHandler
+// ลากไอเทมไปวางที่ Hotbar ได้ (เฉพาะของที่ใส่ Hotbar ได้: อาวุธ เครื่องมือ ของกินได้)
+// ถ้าลากช่องที่ลากไม่ได้ จะส่งการลากต่อให้ Scroll View (เลื่อนรายการได้ตามเดิม)
+public class InventorySlotUI : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     [Header("References")]
     [Tooltip("รูปไอคอนของไอเทม")]
@@ -177,6 +179,81 @@ public class InventorySlotUI : MonoBehaviour, IPointerClickHandler
         if (eventData.button == PointerEventData.InputButton.Left)
         {
             OnClicked?.Invoke(this);
+        }
+    }
+
+    // ---------- ลากไป Hotbar ----------
+
+    // การลากครั้งนี้เป็นการลากไอเทม (true) หรือส่งต่อให้ Scroll View (false)
+    private bool isDraggingItem;
+    private GameObject forwardedDragTarget;
+
+    // ช่องนี้ลากไปใส่ Hotbar ได้หรือไม่
+    public bool CanDragToHotbar =>
+        CurrentItem != null &&
+        CurrentState != SlotState.Undiscovered &&
+        Hotbar.CanAssign(CurrentItem);
+
+    public void OnBeginDrag(PointerEventData eventData)
+    {
+        isDraggingItem = eventData.button == PointerEventData.InputButton.Left && CanDragToHotbar;
+
+        if (isDraggingItem)
+        {
+            DragIconUI.Begin(this, CurrentItem, eventData.position);
+            return;
+        }
+
+        // ลากไม่ได้: ส่งต่อให้ตัวที่รับการลากซึ่งอยู่เหนือขึ้นไป (เช่น Scroll View)
+        forwardedDragTarget = transform.parent != null
+            ? ExecuteEvents.GetEventHandler<IBeginDragHandler>(transform.parent.gameObject)
+            : null;
+
+        if (forwardedDragTarget != null)
+        {
+            ExecuteEvents.Execute(forwardedDragTarget, eventData, ExecuteEvents.initializePotentialDrag);
+            ExecuteEvents.Execute(forwardedDragTarget, eventData, ExecuteEvents.beginDragHandler);
+        }
+    }
+
+    public void OnDrag(PointerEventData eventData)
+    {
+        if (isDraggingItem)
+        {
+            DragIconUI.Move(eventData.position);
+            return;
+        }
+
+        if (forwardedDragTarget != null)
+        {
+            ExecuteEvents.Execute(forwardedDragTarget, eventData, ExecuteEvents.dragHandler);
+        }
+    }
+
+    public void OnEndDrag(PointerEventData eventData)
+    {
+        if (isDraggingItem)
+        {
+            // การวางจริงจัดการที่ HotbarSlotUI.OnDrop (ถูกเรียกก่อนฟังก์ชันนี้)
+            isDraggingItem = false;
+            DragIconUI.End();
+            return;
+        }
+
+        if (forwardedDragTarget != null)
+        {
+            ExecuteEvents.Execute(forwardedDragTarget, eventData, ExecuteEvents.endDragHandler);
+            forwardedDragTarget = null;
+        }
+    }
+
+    // ถ้าช่องถูกปิด/ล้างระหว่างลาก ให้ซ่อนไอคอน
+    private void OnDisable()
+    {
+        if (isDraggingItem)
+        {
+            isDraggingItem = false;
+            DragIconUI.End();
         }
     }
 }

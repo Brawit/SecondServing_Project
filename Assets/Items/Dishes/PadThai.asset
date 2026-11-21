@@ -21,3 +21,7 @@ MonoBehaviour:
   category: 0
   source: 0
   sellPrice: 0
+  restoreHealth: 28
+  restoreStamina: 45
+  restoreMana: 0
+  restoreFever: 0

@@ -8,7 +8,8 @@ public class SaveData
     // เวอร์ชันของรูปแบบไฟล์เซฟ เพิ่มเลขเมื่อเปลี่ยนโครงสร้าง จะได้แปลงเซฟเก่าได้
     // 1 = วัน กระเป๋า ของบนพื้น
     // 2 = เพิ่มไอเทมที่เคยเจอ สูตรที่รู้ และระดับกระเป๋า
-    public const int CurrentVersion = 2;
+    // 3 = เพิ่มช่อง Hotbar, FEVER และค่าสูงสุดที่เพิ่มถาวร
+    public const int CurrentVersion = 3;
 
     public int version = CurrentVersion;
 
@@ -29,6 +30,17 @@ public class SaveData
 
     // [v2] ระดับกระเป๋า (1 = ระดับแรก)
     public int bagLevel = 1;
+
+    // [v3] รหัสไอเทมใน Hotbar ทีละช่อง (10 ช่อง, ช่องว่าง = "")
+    public List<string> hotbarItems = new List<string>();
+
+    // [v3] FEVER เก็บข้ามวันได้ (ค่าปัจจุบันของ Health/Stamina/Mana ไม่ต้องเซฟ เพราะโหลด = เริ่มวันใหม่ เต็มเสมอ)
+    public float fever = 0f;
+
+    // [v3] ค่าสูงสุดที่เพิ่มถาวร เช่น จากอาหารบอส
+    public int bonusMaxHealth = 0;
+    public int bonusMaxStamina = 0;
+    public int bonusMaxMana = 0;
 }
 
 // ของหนึ่งชนิดในกระเป๋า

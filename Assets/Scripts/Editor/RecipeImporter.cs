@@ -11,6 +11,7 @@ using UnityEngine;
 // - อ่าน Assets/Data/Recipes.csv แล้วสร้าง/อัปเดต RecipeData ใน Assets/Recipes
 // - สร้าง/อัปเดตไอเทมจานอาหาร (ItemType.Dish) ของทุกสูตรใน Assets/Items/Dishes (itemId = recipe_id)
 // - ไม่เขียนทับ icon และ description ที่ใส่เอง
+// - อ่านค่าที่ฟื้นเมื่อกิน (Health / Stamina / Mana / Fever) ใส่ให้วัตถุดิบและจานอาหาร
 // - หาคอลัมน์จากชื่อหัวคอลัมน์ ไม่ใช่ลำดับ (ย้ายคอลัมน์ได้ แต่ห้ามเปลี่ยนชื่อหัว)
 public static class RecipeImporter
 {
@@ -31,6 +32,12 @@ public static class RecipeImporter
     private static readonly string[] ColCategory = { "category" };
     private static readonly string[] ColSource = { "source" };
     private static readonly string[] ColSellPrice = { "sell price", "sell_price", "price" };
+
+    // ค่าที่ฟื้นเมื่อกิน (มีทั้งในชีต Ingredients และ Recipes ถ้าไม่มีคอลัมน์ จะไม่แตะค่าเดิม)
+    private static readonly string[] ColHealth = { "health", "restore health" };
+    private static readonly string[] ColStamina = { "stamina", "restore stamina" };
+    private static readonly string[] ColMana = { "mana", "restore mana" };
+    private static readonly string[] ColFever = { "fever", "restore fever" };
 
     private static readonly string[] ColRecipeId = { "recipe_id", "recipeid" };
     private static readonly string[] ColRecipeNameTh = { "ชื่อเมนู", "name_th" };
@@ -110,6 +117,7 @@ public static class RecipeImporter
         int colCategory = header.Find(ColCategory);
         int colSource = header.Find(ColSource);
         int colPrice = header.Find(ColSellPrice);
+        FoodColumns foodCols = FoodColumns.Find(header);
 
         EnsureFolder(NewItemFolder);
         HashSet<string> seenIds = new HashSet<string>();
@@ -183,6 +191,7 @@ public static class RecipeImporter
             }
 
             item.sellPrice = ParseInt(Cell(row, colPrice));
+            foodCols.ApplyTo(item, row);
 
             EditorUtility.SetDirty(item);
         }
@@ -213,6 +222,7 @@ public static class RecipeImporter
         int colDemo = header.Find(ColDemo);
         int colFull = header.FindByPrefix(ColFullIngredientsPrefix);
         int colPrice = header.Find(ColSellPrice);
+        FoodColumns foodCols = FoodColumns.Find(header);
 
         int[] colKeys = new int[ColKeys.Length];
         for (int k = 0; k < ColKeys.Length; k++)
@@ -313,6 +323,12 @@ public static class RecipeImporter
 
             // ไอเทมจานอาหารของสูตรนี้
             recipe.dishItem = CreateOrUpdateDish(recipe, items, report);
+
+            // ค่าที่ฟื้นเมื่อกินจานนี้ (เก็บไว้ที่ไอเทมจานอาหาร)
+            if (recipe.dishItem != null)
+            {
+                foodCols.ApplyTo(recipe.dishItem, row);
+            }
 
             EditorUtility.SetDirty(recipe);
         }
@@ -672,6 +688,42 @@ public static class RecipeImporter
                 throw new Exception($"Column '{displayName}' not found in {file}.");
             }
             return index;
+        }
+    }
+
+    // ตำแหน่งคอลัมน์ค่าที่ฟื้นเมื่อกิน (Health / Stamina / Mana / Fever)
+    private class FoodColumns
+    {
+        private int health = -1;
+        private int stamina = -1;
+        private int mana = -1;
+        private int fever = -1;
+
+        public static FoodColumns Find(CsvHeader header)
+        {
+            return new FoodColumns
+            {
+                health = header.Find(ColHealth),
+                stamina = header.Find(ColStamina),
+                mana = header.Find(ColMana),
+                fever = header.Find(ColFever)
+            };
+        }
+
+        // ใส่ค่าให้ไอเทม เฉพาะคอลัมน์ที่มีในไฟล์ (คอลัมน์ไหนไม่มี จะไม่แตะค่าเดิม)
+        public void ApplyTo(ItemData item, List<string> row)
+        {
+            if (item == null)
+            {
+                return;
+            }
+
+            if (health >= 0) item.restoreHealth = ParseInt(Cell(row, health));
+            if (stamina >= 0) item.restoreStamina = ParseInt(Cell(row, stamina));
+            if (mana >= 0) item.restoreMana = ParseInt(Cell(row, mana));
+            if (fever >= 0) item.restoreFever = ParseInt(Cell(row, fever));
+
+            EditorUtility.SetDirty(item);
         }
     }
 

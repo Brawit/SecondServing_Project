@@ -42,7 +42,7 @@ public class GameClock : MonoBehaviour
     [Tooltip("พิมพ์เวลาลง Console ทุกครั้งที่เวลาเดิน")]
     [SerializeField] private bool logEveryTick = false;
 
-    [Tooltip("ตัวคูณความเร็วตอนกด F ค้าง")]
+    [Tooltip("ตัวคูณความเร็วตอนกด F7 ค้าง")]
     [SerializeField] private float fastForwardMultiplier = 10f;
 
     // ---------- สถานะปัจจุบัน ----------
@@ -137,7 +137,7 @@ public class GameClock : MonoBehaviour
             return;
         }
 
-        // ถ้ากด F ค้างไว้ เวลาจะเดินเร็วขึ้น
+        // ถ้ากด F7 ค้างไว้ เวลาจะเดินเร็วขึ้น
         float speed = IsFastForwardHeld() ? fastForwardMultiplier : 1f;
         tickTimer += Time.deltaTime * speed;
 
@@ -391,6 +391,7 @@ public class GameClock : MonoBehaviour
     private bool IsFastForwardHeld()
     {
         Keyboard keyboard = Keyboard.current;
-        return keyboard != null && keyboard.fKey.isPressed;
+        // ใช้ F7 แทน F เดิม เพราะ F เป็นปุ่ม Block ของผู้เล่นแล้ว
+        return keyboard != null && keyboard.f7Key.isPressed;
     }
 }

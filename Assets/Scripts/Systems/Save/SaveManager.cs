@@ -30,6 +30,12 @@ public class SaveManager : MonoBehaviour
     [Tooltip("สมุดสูตรของผู้เล่น (คอมโพเนนต์ RecipeBook บนตัว Player)")]
     [SerializeField] private RecipeBook playerRecipeBook;
 
+    [Tooltip("Hotbar ของผู้เล่น (คอมโพเนนต์ Hotbar บนตัว Player) เว้นว่างไว้ จะหาจาก Player Inventory")]
+    [SerializeField] private Hotbar playerHotbar;
+
+    [Tooltip("ค่าสถานะของผู้เล่น (คอมโพเนนต์ PlayerStats บนตัว Player) เว้นว่างไว้ จะหาจาก Player Inventory")]
+    [SerializeField] private PlayerStats playerStats;
+
     [Header("Settings")]
     [Tooltip("ชื่อไฟล์เซฟ")]
     [SerializeField] private string fileName = "save.json";
@@ -86,6 +92,24 @@ public class SaveManager : MonoBehaviour
         if (recipeDatabase == null || playerRecipeBook == null)
         {
             Debug.LogWarning("SaveManager: Recipe Database or Player Recipe Book is not assigned. Known recipes will not be saved.", this);
+        }
+
+        // [v3] ถ้าลืมผูก Hotbar / PlayerStats ให้หาบนตัว Player เดียวกับกระเป๋า
+        if (playerHotbar == null && playerInventory != null)
+        {
+            playerHotbar = playerInventory.GetComponent<Hotbar>();
+        }
+        if (playerStats == null && playerInventory != null)
+        {
+            playerStats = playerInventory.GetComponent<PlayerStats>();
+        }
+        if (playerHotbar == null)
+        {
+            Debug.LogWarning("SaveManager: Player Hotbar is not assigned. Hotbar slots will not be saved.", this);
+        }
+        if (playerStats == null)
+        {
+            Debug.LogWarning("SaveManager: Player Stats is not assigned. FEVER and bonus max values will not be saved.", this);
         }
 
         Debug.Log($"SaveManager: Save path = {SavePath}");
@@ -194,6 +218,19 @@ public class SaveManager : MonoBehaviour
         }
         data.knownRecipes = CaptureKnownRecipes();
 
+        // [v3] ช่อง Hotbar, FEVER และค่าสูงสุดที่เพิ่มถาวร
+        if (playerHotbar != null)
+        {
+            data.hotbarItems = playerHotbar.CaptureSlotIds();
+        }
+        if (playerStats != null)
+        {
+            data.fever = playerStats.Fever;
+            data.bonusMaxHealth = playerStats.GetBonusMax(StatType.Health);
+            data.bonusMaxStamina = playerStats.GetBonusMax(StatType.Stamina);
+            data.bonusMaxMana = playerStats.GetBonusMax(StatType.Mana);
+        }
+
         string json = JsonUtility.ToJson(data, true);
 
         try
@@ -216,7 +253,7 @@ public class SaveManager : MonoBehaviour
 
         FlushWebStorage();
 
-        Debug.Log($"SaveManager: Game saved (next day {data.day}, {data.inventory.Count} inventory entries, {data.groundItems.Count} ground items).");
+        Debug.Log($"SaveManager: Game saved (version {data.version}, next day {data.day}, {data.inventory.Count} inventory entries, {data.groundItems.Count} ground items, FEVER {data.fever:0}).");
         return true;
     }
 
@@ -371,6 +408,18 @@ public class SaveManager : MonoBehaviour
             Debug.Log($"SaveManager: Save version {data.version} has no discovered items or recipes. Using defaults.");
         }
 
+        // 5) [v3] ช่อง Hotbar, FEVER และค่าสูงสุดที่เพิ่มถาวร
+        // เซฟ v1/v2 ไม่มีข้อมูลนี้: Hotbar ว่าง, FEVER 0, โบนัส 0 (ค่าตั้งต้นของเกมอยู่แล้ว ไม่ต้องทำอะไร)
+        if (data.version >= 3)
+        {
+            RestoreHotbar(data.hotbarItems);
+            RestorePlayerStats(data);
+        }
+        else
+        {
+            Debug.Log($"SaveManager: Save version {data.version} has no hotbar or FEVER data. Using defaults.");
+        }
+
         int inventoryCount = data.inventory != null ? data.inventory.Count : 0;
         int groundCount = data.groundItems != null ? data.groundItems.Count : 0;
         Debug.Log($"SaveManager: Game loaded (version {data.version}, day {data.day}, {inventoryCount} inventory entries, {groundCount} ground items).");
@@ -459,6 +508,54 @@ public class SaveManager : MonoBehaviour
         }
 
         playerRecipeBook.SetKnown(result);
+    }
+
+    // แปลงรายการรหัสกลับเป็นช่อง Hotbar (ช่องว่างหรือรหัสที่หาไม่เจอ = ช่องว่าง)
+    private void RestoreHotbar(List<string> itemIds)
+    {
+        if (playerHotbar == null || itemDatabase == null || itemIds == null)
+        {
+            return;
+        }
+
+        List<ItemData> result = new List<ItemData>(Hotbar.SlotCount);
+
+        for (int i = 0; i < Hotbar.SlotCount; i++)
+        {
+            string itemId = i < itemIds.Count ? itemIds[i] : "";
+            ItemData item = null;
+
+            if (!string.IsNullOrWhiteSpace(itemId))
+            {
+                item = itemDatabase.GetById(itemId);
+                if (item == null)
+                {
+                    // ไอเทมต้องอยู่ใน ItemDatabase (กด Find All Items ที่ ItemDatabase ถ้าเพิ่งสร้างไอเทมใหม่)
+                    Debug.LogWarning($"SaveManager: Unknown hotbar itemId '{itemId}' in slot {i + 1}. Slot left empty. Is it in the Item Database?");
+                }
+            }
+
+            result.Add(item);
+        }
+
+        playerHotbar.SetAllSlots(result);
+    }
+
+    // คืน FEVER และค่าสูงสุดที่เพิ่มถาวร แล้วเติม Health/Stamina/Mana ให้เต็มค่าสูงสุดใหม่ (โหลด = เริ่มวันใหม่)
+    private void RestorePlayerStats(SaveData data)
+    {
+        if (playerStats == null)
+        {
+            return;
+        }
+
+        playerStats.SetBonusMax(StatType.Health, data.bonusMaxHealth);
+        playerStats.SetBonusMax(StatType.Stamina, data.bonusMaxStamina);
+        playerStats.SetBonusMax(StatType.Mana, data.bonusMaxMana);
+        playerStats.SetFever(data.fever);
+
+        // ตอน Awake ค่าปัจจุบันถูกตั้งเท่าค่าสูงสุดพื้นฐาน ต้องเติมใหม่หลังได้โบนัส
+        playerStats.RefillForNewDay();
     }
 
     // ---------- ลบเซฟ ----------

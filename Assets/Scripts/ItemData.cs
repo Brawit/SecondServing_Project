@@ -78,6 +78,25 @@ public class ItemData : ScriptableObject
     [Tooltip("ราคาที่ร้านค้ารับซื้อจากผู้เล่น (0 = ยังไม่ได้ตั้ง)")]
     [Min(0)] public int sellPrice = 0;
 
+    [Header("Food")]
+    [Tooltip("Health ที่ฟื้นเมื่อกิน 1 ชิ้น (0 = ไม่ฟื้น)")]
+    [Min(0)] public int restoreHealth = 0;
+
+    [Tooltip("Stamina ที่ฟื้นเมื่อกิน 1 ชิ้น (0 = ไม่ฟื้น)")]
+    [Min(0)] public int restoreStamina = 0;
+
+    [Tooltip("Mana ที่ฟื้นเมื่อกิน 1 ชิ้น (0 = ไม่ฟื้น)")]
+    [Min(0)] public int restoreMana = 0;
+
+    [Tooltip("FEVER ที่เพิ่มเมื่อกิน 1 ชิ้น (0 = ไม่เพิ่ม)")]
+    [Min(0)] public int restoreFever = 0;
+
+    // กินได้หรือไม่: ต้องเป็นวัตถุดิบหรืออาหาร และฟื้นค่าอย่างน้อย 1 อย่าง
+    // (วัตถุดิบที่ทุกค่าเป็น 0 เช่น แป้ง เนื้อดิบ = กินดิบไม่ได้)
+    public bool IsEdible =>
+        (itemType == ItemType.Ingredient || itemType == ItemType.Dish) &&
+        (restoreHealth > 0 || restoreStamina > 0 || restoreMana > 0 || restoreFever > 0);
+
 #if UNITY_EDITOR
     // ถ้ายังไม่มีรหัส ให้ตั้งจากชื่อไฟล์เป็นตัวพิมพ์เล็ก เช่น "Mushroom" -> "mushroom"
     private void OnValidate()

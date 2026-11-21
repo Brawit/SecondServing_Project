@@ -83,7 +83,7 @@ public class InventoryUI : MonoBehaviour
     [Tooltip("ห้ามผู้เล่นเดินระหว่างเปิดกระเป๋า")]
     [SerializeField] private bool blockMovementWhileOpen = true;
 
-    [Tooltip("ซ่อนสูตรลับที่ยังไม่รู้ (ไม่แสดงแม้แต่เงาดำ)")]
+    [Tooltip("ซ่อนสูตรลับที่ยังไม่รู้ (ไม่แสดงแม้แต่เงาดำ) ทั้งในแท็บ Recipes และจานของสูตรนั้นในแท็บ Dishes\nจานจะกลับมาแสดงเมื่อรู้สูตร หรือเคยได้จานนั้นมาแล้ว")]
     [SerializeField] private bool hideUnknownSecretRecipes = true;
 
     [Tooltip("แท็บที่เปิดเป็นแท็บแรก")]
@@ -521,10 +521,18 @@ public class InventoryUI : MonoBehaviour
 
         foreach (ItemData item in itemDatabase.Items)
         {
-            if (item != null && IsItemInTab(item, tab))
+            if (item == null || !IsItemInTab(item, tab))
             {
-                result.Add(item);
+                continue;
             }
+
+            // แท็บ Dishes: ซ่อนจานของสูตรลับที่ยังไม่รู้
+            if (tab == BagTab.Dishes && IsHiddenSecretDish(item))
+            {
+                continue;
+            }
+
+            result.Add(item);
         }
 
         result.Sort((a, b) =>
@@ -533,6 +541,36 @@ public class InventoryUI : MonoBehaviour
             if (c != 0) return c;
             return string.CompareOrdinal(a.itemName, b.itemName);
         });
+    }
+
+    // จานนี้เป็นของสูตรลับที่ยังไม่รู้ และควรซ่อนหรือไม่
+    // ไม่ซ่อนถ้า: ปิดตัวเลือกซ่อนไว้ / หาสูตรไม่เจอ / ไม่ใช่สูตรลับ / รู้สูตรแล้ว / มีจานในกระเป๋าหรือเคยได้จานนี้มาแล้ว
+    private bool IsHiddenSecretDish(ItemData dish)
+    {
+        if (!hideUnknownSecretRecipes || recipeDatabase == null)
+        {
+            return false;
+        }
+
+        // itemId ของจาน = recipe_id ของสูตร (ตัว import ตั้งให้)
+        RecipeData recipe = recipeDatabase.GetById(dish.itemId);
+        if (recipe == null || !recipe.isSecret)
+        {
+            return false;
+        }
+
+        if (recipeBook != null && recipeBook.Knows(recipe))
+        {
+            return false;
+        }
+
+        // เคยได้จานนี้มาแล้ว (เช่น NPC ให้) แสดงไว้ตามแบบ Collectibles
+        if (inventory != null && (inventory.GetCount(dish) > 0 || inventory.IsDiscovered(dish)))
+        {
+            return false;
+        }
+
+        return true;
     }
 
     private static bool IsItemInTab(ItemData item, BagTab tab)

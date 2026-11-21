@@ -1,84 +1,84 @@
-﻿item_id,ชื่อไทย,Name (EN),Category,Source,ใช้ในกี่สูตร,รวมมาจาก (ชื่อในสูตรจริง),Sell Price
-holy_basil,ใบกะเพรา,Holy Basil,Herb,Forage,1,,
-basil,ใบโหระพา,Basil,Herb,Forage,2,,
-chili,พริก,Chili,Vegetable,Forage,7,"พริก, พริกแห้ง, พริกฮาลาปิโน",
-lemongrass,ตะไคร้,Lemongrass,Herb,Forage,1,,
-mushroom,เห็ด,Mushroom,Vegetable,Forage,3,"เห็ดฟาง, เห็ดแชมปิญอง (มีในเกมแล้ว)",
-spring_onion,ต้นหอม,Spring Onion,Herb,Forage,6,,
-ginger,ขิง,Ginger,Herb,Forage,3,,
-pandan,ใบเตย,Pandan Leaf,Herb,Forage,1,,
-butterfly_pea,ดอกอัญชัน,Butterfly Pea Flower,Flower,Forage,1,,
-chrysanthemum,ดอกเก๊กฮวย,Chrysanthemum,Flower,Forage,1,ดอกเก๊กฮวยแห้ง,
-tea_leaves,ใบชา,Tea Leaves,Herb,Forage,1,ชา,
-tomato,มะเขือเทศ,Tomato,Vegetable,Forage,6,,
-carrot,แครอท,Carrot,Vegetable,Forage,2,,
-potato,มันฝรั่ง,Potato,Vegetable,Forage,3,,
-sweet_potato,มันหวาน,Sweet Potato,Vegetable,Forage,1,,
-cabbage,กะหล่ำปลี,Cabbage,Vegetable,Forage,4,,
-cucumber,แตงกวา,Cucumber,Vegetable,Forage,2,,
-green_papaya,มะละกอดิบ,Green Papaya,Vegetable,Forage,1,,
-thai_eggplant,มะเขือเปราะ,Thai Eggplant,Vegetable,Forage,1,"มะเขือเปราะ, มะเขือพวง",
-bean_sprout,ถั่วงอก,Bean Sprout,Vegetable,Forage,1,,
-pumpkin,ฟักทอง,Pumpkin,Vegetable,Forage,3,,
-taro,เผือก,Taro,Vegetable,Forage,2,,
-spinach,ผักโขม,Spinach,Vegetable,Forage,1,,
-lettuce,ผักกาดหอม,Lettuce,Vegetable,Forage,2,,
-bok_choy,ผักกวางตุ้ง,Bok Choy,Vegetable,Forage,1,,
-bell_pepper,พริกหวาน,Bell Pepper,Vegetable,Forage,2,,
-zucchini,บวบ,Zucchini,Vegetable,Forage,1,,
-corn,ข้าวโพด,Corn,Vegetable,Forage,2,"ข้าวโพดโฮมินี, ใบข้าวโพดแห้ง",
-avocado,อะโวคาโด,Avocado,Fruit,Forage,1,,
-water_chestnut,แห้ว,Water Chestnut,Vegetable,Forage,1,,
-coconut,มะพร้าว,Coconut,Fruit,Forage,8,กะทิ,
-mango,มะม่วง,Mango,Fruit,Forage,2,มะม่วงสุก,
-lime,มะนาว,Lime,Fruit,Forage,4,"มะนาว, น้ำมะนาว",
-lemon,เลมอน,Lemon,Fruit,Forage,2,"เลมอน, น้ำเชื่อมเลมอน",
-apple,แอปเปิล,Apple,Fruit,Forage,2,,
-pineapple,สับปะรด,Pineapple,Fruit,Forage,1,,
-pomelo,ส้มโอ,Pomelo,Fruit,Forage,1,,
-berry,เบอร์รี,Berry,Fruit,Forage,1,,
-seasonal_fruit,ผลไม้ตามฤดูกาล,Seasonal Fruit,Fruit,Forage,3,"ผลไม้สดตามฤดูกาล, ผลไม้สดหลากสี, กลิ่นผลไม้",
-peanut,ถั่วลิสง,Peanut,Nut,Forage,2,,
-pistachio,พิสตาชิโอ,Pistachio,Nut,Market,1,,
-pecan,พีแคน,Pecan,Nut,Market,1,,
-sesame,งา,Sesame,Nut,Market,2,"งาดำ, งาบด",
-beans,ถั่ว (ดำ/ขาว),Beans,Vegetable,Market,3,"ถั่วดำ, ถั่วขาว",
-soybean,ถั่วเหลือง,Soybean,Vegetable,Market,1,,
-shrimp,กุ้ง,Shrimp,Seafood,Market,5,,
-crab,ปู,Crab,Seafood,Sea,1,เนื้อปู,
-octopus,ปลาหมึก,Octopus,Seafood,Sea,1,ปลาหมึกยักษ์,
-salmon,ปลาแซลมอน,Salmon,Seafood,Sea,1,,
-tuna,ปลาทูน่า,Tuna,Seafood,Sea,1,,
-clam,หอย,Clam,Seafood,Sea,1,หอยลาย,
-pork,เนื้อหมู,Pork,Meat,Market,12,"หมูสับ, เนื้อหมู, สันนอก, สามชั้น, ซี่โครงหมู, กระดูกหมู, หมูชาชู",
-chicken,เนื้อไก่,Chicken,Meat,Market,9,,
-beef,เนื้อวัว,Beef,Meat,Market,8,"เนื้อวัว, เนื้อวัวบด, เนื้อวัวสไลซ์",
-duck,เป็ด,Duck,Meat,Market,1,,
-egg,ไข่ไก่,Egg,Animal Product,Market,25,,
-rice,ข้าว,Rice,Grain,Market,9,"ข้าวสวย, ข้าวสาร, ข้าวญี่ปุ่น, ข้าวอาร์โบริโอ",
-glutinous_rice,ข้าวเหนียว,Glutinous Rice,Grain,Market,5,"ข้าวเหนียว, แป้งข้าวเหนียว, แป้งข้าวเหนียวญี่ปุ่น",
-noodles,เส้นก๋วยเตี๋ยว/บะหมี่,Noodles,Grain,Market,4,"เส้นจันท์, บะหมี่ไข่, เส้นราเมง, เส้นบะหมี่",
-pasta,พาสต้า,Pasta,Grain,Market,4,"สปาเกตตี, มักกะโรนี, แผ่นลาซานญ่า, พาสต้า",
-bread,ขนมปัง,Bread,Grain,Market,4,"ขนมปังเบอร์เกอร์/ฮอตดอก/บาแก็ต, เกล็ดขนมปัง",
-milk,นม,Milk,Dairy,Artisan,12,"นมสด, นมข้นหวาน, นมข้นจืด",
-cheese,ชีส,Cheese,Dairy,Artisan,14,"ชีส, เชดดาร์, มอสซาเรลลา, พาร์เมซาน, ริคอตต้า, มาสคาร์โปน",
-butter,เนย,Butter,Dairy,Artisan,9,,
-cream,ครีม,Cream,Dairy,Artisan,5,"วิปปิงครีม, ครีมเปรี้ยว, ซาวร์ครีม, บัตเตอร์มิลก์",
-yogurt,โยเกิร์ต,Yogurt,Dairy,Artisan,1,,
-honey,น้ำผึ้ง,Honey,Sweetener,Artisan,4,,
-maple_syrup,เมเปิลไซรัป,Maple Syrup,Sweetener,Artisan,2,,
-chocolate,ช็อกโกแลต,Chocolate,Sweet,Artisan,3,"ดาร์กช็อกโกแลต, ช็อกโกแลตชิป, ผงโกโก้, น้ำเชื่อมช็อกโกแลต",
-coffee,กาแฟ,Coffee,Drink Base,Artisan,2,"เมล็ดกาแฟ, กาแฟเอสเปรสโซ",
-matcha,มัทฉะ,Matcha,Drink Base,Artisan,2,ผงมัทฉะ,
-thai_tea,ชาไทย,Thai Tea Leaves,Drink Base,Artisan,1,,
-thai_curry_paste,พริกแกงไทย,Thai Curry Paste,Paste,Artisan,3,"พริกแกงเขียวหวาน, พริกแกงมัสมั่น, พริกแกงข้าวซอย",
-curry_roux,ก้อนแกงกะหรี่ญี่ปุ่น,Japanese Curry Roux,Paste,Artisan,1,,
-red_bean_paste,ถั่วกวน,Sweet Bean Paste,Paste,Artisan,5,"ถั่วแดงกวน, ถั่วขาวกวน",
-tofu,เต้าหู้,Tofu,Fermented,Artisan,1,,
-pickles,ผักดอง,Pickles,Fermented,Artisan,2,"ขิงดอง, ผักกาดดอง, หน่อไม้ดอง, แตงกวาดอง",
-nori,สาหร่ายโนริ,Nori,Sea Product,Artisan,1,,
-cured_meat,เนื้อหมัก (เบคอน/แฮม/ไส้กรอก),Cured Meat,Meat,Artisan,4,"หมูแฮม, เบคอน, ไส้กรอก, แก้มหมูหมัก",
-salted_egg,ไข่เค็ม,Salted Egg,Fermented,Artisan,1,ไข่แดงเค็ม,
-tortilla,แผ่นตอร์ติญา,Tortilla,Grain,Artisan,6,"ตอร์ติญาข้าวโพด/แป้งสาลี, แป้งมาซา",
-chinotto,น้ำเชื่อมชิโนตโต,Chinotto Syrup,Drink Base,Artisan,1,,
-flour,แป้งสาลี,Flour,Grain,Market,24,"แป้งสาลี, แป้งเทมปุระ, แป้งทาโกะยากิ, แป้งพิซซ่า, แป้งพาย, แผ่นเกี๊ยว, เลดี้ฟิงเกอร์, วาฟเฟิล",
+﻿item_id,ชื่อไทย,Name (EN),Category,Source,ใช้ในกี่สูตร,รวมมาจาก (ชื่อในสูตรจริง),Sell Price,Health,Stamina,Mana,Fever
+holy_basil,ใบกะเพรา,Holy Basil,Herb,Forage,1,,,0,0,0,0
+basil,ใบโหระพา,Basil,Herb,Forage,2,,,8,13,0,0
+chili,พริก,Chili,Vegetable,Forage,7,"พริก, พริกแห้ง, พริกฮาลาปิโน",,0,0,0,0
+lemongrass,ตะไคร้,Lemongrass,Herb,Forage,1,,,0,0,0,0
+mushroom,เห็ด,Mushroom,Vegetable,Forage,3,"เห็ดฟาง, เห็ดแชมปิญอง (มีในเกมแล้ว)",,0,0,0,0
+spring_onion,ต้นหอม,Spring Onion,Herb,Forage,6,,,5,15,0,0
+ginger,ขิง,Ginger,Herb,Forage,3,,,0,0,0,0
+pandan,ใบเตย,Pandan Leaf,Herb,Forage,1,,,0,0,0,0
+butterfly_pea,ดอกอัญชัน,Butterfly Pea Flower,Flower,Forage,1,,,0,0,0,0
+chrysanthemum,ดอกเก๊กฮวย,Chrysanthemum,Flower,Forage,1,ดอกเก๊กฮวยแห้ง,,0,0,0,0
+tea_leaves,ใบชา,Tea Leaves,Herb,Forage,1,ชา,,0,0,0,0
+tomato,มะเขือเทศ,Tomato,Vegetable,Forage,6,,,3,10,5,0
+carrot,แครอท,Carrot,Vegetable,Forage,2,,,3,17,3,0
+potato,มันฝรั่ง,Potato,Vegetable,Forage,3,,,0,0,0,0
+sweet_potato,มันหวาน,Sweet Potato,Vegetable,Forage,1,,,0,0,0,0
+cabbage,กะหล่ำปลี,Cabbage,Vegetable,Forage,4,,,0,0,0,0
+cucumber,แตงกวา,Cucumber,Vegetable,Forage,2,,,8,9,0,0
+green_papaya,มะละกอดิบ,Green Papaya,Vegetable,Forage,1,,,0,0,0,0
+thai_eggplant,มะเขือเปราะ,Thai Eggplant,Vegetable,Forage,1,"มะเขือเปราะ, มะเขือพวง",,0,0,0,0
+bean_sprout,ถั่วงอก,Bean Sprout,Vegetable,Forage,1,,,0,0,0,0
+pumpkin,ฟักทอง,Pumpkin,Vegetable,Forage,3,,,0,0,0,0
+taro,เผือก,Taro,Vegetable,Forage,2,,,0,0,0,0
+spinach,ผักโขม,Spinach,Vegetable,Forage,1,,,0,0,0,0
+lettuce,ผักกาดหอม,Lettuce,Vegetable,Forage,2,,,3,13,0,0
+bok_choy,ผักกวางตุ้ง,Bok Choy,Vegetable,Forage,1,,,0,0,0,0
+bell_pepper,พริกหวาน,Bell Pepper,Vegetable,Forage,2,,,5,5,0,0
+zucchini,บวบ,Zucchini,Vegetable,Forage,1,,,0,0,0,0
+corn,ข้าวโพด,Corn,Vegetable,Forage,2,"ข้าวโพดโฮมินี, ใบข้าวโพดแห้ง",,2,15,0,0
+avocado,อะโวคาโด,Avocado,Fruit,Forage,1,,,7,9,0,0
+water_chestnut,แห้ว,Water Chestnut,Vegetable,Forage,1,,,6,9,6,0
+coconut,มะพร้าว,Coconut,Fruit,Forage,8,กะทิ,,4,9,0,0
+mango,มะม่วง,Mango,Fruit,Forage,2,มะม่วงสุก,,8,4,0,0
+lime,มะนาว,Lime,Fruit,Forage,4,"มะนาว, น้ำมะนาว",,6,4,0,0
+lemon,เลมอน,Lemon,Fruit,Forage,2,"เลมอน, น้ำเชื่อมเลมอน",,6,17,0,0
+apple,แอปเปิล,Apple,Fruit,Forage,2,,,8,10,0,0
+pineapple,สับปะรด,Pineapple,Fruit,Forage,1,,,6,4,0,0
+pomelo,ส้มโอ,Pomelo,Fruit,Forage,1,,,8,4,0,0
+berry,เบอร์รี,Berry,Fruit,Forage,1,,,2,7,0,0
+seasonal_fruit,ผลไม้ตามฤดูกาล,Seasonal Fruit,Fruit,Forage,3,"ผลไม้สดตามฤดูกาล, ผลไม้สดหลากสี, กลิ่นผลไม้",,2,6,0,0
+peanut,ถั่วลิสง,Peanut,Nut,Forage,2,,,6,8,0,0
+pistachio,พิสตาชิโอ,Pistachio,Nut,Market,1,,,7,6,8,0
+pecan,พีแคน,Pecan,Nut,Market,1,,,8,8,7,0
+sesame,งา,Sesame,Nut,Market,2,"งาดำ, งาบด",,0,0,0,0
+beans,ถั่ว (ดำ/ขาว),Beans,Vegetable,Market,3,"ถั่วดำ, ถั่วขาว",,0,0,0,0
+soybean,ถั่วเหลือง,Soybean,Vegetable,Market,1,,,0,0,0,0
+shrimp,กุ้ง,Shrimp,Seafood,Market,5,,,0,0,0,0
+crab,ปู,Crab,Seafood,Sea,1,เนื้อปู,,0,0,0,0
+octopus,ปลาหมึก,Octopus,Seafood,Sea,1,ปลาหมึกยักษ์,,0,0,0,0
+salmon,ปลาแซลมอน,Salmon,Seafood,Sea,1,,,0,0,0,0
+tuna,ปลาทูน่า,Tuna,Seafood,Sea,1,,,0,0,0,0
+clam,หอย,Clam,Seafood,Sea,1,หอยลาย,,0,0,0,0
+pork,เนื้อหมู,Pork,Meat,Market,12,"หมูสับ, เนื้อหมู, สันนอก, สามชั้น, ซี่โครงหมู, กระดูกหมู, หมูชาชู",,0,0,0,0
+chicken,เนื้อไก่,Chicken,Meat,Market,9,,,0,0,0,0
+beef,เนื้อวัว,Beef,Meat,Market,8,"เนื้อวัว, เนื้อวัวบด, เนื้อวัวสไลซ์",,0,0,0,0
+duck,เป็ด,Duck,Meat,Market,1,,,0,0,0,0
+egg,ไข่ไก่,Egg,Animal Product,Market,25,,,0,0,0,0
+rice,ข้าว,Rice,Grain,Market,9,"ข้าวสวย, ข้าวสาร, ข้าวญี่ปุ่น, ข้าวอาร์โบริโอ",,0,0,0,0
+glutinous_rice,ข้าวเหนียว,Glutinous Rice,Grain,Market,5,"ข้าวเหนียว, แป้งข้าวเหนียว, แป้งข้าวเหนียวญี่ปุ่น",,0,0,0,0
+noodles,เส้นก๋วยเตี๋ยว/บะหมี่,Noodles,Grain,Market,4,"เส้นจันท์, บะหมี่ไข่, เส้นราเมง, เส้นบะหมี่",,0,0,0,0
+pasta,พาสต้า,Pasta,Grain,Market,4,"สปาเกตตี, มักกะโรนี, แผ่นลาซานญ่า, พาสต้า",,0,0,0,0
+bread,ขนมปัง,Bread,Grain,Market,4,"ขนมปังเบอร์เกอร์/ฮอตดอก/บาแก็ต, เกล็ดขนมปัง",,2,6,0,0
+milk,นม,Milk,Dairy,Artisan,12,"นมสด, นมข้นหวาน, นมข้นจืด",,2,4,0,0
+cheese,ชีส,Cheese,Dairy,Artisan,14,"ชีส, เชดดาร์, มอสซาเรลลา, พาร์เมซาน, ริคอตต้า, มาสคาร์โปน",,7,7,0,0
+butter,เนย,Butter,Dairy,Artisan,9,,,0,0,0,0
+cream,ครีม,Cream,Dairy,Artisan,5,"วิปปิงครีม, ครีมเปรี้ยว, ซาวร์ครีม, บัตเตอร์มิลก์",,0,0,0,0
+yogurt,โยเกิร์ต,Yogurt,Dairy,Artisan,1,,,5,4,0,0
+honey,น้ำผึ้ง,Honey,Sweetener,Artisan,4,,,1,6,0,0
+maple_syrup,เมเปิลไซรัป,Maple Syrup,Sweetener,Artisan,2,,,1,9,3,0
+chocolate,ช็อกโกแลต,Chocolate,Sweet,Artisan,3,"ดาร์กช็อกโกแลต, ช็อกโกแลตชิป, ผงโกโก้, น้ำเชื่อมช็อกโกแลต",,1,11,0,0
+coffee,กาแฟ,Coffee,Drink Base,Artisan,2,"เมล็ดกาแฟ, กาแฟเอสเปรสโซ",,0,0,0,0
+matcha,มัทฉะ,Matcha,Drink Base,Artisan,2,ผงมัทฉะ,,0,0,0,0
+thai_tea,ชาไทย,Thai Tea Leaves,Drink Base,Artisan,1,,,0,0,0,0
+thai_curry_paste,พริกแกงไทย,Thai Curry Paste,Paste,Artisan,3,"พริกแกงเขียวหวาน, พริกแกงมัสมั่น, พริกแกงข้าวซอย",,0,0,0,0
+curry_roux,ก้อนแกงกะหรี่ญี่ปุ่น,Japanese Curry Roux,Paste,Artisan,1,,,0,0,0,0
+red_bean_paste,ถั่วกวน,Sweet Bean Paste,Paste,Artisan,5,"ถั่วแดงกวน, ถั่วขาวกวน",,7,14,0,0
+tofu,เต้าหู้,Tofu,Fermented,Artisan,1,,,7,12,0,0
+pickles,ผักดอง,Pickles,Fermented,Artisan,2,"ขิงดอง, ผักกาดดอง, หน่อไม้ดอง, แตงกวาดอง",,6,9,0,0
+nori,สาหร่ายโนริ,Nori,Sea Product,Artisan,1,,,1,5,0,0
+cured_meat,เนื้อหมัก (เบคอน/แฮม/ไส้กรอก),Cured Meat,Meat,Artisan,4,"หมูแฮม, เบคอน, ไส้กรอก, แก้มหมูหมัก",,2,5,0,0
+salted_egg,ไข่เค็ม,Salted Egg,Fermented,Artisan,1,ไข่แดงเค็ม,,8,18,0,0
+tortilla,แผ่นตอร์ติญา,Tortilla,Grain,Artisan,6,"ตอร์ติญาข้าวโพด/แป้งสาลี, แป้งมาซา",,6,6,0,0
+chinotto,น้ำเชื่อมชิโนตโต,Chinotto Syrup,Drink Base,Artisan,1,,,0,0,0,0
+flour,แป้งสาลี,Flour,Grain,Market,24,"แป้งสาลี, แป้งเทมปุระ, แป้งทาโกะยากิ, แป้งพิซซ่า, แป้งพาย, แผ่นเกี๊ยว, เลดี้ฟิงเกอร์, วาฟเฟิล",,0,0,0,0
