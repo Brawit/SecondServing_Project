@@ -16,7 +16,9 @@ public enum SlotState
 // ลากไอเทมไปวางที่ Hotbar ได้ (เฉพาะของที่ใส่ Hotbar ได้: อาวุธ เครื่องมือ ของกินได้)
 // ลากของสวมใส่ไปวางที่ช่องสวมใส่ได้ (ต้องมีในกระเป๋าอย่างน้อย 1 ชิ้น)
 // ถ้าลากช่องที่ลากไม่ได้ จะส่งการลากต่อให้ Scroll View (เลื่อนรายการได้ตามเดิม)
-public class InventorySlotUI : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
+// [2.5] เอาเมาส์วางบนช่อง = ส่ง OnHoverEnter / OnHoverExit (InventoryUI ใช้แสดงกล่องคุณภาพจาน)
+public class InventorySlotUI : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, IDragHandler, IEndDragHandler,
+    IPointerEnterHandler, IPointerExitHandler
 {
     [Header("References")]
     [Tooltip("รูปไอคอนของไอเทม")]
@@ -53,6 +55,12 @@ public class InventorySlotUI : MonoBehaviour, IPointerClickHandler, IBeginDragHa
 
     // ส่งสัญญาณเมื่อผู้เล่นคลิกช่องนี้
     public event Action<InventorySlotUI> OnClicked;
+
+    // [2.5] ส่งสัญญาณเมื่อเมาส์เข้า / ออกจากช่องนี้
+    public event Action<InventorySlotUI> OnHoverEnter;
+    public event Action<InventorySlotUI> OnHoverExit;
+
+    private bool isHovered;
 
     // ---------- ตั้งค่าการแสดงผล ----------
 
@@ -175,6 +183,25 @@ public class InventorySlotUI : MonoBehaviour, IPointerClickHandler, IBeginDragHa
 
     // ---------- คลิก ----------
 
+    // ---------- [2.5] เมาส์วาง ----------
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        isHovered = true;
+        OnHoverEnter?.Invoke(this);
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        if (!isHovered)
+        {
+            return;
+        }
+
+        isHovered = false;
+        OnHoverExit?.Invoke(this);
+    }
+
     public void OnPointerClick(PointerEventData eventData)
     {
         if (eventData.button == PointerEventData.InputButton.Left)
@@ -261,6 +288,13 @@ public class InventorySlotUI : MonoBehaviour, IPointerClickHandler, IBeginDragHa
         {
             isDraggingItem = false;
             DragIconUI.End();
+        }
+
+        // ช่องถูกซ่อนตอนเมาส์ยังวางอยู่ (เช่น ปิดกระเป๋า / เปลี่ยนแท็บ) = ถือว่าเมาส์ออกแล้ว
+        if (isHovered)
+        {
+            isHovered = false;
+            OnHoverExit?.Invoke(this);
         }
     }
 }

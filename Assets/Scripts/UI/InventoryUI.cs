@@ -133,6 +133,23 @@ public class InventoryUI : MonoBehaviour
     // จำไว้ว่าหน้าต่างนี้เป็นคนหยุดนาฬิกาเอง
     private bool pausedClockByThis = false;
 
+    // ---------- [2.5] กล่องบอกคุณภาพจาน (สร้างเองตอนใช้ครั้งแรก ไม่ต้องวางในฉาก) ----------
+
+    [Header("Dish Quality Tooltip")]
+    [Tooltip("เอาเมาส์วางบนจานในกระเป๋า = แสดงจำนวนแยกตามคุณภาพ")]
+    [SerializeField] private bool showQualityTooltip = true;
+
+    [Tooltip("ระยะห่างของกล่องจากเมาส์ (หน่วยตาม Canvas)")]
+    [SerializeField] private Vector2 tooltipOffset = new Vector2(24f, -24f);
+
+    [Tooltip("ขนาดตัวอักษรในกล่อง")]
+    [Min(8f)] [SerializeField] private float tooltipFontSize = 22f;
+
+    private InventorySlotUI hoveredSlot;
+    private RectTransform tooltipRect;
+    private TMP_Text tooltipText;
+    private Canvas tooltipCanvas;
+
     private void Awake()
     {
         // เตือนถ้าลืมลากของใส่ช่องใน Inspector
@@ -207,6 +224,8 @@ public class InventoryUI : MonoBehaviour
 
     private void OnDisable()
     {
+        HideQualityTooltip();
+
         if (inventory != null)
         {
             inventory.OnChanged -= MarkDirty;
@@ -238,6 +257,8 @@ public class InventoryUI : MonoBehaviour
 
     private void Update()
     {
+        UpdateQualityTooltip();
+
         Keyboard keyboard = Keyboard.current;
         if (keyboard == null)
         {
@@ -694,6 +715,8 @@ public class InventoryUI : MonoBehaviour
             InventorySlotUI newSlot = Instantiate(slotPrefab, slotContainer);
             newSlot.name = $"Slot_{slots.Count}";
             newSlot.OnClicked += HandleSlotClicked;
+            newSlot.OnHoverEnter += HandleSlotHoverEnter;
+            newSlot.OnHoverExit += HandleSlotHoverExit;
             slots.Add(newSlot);
         }
     }
@@ -804,6 +827,12 @@ public class InventoryUI : MonoBehaviour
 
         sb.AppendLine($"Owned: {count} / {inventory.StackCap}");
 
+        // [2.5] จานอาหาร: จำนวนแยกตามคุณภาพ
+        if (Inventory.TracksQuality(item) && count > 0)
+        {
+            sb.AppendLine($"Quality: {BuildQualityText(item, " · ")}");
+        }
+
         // ของสวมใส่: บอกช่องที่ใส่ได้ และจำนวนที่สวมอยู่ (ของที่สวมอยู่ไม่นับในกระเป๋า)
         if (item.IsEquippable)
         {
@@ -858,6 +887,136 @@ public class InventoryUI : MonoBehaviour
         sb.Append($"Can make now: {RecipeDatabase.GetMaxServings(recipe, inventory)}");
 
         SetDetailText(recipe.recipeName, sb.ToString());
+    }
+
+    // ---------- [2.5] กล่องบอกคุณภาพจาน ----------
+
+    private void HandleSlotHoverEnter(InventorySlotUI slot)
+    {
+        hoveredSlot = slot;
+    }
+
+    private void HandleSlotHoverExit(InventorySlotUI slot)
+    {
+        if (hoveredSlot == slot)
+        {
+            hoveredSlot = null;
+            HideQualityTooltip();
+        }
+    }
+
+    // ข้อความจำนวนแยกตามคุณภาพ เช่น "Perfect x2 · Good x5 · OK x0" (ตัวที่เป็น 0 สีจาง)
+    private string BuildQualityText(ItemData item, string separator)
+    {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < DishQualityUtil.BestFirst.Length; i++)
+        {
+            DishQuality q = DishQualityUtil.BestFirst[i];
+            int n = inventory.GetCount(item, q);
+            string part = $"{DishQualityUtil.ColoredLabel(q)} x{n}";
+            if (n == 0) part = $"<color=#FFFFFF66>{DishQualityUtil.Label(q)} x0</color>";
+            if (i > 0) sb.Append(separator);
+            sb.Append(part);
+        }
+        return sb.ToString();
+    }
+
+    private void UpdateQualityTooltip()
+    {
+        if (!showQualityTooltip || !IsOpen || hoveredSlot == null || !hoveredSlot.isActiveAndEnabled || inventory == null)
+        {
+            HideQualityTooltip();
+            return;
+        }
+
+        ItemData item = hoveredSlot.CurrentItem;
+        if (item == null || !Inventory.TracksQuality(item) || hoveredSlot.CurrentState == SlotState.Undiscovered || inventory.GetCount(item) <= 0)
+        {
+            HideQualityTooltip();
+            return;
+        }
+
+        if (!EnsureQualityTooltip())
+        {
+            return;
+        }
+
+        tooltipText.text = BuildQualityText(item, "\n");
+        if (!tooltipRect.gameObject.activeSelf)
+        {
+            tooltipRect.gameObject.SetActive(true);
+        }
+        tooltipRect.SetAsLastSibling();
+
+        // ตามเมาส์
+        Mouse mouse = Mouse.current;
+        RectTransform canvasRect = tooltipCanvas.transform as RectTransform;
+        if (mouse != null && canvasRect != null)
+        {
+            Camera cam = tooltipCanvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : tooltipCanvas.worldCamera;
+            if (RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRect, mouse.position.ReadValue(), cam, out Vector2 local))
+            {
+                tooltipRect.anchoredPosition = local + tooltipOffset;
+            }
+        }
+    }
+
+    private void HideQualityTooltip()
+    {
+        if (tooltipRect != null && tooltipRect.gameObject.activeSelf)
+        {
+            tooltipRect.gameObject.SetActive(false);
+        }
+    }
+
+    // สร้างกล่อง (พื้นหลังเข้ม + ข้อความ ขยายตามเนื้อหา) บน Canvas หลักของหน้าต่างกระเป๋า
+    private bool EnsureQualityTooltip()
+    {
+        if (tooltipRect != null)
+        {
+            return true;
+        }
+
+        Canvas canvas = windowRoot != null ? windowRoot.GetComponentInParent<Canvas>() : GetComponentInParent<Canvas>();
+        if (canvas == null)
+        {
+            return false;
+        }
+        tooltipCanvas = canvas.rootCanvas;
+
+        GameObject box = new GameObject("DishQualityTooltip", typeof(RectTransform));
+        box.transform.SetParent(tooltipCanvas.transform, false);
+        box.layer = tooltipCanvas.gameObject.layer;
+        tooltipRect = box.GetComponent<RectTransform>();
+        tooltipRect.anchorMin = new Vector2(0.5f, 0.5f);
+        tooltipRect.anchorMax = new Vector2(0.5f, 0.5f);
+        tooltipRect.pivot = new Vector2(0f, 1f);
+
+        Image bg = box.AddComponent<Image>();
+        bg.color = new Color(0.05f, 0.05f, 0.07f, 0.92f);
+        bg.raycastTarget = false;
+
+        VerticalLayoutGroup layout = box.AddComponent<VerticalLayoutGroup>();
+        layout.padding = new RectOffset(12, 12, 8, 8);
+        layout.childControlWidth = true;
+        layout.childControlHeight = true;
+        layout.childForceExpandWidth = false;
+        layout.childForceExpandHeight = false;
+
+        ContentSizeFitter fitter = box.AddComponent<ContentSizeFitter>();
+        fitter.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
+        fitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+
+        GameObject textGo = new GameObject("Text", typeof(RectTransform));
+        textGo.transform.SetParent(box.transform, false);
+        textGo.layer = box.layer;
+        TextMeshProUGUI text = textGo.AddComponent<TextMeshProUGUI>();
+        text.fontSize = tooltipFontSize;
+        text.raycastTarget = false;
+        tooltipText = text;
+
+        box.SetActive(false);
+        return true;
     }
 
     private void SetDetailText(string title, string body)

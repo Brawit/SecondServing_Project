@@ -317,6 +317,15 @@ public class SaveManager : MonoBehaviour
             InventoryEntrySave entry = new InventoryEntrySave();
             entry.itemId = pair.Key.itemId;
             entry.amount = pair.Value;
+
+            // [v6] จานอาหาร: เก็บจำนวนแยกตามคุณภาพ
+            if (Inventory.TracksQuality(pair.Key))
+            {
+                entry.qualityOk = playerInventory.GetCount(pair.Key, DishQuality.Ok);
+                entry.qualityGood = playerInventory.GetCount(pair.Key, DishQuality.Good);
+                entry.qualityPerfect = playerInventory.GetCount(pair.Key, DishQuality.Perfect);
+            }
+
             result.Add(entry);
         }
 
@@ -483,6 +492,9 @@ public class SaveManager : MonoBehaviour
 
         Dictionary<ItemData, int> items = new Dictionary<ItemData, int>();
 
+        // [v6] คุณภาพจาน "จาน -> [OK, Good, Perfect]" (รวมถ้ามีรหัสซ้ำ)
+        Dictionary<ItemData, int[]> qualities = new Dictionary<ItemData, int[]>();
+
         foreach (InventoryEntrySave entry in entries)
         {
             if (entry == null || entry.amount <= 0)
@@ -500,9 +512,27 @@ public class SaveManager : MonoBehaviour
             // ถ้ามีรหัสซ้ำในไฟล์ ให้รวมจำนวน
             items.TryGetValue(item, out int current);
             items[item] = current + entry.amount;
+
+            // [v6] เซฟเก่า (v1–v5) ไม่มีคุณภาพ = 0 ทั้งหมด → ข้าม (Inventory นับเป็น Good ให้เอง)
+            if (Inventory.TracksQuality(item) && entry.qualityOk + entry.qualityGood + entry.qualityPerfect == entry.amount)
+            {
+                if (!qualities.TryGetValue(item, out int[] q))
+                {
+                    q = new int[DishQualityUtil.Count];
+                    qualities[item] = q;
+                }
+                q[(int)DishQuality.Ok] += entry.qualityOk;
+                q[(int)DishQuality.Good] += entry.qualityGood;
+                q[(int)DishQuality.Perfect] += entry.qualityPerfect;
+            }
         }
 
         playerInventory.SetItems(items);
+
+        foreach (KeyValuePair<ItemData, int[]> pair in qualities)
+        {
+            playerInventory.SetDishQualities(pair.Key, pair.Value[(int)DishQuality.Ok], pair.Value[(int)DishQuality.Good], pair.Value[(int)DishQuality.Perfect]);
+        }
     }
 
     // แปลงรายการรหัสกลับเป็นไอเทมที่เคยเจอ

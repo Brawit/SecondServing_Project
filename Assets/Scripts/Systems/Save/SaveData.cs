@@ -11,7 +11,8 @@ public class SaveData
     // 3 = เพิ่มช่อง Hotbar, FEVER และค่าสูงสุดที่เพิ่มถาวร
     // 4 = เพิ่มของที่สวมอยู่ (8 ช่อง)
     // 5 = เพิ่มเมนูประจำวันล่าสุด (ใช้เป็นค่าเริ่มต้นของวันถัดไป)
-    public const int CurrentVersion = 5;
+    // 6 = จานอาหารในกระเป๋าแยกจำนวนตามคุณภาพ (qualityOk / qualityGood / qualityPerfect ใน InventoryEntrySave)
+    public const int CurrentVersion = 6;
 
     public int version = CurrentVersion;
 
@@ -59,6 +60,11 @@ public class InventoryEntrySave
 {
     public string itemId;
     public int amount;
+
+    // [v6] จำนวนแยกตามคุณภาพ (เฉพาะจานอาหาร ผลรวม = amount) เซฟเก่าไม่มี = 0 ทั้งหมด → นับเป็น Good
+    public int qualityOk;
+    public int qualityGood;
+    public int qualityPerfect;
 }
 
 // ของหนึ่งชิ้นบนพื้น: อยู่โซนไหน เป็นอะไร อยู่ช่อง Tile ไหน

@@ -5,6 +5,8 @@ using UnityEngine;
 // กระเป๋าวิเศษของผู้เล่น: ของคงสภาพเดิมเสมอ ไม่มีช่องให้จัด เก็บได้ทุกชนิด
 // แต่ละชนิดเก็บได้ไม่เกิน "เพดานต่อชนิด" ตามระดับกระเป๋า (อัปเกรดได้)
 // และจำไว้ว่าเคยเจอไอเทมไหนมาแล้วบ้าง (ใช้แสดงแบบ Collectibles)
+// [2.5] จานอาหาร (ItemType.Dish) แยกนับตามคุณภาพ (OK / Good / Perfect) แต่ยังเป็นช่องเดียวกัน
+// จำนวนรวม (GetCount) = ผลรวมทุกคุณภาพเสมอ / ของที่ไม่ระบุคุณภาพตอนเพิ่ม = Good / เอาออกแบบไม่ระบุ = เอาคุณภาพต่ำสุดออกก่อน
 public class Inventory : MonoBehaviour
 {
     [Header("Bag Levels")]
@@ -23,6 +25,9 @@ public class Inventory : MonoBehaviour
 
     // ไอเทมที่เคยเก็บได้อย่างน้อย 1 ครั้ง
     private readonly HashSet<ItemData> discovered = new HashSet<ItemData>();
+
+    // [2.5] จำนวนจานแยกตามคุณภาพ "จาน -> [OK, Good, Perfect]" (เฉพาะ ItemType.Dish)
+    private readonly Dictionary<ItemData, int[]> dishQualities = new Dictionary<ItemData, int[]>();
 
     private int bagLevel;
 
@@ -91,8 +96,14 @@ public class Inventory : MonoBehaviour
         return Mathf.Max(0, StackCap - GetCount(item));
     }
 
-    // เพิ่มของเข้ากระเป๋า เพิ่มได้ทั้งหมดหรือไม่เพิ่มเลย คืนค่า true ถ้าสำเร็จ
+    // เพิ่มของเข้ากระเป๋า เพิ่มได้ทั้งหมดหรือไม่เพิ่มเลย คืนค่า true ถ้าสำเร็จ (จานอาหาร = คุณภาพ Good)
     public bool AddItem(ItemData item, int amount = 1)
+    {
+        return AddItem(item, amount, DishQuality.Good);
+    }
+
+    // [2.5] เพิ่มของพร้อมคุณภาพ (คุณภาพมีผลเฉพาะจานอาหาร)
+    public bool AddItem(ItemData item, int amount, DishQuality quality)
     {
         if (item == null || amount <= 0) return false;
 
@@ -106,6 +117,11 @@ public class Inventory : MonoBehaviour
         items.TryGetValue(item, out int current);
         items[item] = current + amount;
 
+        if (TracksQuality(item))
+        {
+            GetQualityArray(item)[(int)quality] += amount;
+        }
+
         MarkDiscovered(item, true);
 
         OnChanged?.Invoke();
@@ -113,16 +129,143 @@ public class Inventory : MonoBehaviour
     }
 
     // เอาของออกจากกระเป๋า คืนค่า true ถ้ามีพอและเอาออกสำเร็จ
+    // จานอาหาร: เอาคุณภาพต่ำสุดออกก่อน (เก็บจานดีไว้ เช่น ตอนกินจาก Hotbar)
     public bool RemoveItem(ItemData item, int amount = 1)
     {
         if (item == null || amount <= 0) return false;
         if (!items.TryGetValue(item, out int current) || current < amount) return false;
 
-        if (current == amount) items.Remove(item);
-        else items[item] = current - amount;
+        if (TracksQuality(item))
+        {
+            int[] counts = GetQualityArray(item);
+            int left = amount;
+            for (int q = 0; q < DishQualityUtil.Count && left > 0; q++)
+            {
+                int take = Mathf.Min(counts[q], left);
+                counts[q] -= take;
+                left -= take;
+            }
+        }
 
+        SetTotal(item, current - amount);
         OnChanged?.Invoke();
         return true;
+    }
+
+    // [2.5] เอาจานคุณภาพที่ระบุออก คืนค่า true ถ้ามีพอ (ของที่ไม่ใช่จาน = เหมือน RemoveItem ปกติ)
+    public bool RemoveItem(ItemData item, int amount, DishQuality quality)
+    {
+        if (item == null || amount <= 0) return false;
+        if (!TracksQuality(item)) return RemoveItem(item, amount);
+        if (!items.TryGetValue(item, out int current) || current < amount) return false;
+
+        int[] counts = GetQualityArray(item);
+        if (counts[(int)quality] < amount) return false;
+
+        counts[(int)quality] -= amount;
+        SetTotal(item, current - amount);
+        OnChanged?.Invoke();
+        return true;
+    }
+
+    // ---------- [2.5] คุณภาพจาน ----------
+
+    // ไอเทมนี้แยกนับตามคุณภาพไหม (เฉพาะจานอาหาร)
+    public static bool TracksQuality(ItemData item)
+    {
+        return item != null && item.itemType == ItemType.Dish;
+    }
+
+    // จำนวนจานคุณภาพนี้ (ของที่ไม่ใช่จาน: ถือว่าเป็น Good ทั้งหมด)
+    public int GetCount(ItemData item, DishQuality quality)
+    {
+        if (item == null)
+        {
+            return 0;
+        }
+
+        if (!TracksQuality(item))
+        {
+            return quality == DishQuality.Good ? GetCount(item) : 0;
+        }
+
+        return dishQualities.TryGetValue(item, out int[] counts) ? counts[(int)quality] : 0;
+    }
+
+    // คุณภาพดีที่สุดที่มีอยู่ คืนค่า false ถ้าไม่มีเลย
+    public bool TryGetBestQuality(ItemData item, out DishQuality quality)
+    {
+        foreach (DishQuality q in DishQualityUtil.BestFirst)
+        {
+            if (GetCount(item, q) > 0)
+            {
+                quality = q;
+                return true;
+            }
+        }
+
+        quality = DishQuality.Good;
+        return false;
+    }
+
+    // ใส่รายการคุณภาพที่มีอยู่ (เรียงดีสุดก่อน) ลงใน result คืนค่าจำนวนที่ใส่
+    public int GetAvailableQualities(ItemData item, List<DishQuality> result)
+    {
+        result.Clear();
+        foreach (DishQuality q in DishQualityUtil.BestFirst)
+        {
+            if (GetCount(item, q) > 0)
+            {
+                result.Add(q);
+            }
+        }
+        return result.Count;
+    }
+
+    // ตั้งจำนวนแยกตามคุณภาพของจาน (ใช้ตอนโหลดเซฟ) ผลรวมต้องเท่าจำนวนในกระเป๋า ไม่งั้นไม่เปลี่ยน
+    public void SetDishQualities(ItemData item, int ok, int good, int perfect)
+    {
+        if (!TracksQuality(item))
+        {
+            return;
+        }
+
+        int total = GetCount(item);
+        if (ok < 0 || good < 0 || perfect < 0 || ok + good + perfect != total)
+        {
+            Debug.LogWarning($"Inventory: Quality counts for {item.itemName} ({ok}/{good}/{perfect}) don't match {total}. Keeping them as Good.");
+            return;
+        }
+
+        int[] counts = GetQualityArray(item);
+        counts[(int)DishQuality.Ok] = ok;
+        counts[(int)DishQuality.Good] = good;
+        counts[(int)DishQuality.Perfect] = perfect;
+        OnChanged?.Invoke();
+    }
+
+    private int[] GetQualityArray(ItemData item)
+    {
+        if (!dishQualities.TryGetValue(item, out int[] counts))
+        {
+            counts = new int[DishQualityUtil.Count];
+            dishQualities[item] = counts;
+        }
+        return counts;
+    }
+
+    // ตั้งจำนวนรวม (0 = ลบออกจากกระเป๋า รวมถึงตัวนับคุณภาพ)
+    private void SetTotal(ItemData item, int total)
+    {
+        if (total <= 0)
+        {
+            items.Remove(item);
+            dishQualities.Remove(item);
+        }
+        else
+        {
+            items[item] = total;
+        }
     }
 
     // ดูว่ามีของชนิดนี้กี่ชิ้น
@@ -200,6 +343,7 @@ public class Inventory : MonoBehaviour
     public void SetItems(IReadOnlyDictionary<ItemData, int> newItems)
     {
         items.Clear();
+        dishQualities.Clear();
 
         if (newItems != null)
         {
@@ -208,6 +352,12 @@ public class Inventory : MonoBehaviour
                 if (pair.Key == null || pair.Value <= 0) continue;
 
                 items[pair.Key] = pair.Value;
+
+                // [2.5] จานอาหาร: ตั้งเป็น Good ทั้งหมดก่อน (SaveManager ตั้งคุณภาพจริงทีหลังด้วย SetDishQualities)
+                if (TracksQuality(pair.Key))
+                {
+                    GetQualityArray(pair.Key)[(int)DishQuality.Good] = pair.Value;
+                }
 
                 // ของที่มีอยู่ในกระเป๋า ถือว่าเคยเจอแล้ว (รองรับเซฟเก่าที่ไม่มีรายการที่เคยเจอ)
                 MarkDiscovered(pair.Key, false);
@@ -258,7 +408,15 @@ public class Inventory : MonoBehaviour
 
         foreach (KeyValuePair<ItemData, int> pair in items)
         {
-            Debug.Log($"Inventory: {pair.Key.itemName} x{pair.Value}");
+            if (TracksQuality(pair.Key))
+            {
+                Debug.Log($"Inventory: {pair.Key.itemName} x{pair.Value} (OK {GetCount(pair.Key, DishQuality.Ok)}, " +
+                          $"Good {GetCount(pair.Key, DishQuality.Good)}, Perfect {GetCount(pair.Key, DishQuality.Perfect)})");
+            }
+            else
+            {
+                Debug.Log($"Inventory: {pair.Key.itemName} x{pair.Value}");
+            }
         }
     }
 
@@ -273,5 +431,33 @@ public class Inventory : MonoBehaviour
     private void DebugPrintInventory()
     {
         PrintInventory();
+    }
+
+    // [2.5] ให้จานของทุกสูตรที่รู้ คุณภาพละ 2 จาน (OK / Good / Perfect) ไว้ทดสอบการเสิร์ฟแบบเลือกคุณภาพ
+    [ContextMenu("Debug: Give Known Dishes (2 of each quality)")]
+    private void DebugGiveMixedDishes()
+    {
+        RecipeBook book = GetComponent<RecipeBook>();
+        if (book == null)
+        {
+            Debug.LogWarning("Inventory: No RecipeBook on this object.");
+            return;
+        }
+
+        int given = 0;
+        foreach (RecipeData recipe in book.KnownRecipes)
+        {
+            if (recipe == null || recipe.dishItem == null)
+            {
+                continue;
+            }
+
+            for (int q = 0; q < DishQualityUtil.Count; q++)
+            {
+                if (AddItem(recipe.dishItem, 2, (DishQuality)q)) given += 2;
+            }
+        }
+
+        Debug.Log($"Inventory: Gave {given} dishes (2 of each quality per known recipe).");
     }
 }

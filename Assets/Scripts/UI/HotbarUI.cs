@@ -22,7 +22,10 @@ public class HotbarUI : MonoBehaviour
     [SerializeField] private TMP_Text selectedNameText;
 
     [Header("Lock")]
-    [Tooltip("ความโปร่งของแถบตอนล็อก (เปิดร้าน)")]
+    [Tooltip("[2.5] ซ่อนแถบทั้งหมดตอนเปิดร้าน (ไม่ติ๊ก = แค่จางตาม Locked Alpha)")]
+    [SerializeField] private bool hideWhileServing = true;
+
+    [Tooltip("ความโปร่งของแถบตอนล็อก (เปิดร้าน) ใช้เมื่อไม่ได้ติ๊ก Hide While Serving")]
     [Range(0f, 1f)]
     [SerializeField] private float lockedAlpha = 0.45f;
 
@@ -173,7 +176,12 @@ public class HotbarUI : MonoBehaviour
 
         if (canvasGroup != null)
         {
-            canvasGroup.alpha = locked ? lockedAlpha : 1f;
+            canvasGroup.alpha = locked ? (hideWhileServing ? 0f : lockedAlpha) : 1f;
+
+            // ซ่อนอยู่ = คลิก/ลากไม่ได้
+            bool hidden = locked && hideWhileServing;
+            canvasGroup.blocksRaycasts = !hidden;
+            canvasGroup.interactable = !hidden;
         }
     }
 }

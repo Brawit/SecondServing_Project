@@ -42,6 +42,7 @@ public enum CustomerMood
 }
 
 // ลูกค้า 1 คน: เดินไปที่นั่ง → สั่งอาหารจากเมนูประจำวัน → รอ → (ผู้เล่นกด E เสิร์ฟ + จ่ายเงิน) → กิน → เดินออก
+// [2.5] กด E ตอนมีจานที่สั่งในกระเป๋ามากกว่า 1 คุณภาพ = เปิดแถบเลือกคุณภาพ (ServePicker) เหนือหัว
 // [2.4b] บางคนถามหาเมนูนิยมที่ร้านไม่มี → ผู้เล่นกด E แนะนำเมนูวันนี้ → ลูกค้าเปลี่ยนจาน → รอ → เสิร์ฟ → กิน → อารมณ์หลังกิน
 // ถ้ารอนานเกินไป หรือไม่มีเมนูเหลือ จะเดินออกเลย
 // ได้อาหารแล้ว = ไม่นับเป็นลูกค้าที่ร้านต้องรอ (ร้านปิดได้ทันทีหลังเสิร์ฟคนสุดท้าย ส่วนลูกค้าจะกินจนเสร็จแล้วเดินออกทีหลัง)
@@ -137,6 +138,9 @@ public class Customer : MonoBehaviour, IInteractable
     // [2.4b] เมนูนิยมที่ถามหา (เฉพาะคนที่ถามหา)
     public RecipeData AskedFor { get; private set; }
 
+    // [2.5] คุณภาพจานที่ได้ (ตั้งตอนเสิร์ฟ)
+    public DishQuality ServedQuality { get; private set; } = DishQuality.Good;
+
     // สั่งไปแล้วหรือยัง (ใช้ให้ CustomerManager นับลูกค้าที่ยังไม่ได้สั่ง)
     public bool HasOrdered { get; private set; }
 
@@ -151,6 +155,9 @@ public class Customer : MonoBehaviour, IInteractable
     public float PatienceRatio => patienceMax > 0f ? Mathf.Clamp01(patienceLeft / patienceMax) : 0f;
 
     public Seat Seat { get; private set; }
+
+    // [2.5] ข้อความเหนือหัว (ServePicker ใช้หาว่าคลิกโดนตัวเลือกไหน)
+    public TMP_Text BubbleText => bubbleText;
 
     private CustomerManager manager;
     private Vector3 exitPosition;
@@ -442,8 +449,26 @@ public class Customer : MonoBehaviour, IInteractable
             dishName = $"{marker} {dishName}";
         }
 
-        bubbleText.text = $"{dishName}\n{Mathf.CeilToInt(patienceLeft)}s";
+        string text = $"{dishName}\n{Mathf.CeilToInt(patienceLeft)}s";
+
+        // [2.5] แถบเลือกคุณภาพเปิดอยู่สำหรับลูกค้าคนนี้
+        ServePicker picker = ServePicker.Instance;
+        if (picker != null && picker.IsOpenFor(this))
+        {
+            text += "\n" + picker.GetLine(this);
+        }
+
+        bubbleText.text = text;
         bubbleText.color = PatienceRatio < 0.3f ? impatientColor : bubbleBaseColor;
+    }
+
+    // [2.5] วาดข้อความเหนือหัวใหม่ (ServePicker เรียกตอนเปิด/ปิด/เลื่อนตัวเลือก)
+    public void RefreshBubble()
+    {
+        if (State == CustomerState.WaitingForFood)
+        {
+            UpdateWaitingBubble();
+        }
     }
 
     private void GiveUp()
@@ -459,7 +484,14 @@ public class Customer : MonoBehaviour, IInteractable
     }
 
     // เสิร์ฟอาหารให้ลูกค้าคนนี้ (ตอนนี้เรียกจากการกด E / ขั้น 2.5 จะเรียกตอนถือจานมาเสิร์ฟ) คืนค่า true ถ้าสำเร็จ
+    // ใช้จานคุณภาพดีที่สุดที่มี
     public bool TryServe()
+    {
+        return TryServe(null);
+    }
+
+    // [2.5] เสิร์ฟด้วยคุณภาพที่เลือก (null = ดีที่สุดที่มี)
+    public bool TryServe(DishQuality? quality)
     {
         if (State != CustomerState.WaitingForFood || Order == null)
         {
@@ -467,17 +499,23 @@ public class Customer : MonoBehaviour, IInteractable
         }
 
         DailyMenu menu = DailyMenu.Instance;
-        if (menu == null || !menu.TryTakeServing(Order))
+        if (menu == null || !menu.TryTakeServing(Order, quality, out DishQuality served))
         {
             NotificationUI.Post(string.Format(cannotServeFormat, Order.recipeName));
             return false;
+        }
+
+        ServedQuality = served;
+        if (ServePicker.Instance != null && ServePicker.Instance.IsOpenFor(this))
+        {
+            ServePicker.Instance.Close();
         }
 
         // เปลี่ยนสถานะก่อนรายงาน ให้ระบบอื่นเห็นว่าลูกค้าคนนี้ไม่ต้องการผู้เล่นแล้ว
         State = CustomerState.Eating;
 
         // สุ่มอารมณ์หลังกินและตั้งความพอใจก่อนรายงาน ให้ CustomerManager นับรวมได้ (แสดงอารมณ์ตอนกินเสร็จ)
-        Mood = manager != null ? manager.DecideMood(OrderKind) : CustomerMood.Good;
+        Mood = manager != null ? manager.DecideMood(OrderKind, served) : CustomerMood.Good;
         Satisfaction = manager != null ? manager.GetSatisfaction(Mood) : 1f;
         acceptTextTimer = 0f;
 
@@ -574,8 +612,41 @@ public class Customer : MonoBehaviour, IInteractable
         }
         else
         {
-            TryServe();
+            HandleServeInteract(interactor);
         }
+    }
+
+    // [2.5] กด E ที่ลูกค้าที่รออาหาร:
+    // แถบเลือกเปิดอยู่ = เสิร์ฟตัวที่เลือก / มีจานในกระเป๋า 2 คุณภาพขึ้นไป = เปิดแถบเลือก / ไม่งั้นเสิร์ฟเลย
+    private void HandleServeInteract(PlayerInteractor interactor)
+    {
+        ServePicker picker = ServePicker.Instance;
+        if (picker != null && picker.IsOpenFor(this))
+        {
+            picker.Confirm();
+            return;
+        }
+
+        Inventory bag = interactor != null && interactor.Inventory != null ? interactor.Inventory :
+                        DailyMenu.Instance != null ? DailyMenu.Instance.Inventory : null;
+
+        if (bag != null && Order != null && Order.dishItem != null && interactor != null)
+        {
+            List<DishQuality> qualities = new List<DishQuality>();
+            if (bag.GetAvailableQualities(Order.dishItem, qualities) >= 2)
+            {
+                ServePicker.GetOrCreate().Open(this, interactor.transform, bag);
+                return;
+            }
+
+            if (qualities.Count == 1)
+            {
+                TryServe(qualities[0]);
+                return;
+            }
+        }
+
+        TryServe(null);
     }
 
     // ---------- ภายใน ----------

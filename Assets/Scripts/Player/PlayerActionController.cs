@@ -103,19 +103,15 @@ public class PlayerActionController : MonoBehaviour
             return;
         }
 
-        // เลือกช่อง (ทำได้แม้ตอนร้านเปิด เพราะไม่ได้ใช้ของ)
-        HandleSelectionInput(keyboard, mouse);
-
-        bool locked = IsShopServing();
-        if (locked)
+        // [2.5] ระหว่างเปิดร้าน Hotbar ถูกซ่อน: เลือกช่องไม่ได้ (ปุ่ม 1–0 / scroll) และใช้ของไม่ได้
+        // ไม่ขึ้นข้อความเตือน เพราะคลิกซ้าย / scroll ใช้กับแถบเลือกคุณภาพตอนเสิร์ฟ
+        if (IsShopServing())
         {
             StopBlocking();
-            if (PressedAnyUseButton(keyboard, mouse))
-            {
-                PostLockedMessage();
-            }
             return;
         }
+
+        HandleSelectionInput(keyboard, mouse);
 
         HandleUseInput(keyboard, mouse);
     }

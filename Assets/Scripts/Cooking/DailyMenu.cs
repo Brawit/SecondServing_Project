@@ -532,10 +532,18 @@ public class DailyMenu : MonoBehaviour
         return IsActive && entry != null && entry.Remaining > 0;
     }
 
-    // เสิร์ฟ 1 จาน: ใช้จานที่ทำไว้แล้วในกระเป๋าก่อน ถ้าไม่มีหักวัตถุดิบ คืนค่า true ถ้าสำเร็จ
-    // (ขั้น 2.5 ทำอาหาร/เสิร์ฟจะเรียกฟังก์ชันนี้)
+    // เสิร์ฟ 1 จาน: ใช้จานที่ทำไว้แล้วในกระเป๋าก่อน (คุณภาพดีที่สุด) ถ้าไม่มีหักวัตถุดิบ คืนค่า true ถ้าสำเร็จ
     public bool TryTakeServing(RecipeData recipe)
     {
+        return TryTakeServing(recipe, null, out _);
+    }
+
+    // [2.5] เสิร์ฟ 1 จานโดยเลือกคุณภาพ (null = ดีที่สุดที่มี) served = คุณภาพที่เสิร์ฟจริง
+    // ไม่มีจานในกระเป๋า = หักวัตถุดิบที่จองไว้ (ชั่วคราว จนกว่าจะมีเตา รอบถัดไป) นับเป็น Good
+    public bool TryTakeServing(RecipeData recipe, DishQuality? quality, out DishQuality served)
+    {
+        served = DishQuality.Good;
+
         if (!CanServe(recipe) || inventory == null)
         {
             return false;
@@ -545,7 +553,19 @@ public class DailyMenu : MonoBehaviour
 
         if (GetDishesInBag(recipe) > 0)
         {
-            inventory.RemoveItem(recipe.dishItem, 1);
+            // คุณภาพที่เลือกหมดแล้ว (เช่น ถูกเสิร์ฟไปก่อน) = ใช้คุณภาพดีที่สุดที่เหลือ
+            DishQuality pick;
+            if (quality.HasValue && inventory.GetCount(recipe.dishItem, quality.Value) > 0)
+            {
+                pick = quality.Value;
+            }
+            else
+            {
+                inventory.TryGetBestQuality(recipe.dishItem, out pick);
+            }
+
+            inventory.RemoveItem(recipe.dishItem, 1, pick);
+            served = pick;
         }
         else
         {
@@ -571,7 +591,7 @@ public class DailyMenu : MonoBehaviour
 
         entry.Remaining--;
         entry.Sold++;
-        Debug.Log($"DailyMenu: Served {recipe.recipeName} ({entry.Remaining} left).");
+        Debug.Log($"DailyMenu: Served {recipe.recipeName} ({DishQualityUtil.Label(served)}, {entry.Remaining} left).");
         OnServingTaken?.Invoke(recipe);
         OnMenuChanged?.Invoke();
         return true;

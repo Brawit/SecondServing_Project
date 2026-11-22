@@ -55,6 +55,19 @@ public class CustomerManager : MonoBehaviour
     [Tooltip("โอกาสตั้งต้นที่จะชอบมาก 0–1 (อัปเกรดร้านเพิ่มได้ผ่าน SetLovedChanceBonus) ส่วนที่เหลือแบ่งเท่ากันให้ อร่อยดี / เฉยๆ")]
     [Range(0f, 1f)] [SerializeField] private float baseLovedChance = 0.2f;
 
+    [Header("Dish quality effect on mood (added to the chances above)")]
+    [Tooltip("จาน Perfect: เพิ่มโอกาสชอบมาก")]
+    [Range(-1f, 1f)] [SerializeField] private float perfectLovedBonus = 0.3f;
+
+    [Tooltip("จาน Perfect: เพิ่ม/ลดโอกาสเฉยๆ (ติดลบ = เฉยๆ น้อยลง)")]
+    [Range(-1f, 1f)] [SerializeField] private float perfectMehBonus = -0.2f;
+
+    [Tooltip("จาน OK: เพิ่ม/ลดโอกาสชอบมาก (ติดลบ = ชอบมากน้อยลง)")]
+    [Range(-1f, 1f)] [SerializeField] private float okLovedBonus = -0.1f;
+
+    [Tooltip("จาน OK: เพิ่มโอกาสเฉยๆ")]
+    [Range(-1f, 1f)] [SerializeField] private float okMehBonus = 0.3f;
+
     [Header("Satisfaction (step 2.6 will use these for money / reputation)")]
     [Tooltip("อารมณ์ อร่อยดี: จานปกติ หรือเปลี่ยนจานแล้วอร่อยดี")]
     [Min(0f)] [SerializeField] private float normalSatisfaction = 1f;
@@ -571,24 +584,55 @@ public class CustomerManager : MonoBehaviour
 
     // ---------- อารมณ์และความพอใจ ----------
 
-    // อารมณ์หลังกิน (ลูกค้าเรียกตอนได้อาหาร): เมนูนิยม = ชอบมาก / จานปกติ = อร่อยดี / เปลี่ยนจาน = สุ่ม
+    // อารมณ์หลังกิน (ลูกค้าเรียกตอนได้อาหาร) คุณภาพจาน Good = ไม่เปลี่ยนโอกาส
     public CustomerMood DecideMood(CustomerOrderKind kind)
     {
+        return DecideMood(kind, DishQuality.Good);
+    }
+
+    // [2.5] อารมณ์หลังกินตามแบบการสั่ง + คุณภาพจาน
+    // โอกาสพื้นฐาน: เมนูนิยม = ชอบมาก 100% / จานปกติ = อร่อยดี 100% / เปลี่ยนจาน = ชอบมาก LovedChance ที่เหลือแบ่งเท่ากัน
+    // แล้วบวกผลของคุณภาพ: Perfect = ชอบมากเพิ่ม เฉยๆ ลด / OK = ชอบมากลด เฉยๆ เพิ่ม
+    public CustomerMood DecideMood(CustomerOrderKind kind, DishQuality quality)
+    {
+        float loved;
+        float meh;
         switch (kind)
         {
             case CustomerOrderKind.Popular:
-                return CustomerMood.Loved;
+                loved = 1f;
+                meh = 0f;
+                break;
 
             case CustomerOrderKind.Substitute:
-                float loved = LovedChance;
-                float roll = UnityEngine.Random.value;
-                if (roll < loved) return CustomerMood.Loved;
-                // ส่วนที่เหลือแบ่งเท่ากัน อร่อยดี / เฉยๆ
-                return roll < loved + (1f - loved) * 0.5f ? CustomerMood.Good : CustomerMood.Meh;
+                loved = LovedChance;
+                meh = (1f - loved) * 0.5f;
+                break;
 
             default:
-                return CustomerMood.Good;
+                loved = 0f;
+                meh = 0f;
+                break;
         }
+
+        if (quality == DishQuality.Perfect)
+        {
+            loved += perfectLovedBonus;
+            meh += perfectMehBonus;
+        }
+        else if (quality == DishQuality.Ok)
+        {
+            loved += okLovedBonus;
+            meh += okMehBonus;
+        }
+
+        loved = Mathf.Clamp01(loved);
+        meh = Mathf.Clamp(meh, 0f, 1f - loved);
+
+        float roll = UnityEngine.Random.value;
+        if (roll < loved) return CustomerMood.Loved;
+        if (roll < loved + meh) return CustomerMood.Meh;
+        return CustomerMood.Good;
     }
 
     // ความพอใจตามอารมณ์
@@ -646,7 +690,8 @@ public class CustomerManager : MonoBehaviour
         // ได้อาหารแล้ว: ร้านไม่ต้องรอคนนี้ (หมดเวลาแล้วและเสิร์ฟครบ = ร้านปิดได้เลย)
         ReleaseServiceSlot(customer);
 
-        if (verboseLog) Debug.Log($"CustomerManager: Served {recipe.recipeName} to {customer.name} ({customer.OrderKind}, mood {customer.Mood}, satisfaction {customer.Satisfaction:0.00}).");
+        if (verboseLog) Debug.Log($"CustomerManager: Served {recipe.recipeName} ({DishQualityUtil.Label(customer.ServedQuality)}) to {customer.name} " +
+                                  $"({customer.OrderKind}, mood {customer.Mood}, satisfaction {customer.Satisfaction:0.00}).");
         OnCustomerServed?.Invoke(customer, recipe);
     }
 
