@@ -1,7 +1,7 @@
 # Second Serving – HANDOFF
 
 > ไฟล์นี้สรุปสถานะโปรเจกต์ให้ Claude ในแชทใหม่อ่านต่อได้ทันที
-> อัปเดตล่าสุด: 21 พฤศจิกายน 2026 (จบขั้น D เมนูประจำวัน / ถัดไปขั้น 2.4 ลูกค้า AI)
+> อัปเดตล่าสุด: 22 พฤศจิกายน 2026 (จบขั้น 2.4b เมนูนิยมรายวัน + ลูกค้าถามหาเมนูนิยม + อารมณ์หลังกิน / ถัดไปขั้น 2.5 ทำอาหารและเสิร์ฟ)
 > ตำแหน่งไฟล์: `D:\SecondServing_Project\Docs\HANDOFF.md` (อยู่นอก Assets ตั้งใจไม่ให้ Unity import)
 
 ---
@@ -77,7 +77,12 @@
 **ร้านและวัน**
 - ร้านอยู่ฉากเดียวกับแผนที่ เข้าด้วยประตูวาร์ป (สลับขอบกล้อง) มีห้องนอนหลังร้านที่เข้าทางประตูหลังได้
 - เปิดร้านได้ช่วง 17:00–19:00 (มีแจ้งเตือน) ถ้าถึง 19:00 ยังไม่เปิด วันนั้นเปิดไม่ได้อีก
-- รอบขาย: จับเวลา 3 นาทีจริง หมดเวลาแล้วไม่รับลูกค้าใหม่ แต่ร้านยังเปิดจนลูกค้าในร้านหมด ปิดร้านแล้วข้ามไป 22:00 เสมอ นาฬิกาหยุดระหว่างขาย
+- รอบขาย: จับเวลา 3 นาทีจริง (`ShopManager.serviceDurationSeconds` = 180) นาฬิกาหยุดระหว่างขาย ปิดร้านแล้วข้ามไป 22:00 เสมอ
+  - หมดเวลา = ไม่รับลูกค้าใหม่ / **ขายหมดทุกเมนูก่อนหมดเวลา = หยุดรับลูกค้าทันที** (`EndServiceBySellOut`)
+  - **ร้านปิดทันทีเมื่อไม่มีลูกค้าที่ยังไม่ได้อาหาร** (รวมคนที่กำลังเดินไปนั่ง) คนที่ได้อาหารแล้วกินต่อจนเสร็จแล้วเดินออกเองระหว่างโหมดสำรวจ
+  - ระหว่างเปิดร้าน **ซ่อนนาฬิกาปกติ** แสดงตัวนับถอยหลัง `นาที:วินาที.เสี้ยววินาที` กลางบนจอ (เหลือง < 60 วิ, แดง+เต้น < 20 วิ) + สถานะ `Dishes left N · Waiting N` / `SOLD OUT!` / `TIME'S UP!`
+  - `Waiting` นับเฉพาะลูกค้าที่**นั่งแล้วและสั่งแล้ว** (เสิร์ฟได้ทันที) คนที่ยังเดิน/คิดเมนู/ได้อาหารแล้วไม่นับ
+- **ความยาว 1 วัน** (10 นาทีเกม = 7 วินาทีจริง แบบ Stardew): 06:00–17:00 ≈ 7.7 นาที, ร้าน 3 นาที, 22:00–03:00 ≈ 3.5 นาที → วันปกติ ≈ 11 นาที สูงสุด ≈ 14 นาที / ผู้ใช้เห็นด้วยว่าค่อยปรับความยาวรอบขาย + ความถี่ลูกค้าหลังจบ 2.5
 - นอนได้ทุกเวลา ยกเว้นตอนเปิดร้าน (กด E ที่เตียงสองครั้ง) → หน้าสรุป → เซฟ → 06:00
 - ถึง 03:00 ยังไม่นอนจะสลบแล้วไปตื่นที่โรงพยาบาล (ยังไม่มีบทลงโทษ)
 - เปิดกระเป๋าไม่ได้ระหว่างเปิดร้านและระหว่างหน้าสรุปวัน
@@ -109,6 +114,24 @@
   - เสิร์ฟใช้จานที่ทำไว้แล้วก่อน แล้วค่อยหักวัตถุดิบ / สองเมนูใช้วัตถุดิบเดียวกัน = max ของแต่ละช่องหักส่วนที่ช่องอื่นจอง
   - **จำเมนูเมื่อวานเป็นค่าเริ่มต้น** (เซฟ v5) เปิดหน้าต่างแล้วจำนวนถูกลดตามของที่มี / สูตรที่ไม่รู้ถูกล้าง
   - ระหว่างเปิดหน้าต่างเมนู: นาฬิกาหยุด เดินไม่ได้ เปิดกระเป๋าไม่ได้ ใช้ Hotbar ไม่ได้
+- **ลูกค้า (ขั้น 2.4a)**
+  - หาเส้นทางด้วย **Grid A* จาก Tilemap** (4 ทิศ) ใช้ต่อกับ NPC เฟส 3 ได้
+  - ที่นั่ง = **โต๊ะ + เก้าอี้หลายตัว** (prefab Table_2Seats) ตอนนี้ 1 คนต่อ 1 ที่ กลุ่มลูกค้าทำทีหลัง
+  - **ลูกค้าสั่งได้เฉพาะเมนูประจำวัน** เมนูหมด = สั่งจานอื่นที่ยังเหลือ หมดทั้งร้าน = เดินออก (ผู้ใช้ไม่อยากให้ลูกค้าอยากกินเมนูที่ไม่ได้ขาย)
+  - ความอดทนสุ่ม 35–50 วินาทีต่อคน (ตั้งใจให้ต่างกัน ต่อไปใช้กับลูกค้าหลายแบบได้) หมดเวลา = เดินออก
+  - **เสิร์ฟชั่วคราว: กด E ที่ลูกค้า** (ขั้น 2.5 จะเปลี่ยนเป็นทำที่เตา → ถือจาน → เสิร์ฟ ผู้ใช้อยากให้มีเฟสทำอาหารจริงจัง)
+  - **จ่ายเงินตอนได้อาหาร** (ไม่ใช่ตอนกินเสร็จ) / เดินออกเร็วกว่าเดินเข้า 1.6 เท่า
+  - **เมนูนิยมรายวัน (ขั้น 2.4b)** `PopularDishes` บนวัตถุ DailyMenu
+    - สุ่มวันละ **2 จาน** (เพิ่มได้ทีหลังจากการอัปเกรดร้าน `SetBonusCount`) แต่ละจานมีโอกาส **25%** เป็นสูตรที่ยังไม่รู้ (ไม่รวมสูตรลับ) สูตรลับที่รู้แล้วเป็นได้ / พยายามไม่ซ้ำเมื่อวาน / **ไม่เซฟ** (โหลด = วันใหม่ สุ่มใหม่)
+    - สูตรที่ยังไม่รู้แสดงเป็น**คำใบ้ชั่วคราว** `??? (Japanese dessert)` / ลูกค้าถามหาเป็น `that Japanese dessert` → ผู้ใช้อยากให้**เฟส 3 เปลี่ยนเป็นคำใบ้ผ่าน NPC / จุดให้ไปหาสูตร / เนื้อเรื่องหลัก-รอง** (คิดตอนมี NPC หลักหรือช่วงขัดเกลาภาพ) แก้ที่ `GetDisplayName` / `GetRequestName` จุดเดียว
+    - หน้าต่างเลือกเมนู: บรรทัด `Popular today: * …` สีทองใต้หัวข้อ + รายการสูตรที่นิยมขึ้นก่อน มี `*` สีทอง (ใช้ `*` เพราะไม่แน่ใจว่าฟอนต์ TMP มี ★)
+    - เมนูนิยมที่มีขาย ถูกสั่งบ่อยกว่า **3 เท่า** / ลูกค้าที่สั่งเมนูนิยมมี `*` หน้าชื่อจานเหนือหัว
+    - **ไม่ใส่เมนูนิยมเลยไม่มีบทลงโทษ** (ผู้ใช้เลือก: ใส่เมนูนิยมต้องไม่มีทางแย่กว่าไม่ใส่) ไม่มีลูกค้าเดินออกเพราะเรื่องเมนูนิยม
+    - **ลูกค้าถามหาเมนูนิยมที่ร้านไม่มี** (ไม่ได้ใส่ หรือหมดแล้ว) โอกาส 25% ต่อคน: ขึ้น `Got Som Tam? [E] 40s` → **ผู้เล่นเดินไปกด E เอง** (ผู้ใช้อยากให้เป็นการโต้ตอบกับลูกค้า) → แจ้งเตือนคำพูดผู้เล่น "Sorry, no … today. Try our menu, it's tasty!" → ลูกค้า `OK, I'll try …!` เลือกจานจากเมนูวันนี้ → รอเสิร์ฟ (ความอดทนนับต่อ ไม่รีเซ็ต) / ลูกค้าที่ถามหาอยู่นับใน Waiting และร้านยังไม่ปิดจนกว่าจะตอบ
+  - **อารมณ์หลังกินและความพอใจ (ขั้น 2.4b)** สุ่มตอนได้อาหาร แสดงตอนกินเสร็จ
+    - ลูกค้าที่เปลี่ยนจาน: **ชอบมาก 20%** (`Loved it!!` 1.5) / **อร่อยดี 40%** (`Tasty, thanks!` 1.0) / **เฉยๆ 40%** (`It was okay.` 0.7) โอกาสชอบมาก**เพิ่มได้จากการอัปเกรดร้าน** (`SetLovedChanceBonus`) ส่วนที่เหลือแบ่งเท่ากัน
+    - ได้กินเมนูนิยม = ชอบมาก 1.5 / จานปกติ = อร่อยดี 1.0 / ไม่ได้กิน = 0
+    - เก็บที่ `Customer.Satisfaction` / `Mood` รวมรายวันใน CustomerManager ให้ 2.6 ใช้คิดเงิน/ชื่อเสียง
 - **Hotbar 10 ช่อง** ด้านล่างจอ: เลือกด้วยลูกกลิ้งเมาส์ / ปุ่ม 1–9, 0 / คลิกที่ช่อง ลากของจากกระเป๋ามาใส่ได้ (เป็นทางลัด ไม่ได้ย้ายของออกจากกระเป๋า) ไอเทมชนิดเดียวกันอยู่ได้ทีละช่อง
   - ใส่ได้เฉพาะ อาวุธ / เครื่องมือ / ของที่กินได้ (`Hotbar.CanAssign`)
   - ลากช่องไปช่อง = สลับ / ลากออกนอกแถบ = เอาทางลัดออก
@@ -125,6 +148,8 @@
 | ค้าง F แล้วกด R | – | – | Ultimate (ใช้ FEVER เต็มหลอด) |
 
 - E = ใช้งานของในฉาก (เดิม) / I = กระเป๋า / ปุ่ม Debug เร่งเวลาย้ายจาก F เป็น **F7** แล้ว
+- **Shift = สลับเดิน/วิ่ง (toggle)** วิ่งเร็ว 1.7 เท่า หัก Stamina 1 ทุก 1 วินาทีเฉพาะตอนขยับตัว Stamina ไม่พอ = กลับเป็นเดินเอง (ปรับได้ที่ PlayerController หัวข้อ Run) ระหว่างเปิดกระเป๋า/หน้าต่างเมนู Shift ไม่สลับวิ่ง
+- Scroll เมาส์: ผู้ใช้อยากได้ **ขึ้น = ไปทางซ้าย / ลง = ไปทางขวา** → ติ๊ก `Invert Scroll` ที่ PlayerActionController บน Player (ไม่ได้แก้โค้ด)
 - คลิกที่ชี้อยู่บน UI จะไม่นับเป็นการใช้ของ
 
 **ค่าสถานะ**
@@ -177,6 +202,26 @@ Cooking/DailyMenu.cs      singleton (วัตถุ DailyMenu ในฉาก):
                           GetTotalSold, ฟัง OnShopClosed, CaptureMenu/RestoreMenu, events OnMenuChanged / OnServingTaken,
                           Debug: Print Menu / Serve One Of Each / Add Menu Slot
 Cooking/RecipeBook.cs     สูตรที่รู้ (บน Player): เริ่มด้วยสูตร inDemo, Knows, Learn, SetKnown, Debug: Learn All Recipes
+Cooking/PopularDishes.cs  [2.4b] singleton (บนวัตถุ DailyMenu): Today, IsPopular, IsKnown, GetDisplayName (คำใบ้ ??? ในหน้าต่างเมนู),
+                          GetRequestName (คำที่ลูกค้าถามหา), GetSummaryText, Marker, SetBonusCount, Reroll, สุ่มตอน OnDayStarted + สุ่มเองตอนถูกเรียกครั้งแรกของวัน,
+                          event OnPopularChanged, Debug: Reroll Popular Dishes / Print Popular Dishes
+Navigation/GridPathfinder.cs  singleton (บน CustomerManager): A* บนช่อง Grid, walkableTilemaps (Ground), blockingTilemaps (Obstables),
+                              Collider ทึบ = สิ่งกีดขวาง ยกเว้น Trigger / Rigidbody Dynamic / Collider ของ Tilemap (ข้าม CameraBounds_*),
+                              FindPath, IsWalkable (cache), ClearCache, TryFindNearestWalkable, วาดเส้นทางล่าสุดเป็นเส้นฟ้าใน Scene view
+Shop/Seat.cs              ที่นั่ง 1 ที่: TryReserve / Release / ForceRelease, SitPosition, Gizmo เขียว = ว่าง แดง = มีคน
+Shop/Table.cs             โต๊ะ (Collider ทึบ) รวม Seat ที่เป็นลูก, FreeSeatCount
+Shop/Customer.cs          IInteractable: WalkingToSeat → Ordering → (Asking) → WaitingForFood → Eating → Leaving, NeedsService, TryServe (E = เสิร์ฟ + จ่ายเงิน),
+                          [2.4b] Asking = ถามหาเมนูนิยม → E = RecommendTodaysMenu (เปลี่ยนจาน), OrderKind (Normal/Popular/Substitute/Asking),
+                          Mood (Loved/Good/Meh) + Satisfaction ตั้งตอนเสิร์ฟ, AskedFor, ข้อความทั้งหมดแก้ได้ใน prefab (หัวข้อ Text / Mood text)
+                          LeaveBecauseShopClosed, RemoveImmediately, ข้อความ TextMeshPro เหนือหัว (ชื่อจาน + วินาทีที่เหลือ)
+Shop/CustomerManager.cs   singleton: ปล่อยลูกค้าจาก entryPoint (ShopEntryFront) ทุก 8–14 วิ เมื่อมีที่นั่งว่าง + FreeServings > 0,
+                          TryPickOrder (ถามหาเมนูนิยมที่ไม่มี โอกาส askForPopularChance / หรือสุ่มจากจานที่เหลือ เมนูนิยม ×popularOrderWeight),
+                          TryPickSubstitute (ตอนผู้เล่นแนะนำเมนู), DecideMood / GetSatisfaction(mood), SetLovedChanceBonus, LovedChance, ReleasePending,
+                          สถิติ [2.4b] PopularServedToday / AskedForPopularToday / SubstituteServedToday / LovedToday / GoodToday / MehToday /
+                          SatisfactionTotalToday / AverageSatisfactionToday (ลูกค้าที่ถามหายังจองจานไว้ใน notYetOrdered จนกว่าจะเปลี่ยนจาน),
+                          waitingForService → ShopManager.Register/UnregisterCustomer (ปล่อยตอนได้อาหาร), SeatedWaitingCount,
+                          ขายหมด → shop.EndServiceBySellOut(), ServedToday / LeftUnhappyToday / EarnedToday,
+                          events OnCustomerSpawned / Served / Paid / Left, Debug: Spawn Customer Now / Serve All Waiting / Print Status
 Interaction/IInteractable.cs, PlayerInteractor.cs (กด E ใช้ของที่ใกล้สุดชิ้นเดียว), PlayerTeleporter.cs (วาร์ป + สลับ Confiner),
             Door.cs, ShopCounter.cs (ช่วง CanOpen เปิด MenuSelectionUI / ไม่มีหน้าต่าง = เปิดร้านทันที), Bed.cs (กด E สองครั้ง)
 Systems/GameClock.cs      singleton, วันไม่จบเอง, passOutHour 27 (03:00), ช่วง Morning/Afternoon/Evening/Night,
@@ -202,15 +247,18 @@ UI/HotbarUI.cs         แถบ 10 ช่อง + ชื่อไอเทม�
 UI/HotbarSlotUI.cs     ไอคอน/จำนวน/เลขปุ่ม/กรอบเลือก, คลิกเลือก, OnDrop (จากกระเป๋า = ใส่, จาก Hotbar = สลับ), ลากออก = เอาออก
 UI/EquipmentPanelUI.cs แผงช่องสวมใส่ 8 ช่อง (แถวบน Stats แถวล่าง Fashion), OnSlotClicked, SetSelectedSlot
 UI/EquipmentSlotUI.cs  ช่องสวมใส่ 1 ช่อง: OnDrop (จากกระเป๋า = สวม, จากช่องอื่น = สลับ), ลากออก = ถอด, คลิก = ดูรายละเอียด
-UI/MenuSelectionUI.cs  หน้าต่างเลือกเมนู (static Instance / IsAnyOpen): Open, Close, ปุ่ม Open Shop / Cancel, Esc, Shift = ±5
+UI/MenuSelectionUI.cs  หน้าต่างเลือกเมนู (static Instance / IsAnyOpen): Open, Close, ปุ่ม Open Shop / Cancel, Esc, Shift = ±5, [2.4b] popularText + เรียงเมนูนิยมขึ้นก่อน
 UI/MenuSlotRowUI.cs    แถวช่องเมนู (ชื่อ, ready+cook, −/+, X) สร้างจาก MenuSlotTemplate
-UI/MenuRecipeItemUI.cs รายการสูตรฝั่งขวา (คลิก = ใส่ช่องว่าง) สร้างจาก RecipeItemTemplate
+UI/MenuRecipeItemUI.cs รายการสูตรฝั่งขวา (คลิก = ใส่ช่องว่าง) สร้างจาก RecipeItemTemplate, [2.4b] เมนูนิยม = `*` + ชื่อสีทอง + "Popular today!"
+UI/ServiceTimerUI.cs   ซ่อน ClockPanel / แสดง ServiceTimerPanel ระหว่างเปิดร้าน (TimerText ใช้ <mspace>, StatusText)
 UI/DragIconUI.cs       ไอคอนลอยตามเมาส์ตอนลาก สร้างตัวเองบน Canvas หลัก (ไม่ต้องวางในฉาก)
 Editor/RecipeImporter.cs           Tools > Second Serving > Import Recipes & Ingredients
 Editor/InventoryLayoutBuilder.cs   Tools > Second Serving > Build Inventory Window Layout (จัดหน้าต่างกระเป๋าอัตโนมัติ)
 Editor/HudLayoutBuilder.cs         Tools > Second Serving > Build Stats HUD (มุมซ้ายบน) / Build Hotbar HUD (กลางล่าง)
                                    ใส่คอมโพเนนต์ที่ขาดให้ Player และผูกช่องให้ กดซ้ำได้
-Editor/MenuLayoutBuilder.cs        Tools > Second Serving > Build Daily Menu Window (สร้าง DailyMenu + MenuSelectionUI/MenuWindow + ผูก SaveManager)
+Editor/CustomerSetupBuilder.cs     Tools > Second Serving > Build Customer System (prefab Customer / Table_2Seats / WhiteSquare + CustomerManager + GridPathfinder)
+Editor/ServiceTimerLayoutBuilder.cs Tools > Second Serving > Build Service Timer
+Editor/MenuLayoutBuilder.cs        Tools > Second Serving > Build Daily Menu Window (สร้าง DailyMenu + PopularDishes + MenuSelectionUI/MenuWindow + PopularText + ผูก SaveManager)
 Editor/EquipmentLayoutBuilder.cs   Tools > Second Serving > Build Equipment Panel (สร้างแผง + PlayerEquipment + ผูก InventoryUI/SaveManager)
                                    / Create Test Equipment Items (ของทดสอบ 8 ชิ้นใน Assets/Items/TestEquipment + อัปเดต ItemDatabase)
 ```
@@ -223,16 +271,19 @@ Editor/EquipmentLayoutBuilder.cs   Tools > Second Serving > Build Equipment Pane
 - **กล้อง:** Main Camera (Cinemachine Brain) + PlayerFollowCam (Position Composer, Ortho 5, Confiner 2D)
 - **Grid:** Ground, Obstacles, CameraBoundsMap, CameraBounds_Shop
 - **ร้าน:** ประตู 4 บาน (Door), ShopCounter, Bed และจุดวาร์ป ShopEntry_Front/Back, Outside_Front/Back, BedWakePoint, HospitalWakePoint
-- **ระบบ:** GameClock, ShopManager, DailyMenu, DayEndManager, ForageSpawner, SaveManager (ItemDatabase, Inventory, ForageSpawner, RecipeDatabase, RecipeBook, Hotbar, PlayerStats, PlayerEquipment, DailyMenu)
+- **ระบบ:** GameClock, ShopManager, DailyMenu (+ **PopularDishes**), **CustomerManager** (+ GridPathfinder, ลูก Customers), DayEndManager, ForageSpawner, SaveManager (ItemDatabase, Inventory, ForageSpawner, RecipeDatabase, RecipeBook, Hotbar, PlayerStats, PlayerEquipment, DailyMenu)
 - **Canvas:** ClockUI, NotificationUI, DaySummaryUI, InventoryUI → InventoryWindow (TitleText, ProgressText, BagLevelText, TabBar ที่มีปุ่ม 5 แท็บ, SlotScrollView/Viewport/Content, DetailPanel, **EquipmentPanel** (EquipSlot_Shoes … EquipSlot_Back), SlotGrid เดิมถูกปิดไว้),
   **StatsHUD** (StatsUI, แถว HealthRow/StaminaRow/ManaRow/FeverRow), **HotbarHUD** (HotbarUI, Slot_1–Slot_10, SelectedNameText),
-  **MenuSelectionUI** → MenuWindow (SlotList + MenuSlotTemplate, RecipeScrollView + RecipeItemTemplate, TotalText, CancelButton, OpenShopButton) อยู่บนสุดของ Canvas
+  **ServiceTimerUI** → ServiceTimerPanel (TimerText, StatusText) กลางบนจอ,
+  **MenuSelectionUI** → MenuWindow 1200x800 (TitleText, HintText, **PopularText**, SlotList + MenuSlotTemplate, RecipeScrollView + RecipeItemTemplate, TotalText, CancelButton, OpenShopButton) อยู่บนสุดของ Canvas
 - หน้าต่างกระเป๋า 1500x860 กลางจอ (ขอบล่างอยู่ที่ y=110) Hotbar สูง 72 ห่างขอบล่าง 16 จึงไม่ทับกัน
 - **ของทดสอบ:** ผู้ใช้สร้าง `TestSword` (Weapon) และ `TestHoe` (Tool) ไว้ใน `Assets/Items` / ของสวมใส่ทดสอบ 8 ชิ้นใน `Assets/Items/TestEquipment` (test_boots, test_ring_ruby, test_ring_jade, test_necklace, test_hat, test_top, test_bottom, test_wings)
 - **กล้อง:** Ortho Size 5 (จอประมาณ 17.8 x 10 หน่วย) Position Composer Damping 0.5, Confiner 2D Damping 0.5 / Slowing Distance 5
   - เคยมีปัญหากล้องกระโดดในร้าน เพราะ `CameraBounds_Shop` เป็น 2 ห้องเชื่อมด้วยช่องแคบกว่าจอ (Confiner แยกเป็น 2 เกาะ) ผู้ใช้รู้วิธีแก้และจัดการเอง
   - `CameraBoundsMap` กว้าง 17 หน่วย แคบกว่าจอ กล้องข้างนอกจึงเลื่อนซ้ายขวาไม่ได้ ตอนขยายแผนที่ต้องกว้างกว่า 18 หน่วย
-- **Prefab:** `Assets/Prefabs/InventorySlot` (มี SelectionFrame), `Assets/Prefabs/Mushroom_Pickup`
+- **Prefab:** `Assets/Prefabs/InventorySlot` (มี SelectionFrame), `Assets/Prefabs/Mushroom_Pickup`, `Assets/Prefabs/Customer` (Body sprite, Bubble TextMeshPro, Trigger + Kinematic), `Assets/Prefabs/Table_2Seats` (Collider ทึบ + Seat_Left/Seat_Right ไม่มี Collider), `Assets/Prefabs/Placeholder/WhiteSquare.png` (4x4, PPU 4)
+- **ร้าน:** ผู้ใช้วางโต๊ะ Table_2Seats ในร้านเองแล้ว / Player มี Rigidbody2D แบบ Dynamic (ตัวหาเส้นทางจึงไม่นับผู้เล่นเป็นสิ่งกีดขวาง)
+- Tilemap สิ่งกีดขวางในฉากชื่อ **`Obstables`** (สะกดผิด) / `CameraBoundsMap` และ `CameraBounds_Shop` มี TilemapCollider2D ทึบ (ใช้กับ Confiner)
 
 ## 9. Roadmap
 
@@ -250,42 +301,57 @@ UI ทั้งหมดตอนนี้เป็นแบบใช้งา�
 - **ขั้น B2:** Hotbar 10 ช่อง + HotbarUI + เลือกช่อง + กิน + รับปุ่ม Attack/Heavy/Block/Skill/Ultimate (ยังไม่มีผลจริง)
 - **ขั้น B3:** ลากของจากกระเป๋าลง Hotbar, สลับช่อง, ลากออก
 - **ขั้น B4:** เซฟ v3 (ช่อง Hotbar, FEVER, ค่าสูงสุดถาวร) + ซ่อนจานของสูตรลับที่ยังไม่รู้ในแท็บ Dishes + Debug ให้ไอเทมตาม itemId
+- **ขั้น 2.4a:** ลูกค้า AI (Grid A*, โต๊ะ/เก้าอี้, เดิน-นั่ง-สั่ง-รอ-เสิร์ฟด้วย E-กิน-ออก) + ตัวจับเวลาร้าน + ขายหมดปิดร้านก่อน + ปิดร้านทันทีหลังเสิร์ฟคนสุดท้าย + Waiting นับคนนั่ง + วิ่ง (Shift) ผู้ใช้ทดสอบแล้วใช้ได้
+- **ขั้น 2.4b:** เมนูนิยมรายวัน (PopularDishes) + แสดงในหน้าต่างเมนู + น้ำหนักการสั่ง ×3 + ลูกค้าถามหาเมนูนิยมที่ไม่มี (กด E แนะนำเมนูวันนี้) + อารมณ์หลังกิน (ชอบมาก/อร่อยดี/เฉยๆ) + ความพอใจรายวัน ผู้ใช้ทดสอบแล้ว "โอเคสำหรับทดสอบ"
 - **ขั้น D = 2.3:** เมนูประจำวัน (DailyMenu + หน้าต่างเลือกเมนูที่เคาน์เตอร์ + จอง/เสิร์ฟ/ปิดร้าน + เซฟ v5) ผู้ใช้ทดสอบแล้วใช้ได้ (UI จะ polish ทีหลัง)
 - **ขั้น C:** Equipment Slots 8 ช่อง (Stats 4 + Fashion 4) ในหน้าต่างกระเป๋า ลากใส่/ถอด/สลับ + เซฟ v4 (ผู้ใช้ทดสอบเบื้องต้นแล้ว ใช้งานได้)
 
-**⬜ เฟส 2 (เหลือประมาณ 8–11 สัปดาห์)**
+**⬜ เฟส 2 (เหลือประมาณ 6–8 สัปดาห์)**
 
 | ขั้น | งาน | เวลา |
 |---|---|---|
-| **2.4** ← ถัดไป | ลูกค้า AI (เลือกระบบหาเส้นทางก่อน) + ลูกค้าอยากกินเมนูเฉพาะ | 8–12 วัน |
-| 2.5 | ทำอาหารและเสิร์ฟ + เตาในครัวที่ใช้ได้ทุกเวลา + โหมดลองผสม (ค้นพบสูตร Rumor) | 9–13 วัน |
-| 2.6 | เงิน ชื่อเสียง ราคาจากต้นทุน ความชำนาญ โบนัสความหลากหลาย | 3–4 วัน |
+| **2.5** ← ถัดไป | ทำอาหารและเสิร์ฟ (เตา → ถือจาน → เสิร์ฟ แทน E ชั่วคราว) + เตาในครัวที่ใช้ได้ทุกเวลา + โหมดลองผสม (ค้นพบสูตร Rumor) | 9–13 วัน |
+| – | ปรับความยาวรอบขาย + ความถี่ลูกค้า หลังมีการทำอาหาร | 0.5 วัน |
+| 2.6 | เงิน (ต่อจาก CustomerManager.OnCustomerPaid / EarnedToday) ชื่อเสียง (LeftUnhappyToday, Satisfaction/Mood รายวัน) ราคาจากต้นทุน ความชำนาญ โบนัสความหลากหลาย + จุดอัปเกรดร้านที่เรียก `PopularDishes.SetBonusCount` / `CustomerManager.SetLovedChanceBonus` | 3–4 วัน |
 | 2.6b | ร้านค้าพื้นฐาน (ซื้อ/ขาย) + อัปเกรดกระเป๋า | 4–6 วัน |
 | 2.6c | ของป่าสำหรับสูตรเริ่มต้น 12 ชนิด (prefab + โซนงอก) | 2–3 วัน |
-| 2.7 | สรุปรายวัน (ส่วนที่เหลือ) | 1–2 วัน |
+| 2.7 | สรุปรายวัน (ส่วนที่เหลือ: ยอดขาย/ลูกค้า/เงิน จาก DailyMenu + CustomerManager) | 1–2 วัน |
 | – | เล่นทดสอบทั้งวงจร | 4–5 วัน |
 
 🎯 จบเฟส 2 = Vertical Slice เล่นครบวงจรด้วย 8 สูตรเริ่มต้น
 
 **⬜ เฟส 3 (ประมาณ 8–11 เดือน)**
-NPC และบทสนทนา, ความสนิทและรสนิยมอาหาร, ข่าวลือและ side story สูตรลับ (ใช้คอลัมน์ Rumor / Story Notes), ฤดูกาลและอากาศ, เควสต์และเทศกาล, แบ่งแผนที่เป็นโซน, พ่อค้าเร่, ร้านค้าเต็มรูปแบบ, ปลูกพืช, เลี้ยงสัตว์, เครื่องแปรรูป, โซนทะเลและตกปลา, **ระบบต่อสู้ + มอนสเตอร์ + บอส + ถ้ำ (8–12 สัปดาห์)** (ต่อจาก PlayerActionController: hitbox, ดาเมจ, เรียก `RegisterCombatHit`, ต้นทุนท่าย้ายไปอยู่ที่ข้อมูลอาวุธ, FEVER จาก Skill), **ความชำนาญ (proficiency) แต่ละอาวุธแบบ Stardew** (ให้แหล่งฟื้น Mana), โพชั่น, ของสวมใส่ที่มีผลกับค่าสถานะ, บทลงโทษตอนสลบ/Health หมด, สิ่งประดิษฐ์ช่วงปลายเกม
+NPC และบทสนทนา, ความสนิทและรสนิยมอาหาร, ข่าวลือและ side story สูตรลับ (ใช้คอลัมน์ Rumor / Story Notes), ฤดูกาลและอากาศ, เควสต์และเทศกาล, แบ่งแผนที่เป็นโซน, พ่อค้าเร่, ร้านค้าเต็มรูปแบบ, ปลูกพืช, เลี้ยงสัตว์, เครื่องแปรรูป, โซนทะเลและตกปลา, **ระบบต่อสู้ + มอนสเตอร์ + บอส + ถ้ำ (8–12 สัปดาห์)** (ต่อจาก PlayerActionController: hitbox, ดาเมจ, เรียก `RegisterCombatHit`, ต้นทุนท่าย้ายไปอยู่ที่ข้อมูลอาวุธ, FEVER จาก Skill), **ความชำนาญ (proficiency) แต่ละอาวุธแบบ Stardew** (ให้แหล่งฟื้น Mana), โพชั่น, ของสวมใส่ที่มีผลกับค่าสถานะ, บทลงโทษตอนสลบ/Health หมด, ลูกค้าเป็นกลุ่ม + ลูกค้าหลายแบบ (ความอดทน/รสนิยมต่างกัน), NPC ใช้ GridPathfinder เดินทั่วเมือง, สิ่งประดิษฐ์ช่วงปลายเกม
 
 **⬜ เฟส 4 (ประมาณ 4–7 เดือน)**
-ภาพ (ไอคอนประมาณ 170 ชิ้น), เสียง, เมนูหลัก, ปรับสมดุล, ฟอนต์ไทย, เช็กภาพสั่น (Interpolate), เดโมเว็บ (SaveSync.jslib), หน้า Steam (ควรขึ้นช่วงกลางเฟส 3), ปล่อยเกม
+ภาพ (ไอคอนประมาณ 170 ชิ้น), polish UI ทั้งหมด (หน้าต่างเมนู ฯลฯ), ตัวบอกสถานะวิ่งบนจอ, เสียง, เมนูหลัก, ปรับสมดุล, ฟอนต์ไทย, เช็กภาพสั่น (Interpolate), เดโมเว็บ (SaveSync.jslib), หน้า Steam (ควรขึ้นช่วงกลางเฟส 3), ปล่อยเกม
 
-## 10. ขั้นถัดไป: ขั้น 2.4 ลูกค้า AI (กำลังเริ่ม)
+## 10. ขั้นถัดไป: ขั้น 2.5 ทำอาหารและเสิร์ฟ
 
-ขั้น D ผู้ใช้ทดสอบแล้วใช้ได้
+ขั้น 2.4b ผู้ใช้ทดสอบแล้ว "โอเคสำหรับทดสอบ" (ค่าตัวเลขต่างๆ ค่อยปรับตอนเล่นทดสอบทั้งวงจร)
 
-**ข้อมูลที่ต้องรู้**
-- ร้านเป็นพื้นที่ภายในที่วาร์ปเข้า (ประตู DoorFront/Back + จุด ShopEntryFront/Back) อยู่ฉากเดียวกับแผนที่ Tilemap ชื่อ `Obstables` (สะกดผิดในฉาก) และ `Ground`
-- ระบบลูกค้าต้องเรียก `ShopManager.RegisterCustomer` / `UnregisterCustomer` (ร้านปิดเมื่อหมดเวลาและลูกค้าออกหมด) และดู `IsAcceptingCustomers`
-- เลือกอาหารจาก `DailyMenu.CanServe` / เสิร์ฟจริงด้วย `DailyMenu.TryTakeServing` (ขั้น 2.5 จะทำการทำอาหาร/เสิร์ฟของผู้เล่น)
-- ต้องเลือกระบบหาเส้นทางกับผู้ใช้ก่อน (มีแพ็กเกจ com.unity.ai.navigation ติดตั้งอยู่แต่เป็น 3D)
+**สิ่งที่ตัดสินใจไว้แล้ว** (ข้อ 6)
+- เปลี่ยนการเสิร์ฟชั่วคราว (กด E ที่ลูกค้า) เป็น: ทำที่เตา → ถือจาน → เดินไปเสิร์ฟ (ผู้ใช้อยากให้มีเฟสทำอาหารจริงจัง แบบเกมทำอาหาร)
+- เตาในครัวใช้ได้ทุกเวลา (ทำจานนอกเวลาเปิดร้านได้ จานเป็นไอเทม ไม่เน่า ใช้ให้ NPC / กิน / ขาย)
+- โหมดลองผสมที่เตา = ทางค้นพบสูตร Rumor (สูตรลับประเภทข่าวลือ)
+- จุดที่ต้องต่อ: `DailyMenu.TryTakeServing(recipe)` (หักจานที่ทำไว้ก่อน แล้วค่อยหักวัตถุดิบที่จอง), `Customer.TryServe()`
+- ลูกค้าที่ถามหาเมนูนิยม (Asking) ยังใช้ E แนะนำเมนูเหมือนเดิม ต้องตัดสินว่าการเสิร์ฟแบบถือจานใช้ปุ่มเดียวกันไหม
+
+**ต้องถามผู้ใช้ก่อนเขียนโค้ด** (ตัวอย่าง)
+- ทำอาหารเป็นมินิเกมแบบไหน (กดตามจังหวะ / ขั้นตอนหั่น-ผัด-จัดจาน / แค่รอเวลา) และยากขึ้นตามสูตรไหม
+- ทำทีละจานหรือหลายจานพร้อมกัน มีเตากี่เตา ถือจานได้กี่จาน
+- ระหว่างเปิดร้าน วัตถุดิบที่จองไว้ถูกหักตอนเริ่มทำหรือตอนทำเสร็จ / ทำพลาดเสียวัตถุดิบไหม
+- คุณภาพจาน (ทำดี/ไม่ดี) มีผลกับความพอใจหรืออารมณ์หลังกินไหม
+- ลองผสม: เลือกวัตถุดิบเองได้กี่อย่าง ผสมผิดได้อะไร (ของเสีย / ไม่เสียอะไร) ใบ้ยังไง
+- แบ่ง 2.5 เป็นขั้นย่อย (2.5a เตา + ถือจาน + เสิร์ฟ / 2.5b มินิเกม / 2.5c ลองผสม) แล้วทำทีละขั้น
+- จบ 2.5 แล้ว: ปรับความยาวรอบขาย + ความถี่ลูกค้า, สรุป roadmap ในแชท + อัปเดต HANDOFF.md
 
 **วิธีทดสอบที่ใช้อยู่**
-- คลิกขวาที่หัวคอมโพเนนต์ (PlayerStats / Hotbar / PlayerEquipment / DailyMenu) ระหว่าง Play เพื่อใช้เมนู Debug
+- คลิกขวาที่หัวคอมโพเนนต์ (PlayerStats / Hotbar / PlayerEquipment / DailyMenu / CustomerManager) ระหว่าง Play เพื่อใช้เมนู Debug
 - อยากได้ไอเทมใดๆ: ที่คอมโพเนนต์ Hotbar กรอก `Debug Item Id` (+ `Debug Amount`) แล้วคลิกขวาหัว > `Debug: Give Item By Id`
 - สูตรทั้งหมด: คลิกขวาหัว RecipeBook > `Debug: Learn All Recipes`
-- เร่งเวลา F7 (ค้าง) / ปิดร้านทันที F8 / ลบเซฟ F9
+- เร่งเวลา F7 (ค้าง) / ปิดร้านทันที F8 (ลูกค้าที่ยังรอจะเดินออก) / ลบเซฟ F9
 - ไอเทมใหม่ต้องกด Find All Items ที่ ItemDatabase ก่อน ไม่งั้นโหลดเซฟกลับไม่ได้
+- ค่าใน Inspector ที่แก้ระหว่าง Play จะหายตอนหยุด Play
+- เมนูนิยม: คลิกขวาหัว PopularDishes > `Debug: Reroll Popular Dishes` / `Debug: Print Popular Dishes` / ให้เจอลูกค้าถามหาเร็วๆ ตั้ง CustomerManager → `Ask For Popular Chance` = 1 ชั่วคราว
+- ค่าที่ปรับบ่อย: ShopManager → Service Duration Seconds, CustomerManager → Min/Max Spawn Interval / Popular Order Weight / Ask For Popular Chance / Base Loved Chance / Satisfaction, prefab Customer → Min/Max Patience / Eat Duration / Leave Speed Multiplier, Player → PlayerController → Run

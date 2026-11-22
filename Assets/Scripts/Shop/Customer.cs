@@ -9,7 +9,8 @@ public enum CustomerState
     Ordering,       // นั่งแล้ว กำลังเลือกเมนู
     WaitingForFood, // สั่งแล้ว รออาหาร (ผู้เล่นกด E เพื่อเสิร์ฟ)
     Eating,         // กำลังกิน
-    Leaving         // เดินออกจากร้าน
+    Leaving,        // เดินออกจากร้าน
+    Asking          // [2.4b] ถามหาเมนูนิยมที่ร้านไม่มี รอผู้เล่นกด E แนะนำเมนูวันนี้ (เพิ่มต่อท้ายเท่านั้น)
 }
 
 // เหตุผลที่ลูกค้าออกจากร้าน (ใช้ในสรุปวันและชื่อเสียงขั้น 2.6)
@@ -21,7 +22,27 @@ public enum CustomerLeaveReason
     ShopClosed    // ร้านปิดระหว่างที่ยังอยู่ (ถูกเก็บออกทันที)
 }
 
+// [2.4b] ลูกค้าสั่งอาหารแบบไหน (CustomerManager.TryPickOrder คืนค่านี้ ใช้คิดความพอใจ)
+public enum CustomerOrderKind
+{
+    None,       // ไม่มีอะไรเหลือให้สั่ง
+    Normal,     // สั่งจานปกติ
+    Popular,    // ได้สั่งเมนูนิยมของวันนี้
+    Substitute, // ถามหาเมนูนิยมที่ไม่มี แล้วเปลี่ยนมากินเมนูวันนี้ตามที่ผู้เล่นแนะนำ
+    Asking      // ถามหาเมนูนิยมที่ไม่มี (ยังไม่ได้สั่ง รอผู้เล่นแนะนำ)
+}
+
+// [2.4b] อารมณ์หลังกินเสร็จ (ใช้คิดความพอใจ)
+public enum CustomerMood
+{
+    None,  // ยังไม่ได้กิน
+    Loved, // ชอบมาก
+    Good,  // อร่อยดี
+    Meh    // เฉยๆ
+}
+
 // ลูกค้า 1 คน: เดินไปที่นั่ง → สั่งอาหารจากเมนูประจำวัน → รอ → (ผู้เล่นกด E เสิร์ฟ + จ่ายเงิน) → กิน → เดินออก
+// [2.4b] บางคนถามหาเมนูนิยมที่ร้านไม่มี → ผู้เล่นกด E แนะนำเมนูวันนี้ → ลูกค้าเปลี่ยนจาน → รอ → เสิร์ฟ → กิน → อารมณ์หลังกิน
 // ถ้ารอนานเกินไป หรือไม่มีเมนูเหลือ จะเดินออกเลย
 // ได้อาหารแล้ว = ไม่นับเป็นลูกค้าที่ร้านต้องรอ (ร้านปิดได้ทันทีหลังเสิร์ฟคนสุดท้าย ส่วนลูกค้าจะกินจนเสร็จแล้วเดินออกทีหลัง)
 // ตอนนี้การเสิร์ฟเป็นแบบชั่วคราว (กด E ที่ลูกค้า) ขั้น 2.5 จะเปลี่ยนเป็นต้องถือจานที่ทำจากเตามาเสิร์ฟ
@@ -74,6 +95,26 @@ public class Customer : MonoBehaviour, IInteractable
     [SerializeField] private string happyLeaveText = "Thanks!";
     [SerializeField] private string shopClosedText = "Closed already?";
 
+    [Tooltip("ข้อความตอนได้กินเมนูนิยม")]
+    [SerializeField] private string popularEatingText = "So good!!";
+
+    [Tooltip("ลูกค้าถามหาเมนูนิยม ({0} = ชื่อเมนู หรือคำใบ้ถ้ายังไม่รู้สูตร)")]
+    [SerializeField] private string askFormat = "Got {0}?";
+
+    [Tooltip("ข้อความของผู้เล่นตอนแนะนำเมนูวันนี้ (แสดงที่แจ้งเตือน) {0} = ชื่อเมนูที่ลูกค้าถามหา")]
+    [SerializeField] private string recommendFormat = "Sorry, no {0} today. Try our menu, it's tasty!";
+
+    [Tooltip("ลูกค้าตอบตกลงเปลี่ยนจาน ({0} = จานใหม่)")]
+    [SerializeField] private string acceptFormat = "OK, I'll try {0}!";
+
+    [Tooltip("แสดงข้อความตอบตกลงกี่วินาที ก่อนกลับไปแสดงชื่อจานและเวลา")]
+    [Min(0f)] [SerializeField] private float acceptTextDuration = 1.5f;
+
+    [Header("Mood text (after eating)")]
+    [SerializeField] private string lovedLeaveText = "Loved it!!";
+    [SerializeField] private string goodLeaveText = "Tasty, thanks!";
+    [SerializeField] private string mehLeaveText = "It was okay.";
+
     [Tooltip("ข้อความแจ้งเตือนตอนเสิร์ฟไม่ได้ ({0} = ชื่อเมนู)")]
     [SerializeField] private string cannotServeFormat = "Can't serve {0} right now.";
 
@@ -84,6 +125,18 @@ public class Customer : MonoBehaviour, IInteractable
     // เมนูที่สั่ง (null = ยังไม่ได้สั่ง)
     public RecipeData Order { get; private set; }
 
+    // [2.4b] สั่งแบบไหน (ปกติ / เมนูนิยม / จำใจสั่งจานแทน)
+    public CustomerOrderKind OrderKind { get; private set; } = CustomerOrderKind.None;
+
+    // [2.4b] ความพอใจของลูกค้าคนนี้ (ตั้งตอนได้อาหาร / ไม่ได้กิน = 0) ขั้น 2.6 ใช้คิดเงินและชื่อเสียง
+    public float Satisfaction { get; private set; }
+
+    // [2.4b] อารมณ์หลังกิน (สุ่มตอนได้อาหาร แสดงตอนกินเสร็จ)
+    public CustomerMood Mood { get; private set; } = CustomerMood.None;
+
+    // [2.4b] เมนูนิยมที่ถามหา (เฉพาะคนที่ถามหา)
+    public RecipeData AskedFor { get; private set; }
+
     // สั่งไปแล้วหรือยัง (ใช้ให้ CustomerManager นับลูกค้าที่ยังไม่ได้สั่ง)
     public bool HasOrdered { get; private set; }
 
@@ -91,6 +144,7 @@ public class Customer : MonoBehaviour, IInteractable
     public bool NeedsService =>
         State == CustomerState.WalkingToSeat ||
         State == CustomerState.Ordering ||
+        State == CustomerState.Asking ||
         State == CustomerState.WaitingForFood;
 
     // ความอดทนที่เหลือ 0–1 (ใช้แสดงผล)
@@ -109,6 +163,7 @@ public class Customer : MonoBehaviour, IInteractable
     private float timer;
     private float patienceLeft;
     private float patienceMax;
+    private float acceptTextTimer;
     private CustomerLeaveReason leaveReason;
     private bool finished;
 
@@ -165,8 +220,18 @@ public class Customer : MonoBehaviour, IInteractable
                 }
                 break;
 
+            case CustomerState.Asking:
+                patienceLeft -= Time.deltaTime;
+                UpdateAskingBubble();
+                if (patienceLeft <= 0f)
+                {
+                    GiveUp();
+                }
+                break;
+
             case CustomerState.WaitingForFood:
                 patienceLeft -= Time.deltaTime;
+                if (acceptTextTimer > 0f) acceptTextTimer -= Time.deltaTime;
                 UpdateWaitingBubble();
                 if (patienceLeft <= 0f)
                 {
@@ -252,22 +317,107 @@ public class Customer : MonoBehaviour, IInteractable
     private void ChooseOrder()
     {
         RecipeData recipe = null;
-        bool picked = manager != null && manager.TryPickOrder(this, out recipe);
+        RecipeData wanted = null;
+        CustomerOrderKind kind = manager != null ? manager.TryPickOrder(this, out recipe, out wanted) : CustomerOrderKind.None;
+
+        // ถามหาเมนูนิยมที่ร้านไม่มี: ยังไม่นับว่าสั่ง รอผู้เล่นกด E (ความอดทนเริ่มนับตั้งแต่ตอนนี้)
+        if (kind == CustomerOrderKind.Asking && wanted != null)
+        {
+            OrderKind = kind;
+            AskedFor = wanted;
+            StartPatience();
+            State = CustomerState.Asking;
+            UpdateAskingBubble();
+            Debug.Log($"Customer '{name}': Asking for {wanted.recipeName} (patience {patienceMax:0}s).");
+            return;
+        }
+
         HasOrdered = true;
 
-        if (!picked || recipe == null)
+        if (kind == CustomerOrderKind.None || recipe == null)
         {
+            OrderKind = CustomerOrderKind.None;
             SetBubble(soldOutText);
             Leave(CustomerLeaveReason.NoFoodLeft);
             return;
         }
 
-        Order = recipe;
+        StartWaiting(recipe, kind);
+        Debug.Log($"Customer '{name}': Ordered {recipe.recipeName} ({kind}, patience {patienceMax:0}s).");
+    }
+
+    // [2.4b] ผู้เล่นกด E ที่ลูกค้าที่ถามหาเมนูนิยม: ขอโทษแล้วแนะนำเมนูวันนี้ ลูกค้าเปลี่ยนจาน คืนค่า true ถ้าสำเร็จ
+    public bool RecommendTodaysMenu()
+    {
+        if (State != CustomerState.Asking)
+        {
+            return false;
+        }
+
+        string askedName = GetAskedName();
+        NotificationUI.Post(string.Format(recommendFormat, askedName));
+
+        RecipeData recipe = null;
+        CustomerOrderKind kind = manager != null ? manager.TryPickSubstitute(this, out recipe) : CustomerOrderKind.None;
+        HasOrdered = true;
+
+        if (kind == CustomerOrderKind.None || recipe == null)
+        {
+            // ระหว่างรอ เมนูอื่นหมดไปแล้ว
+            OrderKind = CustomerOrderKind.None;
+            SetBubble(soldOutText);
+            Leave(CustomerLeaveReason.NoFoodLeft);
+            return false;
+        }
+
+        StartWaiting(recipe, kind);
+        acceptTextTimer = acceptTextDuration;
+        SetBubble(string.Format(acceptFormat, recipe.recipeName));
+        Debug.Log($"Customer '{name}': Asked for {AskedFor?.recipeName}, switched to {recipe.recipeName} ({patienceLeft:0}s patience left).");
+        return true;
+    }
+
+    // เริ่มนับความอดทน (ครั้งเดียวต่อคน ถามหาแล้วเปลี่ยนจาน = นับต่อจากเดิม ไม่รีเซ็ต)
+    private void StartPatience()
+    {
+        if (patienceMax > 0f)
+        {
+            return;
+        }
+
         patienceMax = Random.Range(Mathf.Min(minPatience, maxPatience), Mathf.Max(minPatience, maxPatience));
         patienceLeft = patienceMax;
+    }
+
+    private void StartWaiting(RecipeData recipe, CustomerOrderKind kind)
+    {
+        Order = recipe;
+        OrderKind = kind;
+        StartPatience();
         State = CustomerState.WaitingForFood;
         UpdateWaitingBubble();
-        Debug.Log($"Customer '{name}': Ordered {recipe.recipeName} (patience {patienceMax:0}s).");
+    }
+
+    // ชื่อเมนูที่ถามหา: รู้สูตรแล้ว = ชื่อจริง / ยังไม่รู้ = คำใบ้ (เช่น "that Japanese dessert")
+    private string GetAskedName()
+    {
+        if (AskedFor == null)
+        {
+            return "it";
+        }
+
+        return PopularDishes.Instance != null ? PopularDishes.Instance.GetRequestName(AskedFor) : AskedFor.recipeName;
+    }
+
+    private void UpdateAskingBubble()
+    {
+        if (bubbleText == null)
+        {
+            return;
+        }
+
+        bubbleText.text = $"{string.Format(askFormat, GetAskedName())}\n[E] {Mathf.CeilToInt(patienceLeft)}s";
+        bubbleText.color = PatienceRatio < 0.3f ? impatientColor : bubbleBaseColor;
     }
 
     private void UpdateWaitingBubble()
@@ -277,13 +427,28 @@ public class Customer : MonoBehaviour, IInteractable
             return;
         }
 
-        bubbleText.text = $"{Order.recipeName}\n{Mathf.CeilToInt(patienceLeft)}s";
+        // ยังแสดงข้อความตอบตกลงเปลี่ยนจานอยู่
+        if (acceptTextTimer > 0f)
+        {
+            bubbleText.color = bubbleBaseColor;
+            return;
+        }
+
+        // เมนูนิยมมีเครื่องหมายนำหน้า ให้ผู้เล่นเห็นว่าคนนี้จะพอใจมากถ้าได้กิน
+        string dishName = Order.recipeName;
+        if (OrderKind == CustomerOrderKind.Popular)
+        {
+            string marker = PopularDishes.Instance != null ? PopularDishes.Instance.Marker : "*";
+            dishName = $"{marker} {dishName}";
+        }
+
+        bubbleText.text = $"{dishName}\n{Mathf.CeilToInt(patienceLeft)}s";
         bubbleText.color = PatienceRatio < 0.3f ? impatientColor : bubbleBaseColor;
     }
 
     private void GiveUp()
     {
-        Debug.Log($"Customer '{name}': Waited too long for {Order?.recipeName}. Leaving.");
+        Debug.Log($"Customer '{name}': Waited too long for {(Order != null ? Order.recipeName : AskedFor?.recipeName)}. Leaving.");
         if (manager != null && Order != null)
         {
             manager.ReleasePending(Order);
@@ -311,6 +476,11 @@ public class Customer : MonoBehaviour, IInteractable
         // เปลี่ยนสถานะก่อนรายงาน ให้ระบบอื่นเห็นว่าลูกค้าคนนี้ไม่ต้องการผู้เล่นแล้ว
         State = CustomerState.Eating;
 
+        // สุ่มอารมณ์หลังกินและตั้งความพอใจก่อนรายงาน ให้ CustomerManager นับรวมได้ (แสดงอารมณ์ตอนกินเสร็จ)
+        Mood = manager != null ? manager.DecideMood(OrderKind) : CustomerMood.Good;
+        Satisfaction = manager != null ? manager.GetSatisfaction(Mood) : 1f;
+        acceptTextTimer = 0f;
+
         // จ่ายเงินตอนได้อาหาร (ร้านอาจปิดไปแล้วระหว่างที่ลูกค้ายังกินอยู่ เงินต้องนับในวันนี้)
         if (manager != null)
         {
@@ -320,14 +490,20 @@ public class Customer : MonoBehaviour, IInteractable
         }
 
         timer = eatDuration;
-        SetBubble(eatingText);
+        SetBubble(OrderKind == CustomerOrderKind.Popular ? popularEatingText : eatingText);
         if (bubbleText != null) bubbleText.color = bubbleBaseColor;
         return true;
     }
 
     private void FinishMeal()
     {
-        SetBubble(happyLeaveText);
+        switch (Mood)
+        {
+            case CustomerMood.Loved: SetBubble(lovedLeaveText); break;
+            case CustomerMood.Meh: SetBubble(mehLeaveText); break;
+            case CustomerMood.Good: SetBubble(goodLeaveText); break;
+            default: SetBubble(happyLeaveText); break;
+        }
         Leave(CustomerLeaveReason.Finished);
     }
 
@@ -386,12 +562,20 @@ public class Customer : MonoBehaviour, IInteractable
 
     public bool CanInteract(PlayerInteractor interactor)
     {
-        return State == CustomerState.WaitingForFood;
+        return State == CustomerState.WaitingForFood || State == CustomerState.Asking;
     }
 
     public void Interact(PlayerInteractor interactor)
     {
-        TryServe();
+        // ถามหาเมนูนิยม = แนะนำเมนูวันนี้ / รออาหาร = เสิร์ฟ
+        if (State == CustomerState.Asking)
+        {
+            RecommendTodaysMenu();
+        }
+        else
+        {
+            TryServe();
+        }
     }
 
     // ---------- ภายใน ----------

@@ -1,13 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 // ตัวจัดการลูกค้า: ปล่อยลูกค้าเข้าร้านระหว่างเปิดร้าน ให้ลูกค้าเลือกเมนู และนับว่าใครสั่งอะไรไว้
 // - ปล่อยลูกค้าเป็นระยะ เมื่อร้านยังรับลูกค้า มีที่นั่งว่าง และจานที่เหลือยังพอสำหรับลูกค้าที่จะเข้ามา
 // - ลูกค้าสั่งได้เฉพาะเมนูประจำวันที่ยังเหลือ (หักจานที่ลูกค้าคนอื่นสั่งรอไว้แล้ว) หมดทั้งร้าน = ลูกค้าเดินออก
 // - ลูกค้าที่ได้อาหารแล้ว ไม่นับเป็นลูกค้าที่ร้านต้องรอ: ร้านปิดได้ทันทีหลังเสิร์ฟคนสุดท้าย คนที่กินอยู่จะกินเสร็จแล้วเดินออกเอง
 // - ร้านปิดตอนยังมีคนรออาหาร (เช่น กด F8) = คนนั้นเดินออก / เริ่มวันใหม่แล้วยังมีลูกค้าค้าง = เก็บออกทันที
-// ขั้น 2.4b จะเพิ่มเมนูนิยมรายวัน (ลูกค้ามีโอกาสสั่งเมนูนิยมมากกว่า)
+// - [2.4b] เมนูนิยมรายวัน (PopularDishes): เมนูนิยมที่มีขายมีโอกาสถูกสั่งมากกว่า
+//   เมนูนิยมที่ร้านไม่มีให้ (ไม่ได้ใส่ หรือหมดแล้ว) = ลูกค้าบางคนถามหา → ผู้เล่นกด E แนะนำเมนูวันนี้ → ลูกค้าเปลี่ยนจาน
+//   ลูกค้าที่เปลี่ยนจาน กินเสร็จแล้วสุ่มอารมณ์ ชอบมาก / อร่อยดี / เฉยๆ (โอกาสชอบมากเพิ่มได้จากการอัปเกรดร้าน)
+//   ไม่มีลูกค้าเดินออกเพราะเรื่องเมนูนิยม (ยกเว้นรอนานเกินไป)
+// - [2.4b] ความพอใจต่อลูกค้า (Customer.Satisfaction) รวมเป็นสถิติรายวัน ให้ขั้น 2.6 ใช้คิดเงิน/ชื่อเสียง
 // ควรมีตัวเดียวในฉาก
 public class CustomerManager : MonoBehaviour
 {
@@ -39,6 +44,28 @@ public class CustomerManager : MonoBehaviour
     [Tooltip("ลูกค้าในร้านพร้อมกันได้สูงสุด (0 = เท่าจำนวนที่นั่ง)")]
     [Min(0)] [SerializeField] private int maxConcurrentCustomers = 0;
 
+    [Header("Popular Dishes")]
+    [Tooltip("เมนูนิยมที่มีขาย มีโอกาสถูกสั่งมากกว่าเมนูปกติกี่เท่า")]
+    [Min(1f)] [SerializeField] private float popularOrderWeight = 3f;
+
+    [Tooltip("ถ้ามีเมนูนิยมที่ร้านไม่มีให้ (ไม่ได้ใส่ในเมนู หรือหมดแล้ว) โอกาสที่ลูกค้าแต่ละคนจะถามหา 0–1")]
+    [Range(0f, 1f)] [SerializeField] private float askForPopularChance = 0.25f;
+
+    [Header("Mood after a substitute dish (customer asked for a popular dish, then tried today's menu)")]
+    [Tooltip("โอกาสตั้งต้นที่จะชอบมาก 0–1 (อัปเกรดร้านเพิ่มได้ผ่าน SetLovedChanceBonus) ส่วนที่เหลือแบ่งเท่ากันให้ อร่อยดี / เฉยๆ")]
+    [Range(0f, 1f)] [SerializeField] private float baseLovedChance = 0.2f;
+
+    [Header("Satisfaction (step 2.6 will use these for money / reputation)")]
+    [Tooltip("อารมณ์ อร่อยดี: จานปกติ หรือเปลี่ยนจานแล้วอร่อยดี")]
+    [Min(0f)] [SerializeField] private float normalSatisfaction = 1f;
+
+    [Tooltip("อารมณ์ ชอบมาก: ได้กินเมนูนิยม หรือเปลี่ยนจานแล้วชอบมาก")]
+    [Min(0f)] [SerializeField] private float popularSatisfaction = 1.5f;
+
+    [Tooltip("อารมณ์ เฉยๆ: เปลี่ยนจานแล้วรู้สึกเฉยๆ")]
+    [FormerlySerializedAs("substituteSatisfaction")]
+    [Min(0f)] [SerializeField] private float mehSatisfaction = 0.7f;
+
     [Header("Debug")]
     [Tooltip("แสดง Log ทุกครั้งที่ลูกค้าเข้า/ออก")]
     [SerializeField] private bool verboseLog = true;
@@ -67,6 +94,35 @@ public class CustomerManager : MonoBehaviour
     public int ServedToday { get; private set; }
     public int LeftUnhappyToday { get; private set; }
     public int EarnedToday { get; private set; }
+
+    // [2.4b] จำนวนลูกค้าที่ได้กินเมนูนิยม / ที่ถามหาเมนูนิยมที่ไม่มี / ที่เปลี่ยนจานแล้วได้กิน
+    public int PopularServedToday { get; private set; }
+    public int AskedForPopularToday { get; private set; }
+    public int SubstituteServedToday { get; private set; }
+
+    // [2.4b] อารมณ์หลังกินของลูกค้าทุกคนที่ได้กินวันนี้
+    public int LovedToday { get; private set; }
+    public int GoodToday { get; private set; }
+    public int MehToday { get; private set; }
+
+    // โอกาสชอบมากที่ได้เพิ่มจากการอัปเกรดร้าน
+    private float lovedChanceBonus;
+
+    // โอกาสชอบมากตอนนี้ (หลังเปลี่ยนจาน)
+    public float LovedChance => Mathf.Clamp01(baseLovedChance + lovedChanceBonus);
+
+    // [2.4b] ความพอใจรวมของลูกค้าที่ได้อาหารวันนี้ (ลูกค้าที่เดินออกโดยไม่ได้กิน = 0 ไม่ถูกบวก)
+    public float SatisfactionTotalToday { get; private set; }
+
+    // ความพอใจเฉลี่ยต่อลูกค้าที่เข้าร้านแล้วจบ (ได้กิน + เดินออกแบบไม่พอใจ) 0 = ยังไม่มีลูกค้า
+    public float AverageSatisfactionToday
+    {
+        get
+        {
+            int count = ServedToday + LeftUnhappyToday;
+            return count > 0 ? SatisfactionTotalToday / count : 0f;
+        }
+    }
 
     // ---------- Events ----------
 
@@ -207,6 +263,13 @@ public class CustomerManager : MonoBehaviour
         ServedToday = 0;
         LeftUnhappyToday = 0;
         EarnedToday = 0;
+        PopularServedToday = 0;
+        AskedForPopularToday = 0;
+        SubstituteServedToday = 0;
+        LovedToday = 0;
+        GoodToday = 0;
+        MehToday = 0;
+        SatisfactionTotalToday = 0f;
     }
 
     private void HandleShopOpened()
@@ -260,7 +323,10 @@ public class CustomerManager : MonoBehaviour
         pendingOrders.Clear();
         notYetOrdered = 0;
 
-        Debug.Log($"CustomerManager: Shop closed. Served {ServedToday}, left unhappy {LeftUnhappyToday}, earned {EarnedToday}. " +
+        Debug.Log($"CustomerManager: Shop closed. Served {ServedToday} ({PopularServedToday} popular), left unhappy {LeftUnhappyToday}, " +
+                  $"(asked for popular {AskedForPopularToday}, substitutes {SubstituteServedToday}), " +
+                  $"moods loved {LovedToday} / good {GoodToday} / meh {MehToday}, earned {EarnedToday}, " +
+                  $"avg satisfaction {AverageSatisfactionToday:0.00}. " +
                   $"{stillEating} customer(s) still finishing their meal.");
     }
 
@@ -354,23 +420,92 @@ public class CustomerManager : MonoBehaviour
 
     // ---------- สั่งอาหาร ----------
 
-    // ลูกค้าเลือกเมนู: เลือกจากเมนูประจำวันที่ยังเหลือ (หักจานที่คนอื่นสั่งรอไว้) คืนค่า false ถ้าไม่มีอะไรเหลือ
-    public bool TryPickOrder(Customer customer, out RecipeData recipe)
+    // ลูกค้าเลือกเมนู (เรียกตอนลูกค้านั่งแล้วคิดเสร็จ)
+    // 1) ถ้ามีเมนูนิยมที่ร้านไม่มีให้ (ไม่ได้อยู่ในเมนู หรือหมดแล้ว) = มีโอกาส askForPopularChance ที่ลูกค้าจะถามหา (Asking)
+    //    ลูกค้าจะรอให้ผู้เล่นกด E แนะนำเมนูวันนี้ แล้วค่อยเรียก TryPickSubstitute
+    // 2) ไม่ถามหา = สั่งจากจานที่ยังเหลือ เมนูนิยมที่มีขายมีน้ำหนัก popularOrderWeight เท่า
+    // wanted = เมนูนิยมที่ถามหา (เฉพาะ Asking) / recipe = จานที่สั่งจริง
+    // คืนค่า None = ไม่มีอะไรเหลือให้สั่ง
+    public CustomerOrderKind TryPickOrder(Customer customer, out RecipeData recipe, out RecipeData wanted)
     {
         recipe = null;
-
-        if (customer != null && !customer.HasOrdered && notYetOrdered > 0)
-        {
-            notYetOrdered--;
-        }
+        wanted = null;
 
         DailyMenu menu = DailyMenu.Instance;
         if (menu == null || !menu.IsActive)
         {
-            return false;
+            MarkOrdered(customer);
+            return CustomerOrderKind.None;
         }
 
-        List<RecipeData> options = new List<RecipeData>();
+        PopularDishes popular = PopularDishes.Instance;
+        List<RecipeData> available = GetAvailableDishes(menu);
+
+        if (available.Count == 0)
+        {
+            MarkOrdered(customer);
+            return CustomerOrderKind.None;
+        }
+
+        // เมนูนิยมที่ร้านไม่มีให้ตอนนี้
+        List<RecipeData> missingPopular = new List<RecipeData>();
+        if (popular != null)
+        {
+            foreach (RecipeData dish in popular.Today)
+            {
+                if (dish != null && !available.Contains(dish))
+                {
+                    missingPopular.Add(dish);
+                }
+            }
+        }
+
+        if (missingPopular.Count > 0 && UnityEngine.Random.value < askForPopularChance)
+        {
+            // ยังไม่นับว่าสั่งแล้ว: จานที่เผื่อไว้ให้ลูกค้าคนนี้ยังจองอยู่ จนกว่าจะเปลี่ยนจานหรือเดินออก
+            wanted = missingPopular[UnityEngine.Random.Range(0, missingPopular.Count)];
+            AskedForPopularToday++;
+            if (verboseLog) Debug.Log($"CustomerManager: {customer?.name} is asking for popular {wanted.recipeName} (not available).");
+            return CustomerOrderKind.Asking;
+        }
+
+        MarkOrdered(customer);
+        recipe = PickWeighted(available, popular);
+        if (recipe == null)
+        {
+            return CustomerOrderKind.None;
+        }
+
+        AddPending(recipe);
+        return popular != null && popular.IsPopular(recipe) ? CustomerOrderKind.Popular : CustomerOrderKind.Normal;
+    }
+
+    // ลูกค้าที่ถามหาเมนูนิยม ยอมเปลี่ยนมากินเมนูวันนี้ (เรียกตอนผู้เล่นกด E แนะนำ) คืนค่า None ถ้าไม่มีอะไรเหลือแล้ว
+    public CustomerOrderKind TryPickSubstitute(Customer customer, out RecipeData recipe)
+    {
+        recipe = null;
+        MarkOrdered(customer);
+
+        DailyMenu menu = DailyMenu.Instance;
+        if (menu == null || !menu.IsActive)
+        {
+            return CustomerOrderKind.None;
+        }
+
+        recipe = PickWeighted(GetAvailableDishes(menu), PopularDishes.Instance);
+        if (recipe == null)
+        {
+            return CustomerOrderKind.None;
+        }
+
+        AddPending(recipe);
+        return CustomerOrderKind.Substitute;
+    }
+
+    // จานในเมนูที่ยังเหลือ (หักจานที่ลูกค้าคนอื่นสั่งรอไว้แล้ว)
+    private List<RecipeData> GetAvailableDishes(DailyMenu menu)
+    {
+        List<RecipeData> available = new List<RecipeData>();
         foreach (DailyMenu.MenuEntry entry in menu.Entries)
         {
             if (entry == null || entry.IsEmpty)
@@ -381,21 +516,97 @@ public class CustomerManager : MonoBehaviour
             pendingOrders.TryGetValue(entry.Recipe, out int pending);
             if (entry.Remaining - pending > 0)
             {
-                options.Add(entry.Recipe);
+                available.Add(entry.Recipe);
+            }
+        }
+        return available;
+    }
+
+    // ลูกค้าคนนี้ตัดสินใจแล้ว (สั่ง หรือไม่มีอะไรให้สั่ง) เลิกเผื่อจานไว้ให้
+    private void MarkOrdered(Customer customer)
+    {
+        if (customer != null && !customer.HasOrdered && notYetOrdered > 0)
+        {
+            notYetOrdered--;
+        }
+    }
+
+    private void AddPending(RecipeData recipe)
+    {
+        pendingOrders.TryGetValue(recipe, out int current);
+        pendingOrders[recipe] = current + 1;
+    }
+
+    // สุ่ม 1 จานตามน้ำหนัก (เมนูนิยม = popularOrderWeight, ปกติ = 1)
+    private RecipeData PickWeighted(List<RecipeData> options, PopularDishes popular)
+    {
+        if (options == null || options.Count == 0)
+        {
+            return null;
+        }
+
+        float total = 0f;
+        foreach (RecipeData option in options)
+        {
+            total += WeightOf(option, popular);
+        }
+
+        float roll = UnityEngine.Random.value * total;
+        foreach (RecipeData option in options)
+        {
+            roll -= WeightOf(option, popular);
+            if (roll < 0f)
+            {
+                return option;
             }
         }
 
-        if (options.Count == 0)
+        return options[options.Count - 1];
+    }
+
+    private float WeightOf(RecipeData recipe, PopularDishes popular)
+    {
+        return popular != null && popular.IsPopular(recipe) ? popularOrderWeight : 1f;
+    }
+
+    // ---------- อารมณ์และความพอใจ ----------
+
+    // อารมณ์หลังกิน (ลูกค้าเรียกตอนได้อาหาร): เมนูนิยม = ชอบมาก / จานปกติ = อร่อยดี / เปลี่ยนจาน = สุ่ม
+    public CustomerMood DecideMood(CustomerOrderKind kind)
+    {
+        switch (kind)
         {
-            return false;
+            case CustomerOrderKind.Popular:
+                return CustomerMood.Loved;
+
+            case CustomerOrderKind.Substitute:
+                float loved = LovedChance;
+                float roll = UnityEngine.Random.value;
+                if (roll < loved) return CustomerMood.Loved;
+                // ส่วนที่เหลือแบ่งเท่ากัน อร่อยดี / เฉยๆ
+                return roll < loved + (1f - loved) * 0.5f ? CustomerMood.Good : CustomerMood.Meh;
+
+            default:
+                return CustomerMood.Good;
         }
+    }
 
-        // ตอนนี้สุ่มเท่าๆ กัน (ขั้น 2.4b จะให้น้ำหนักเมนูนิยม)
-        recipe = options[UnityEngine.Random.Range(0, options.Count)];
+    // ความพอใจตามอารมณ์
+    public float GetSatisfaction(CustomerMood mood)
+    {
+        switch (mood)
+        {
+            case CustomerMood.Loved: return popularSatisfaction;
+            case CustomerMood.Good: return normalSatisfaction;
+            case CustomerMood.Meh: return mehSatisfaction;
+            default: return 0f;
+        }
+    }
 
-        pendingOrders.TryGetValue(recipe, out int current);
-        pendingOrders[recipe] = current + 1;
-        return true;
+    // ตั้งโอกาสชอบมากที่ได้เพิ่มจากการอัปเกรดร้าน (เช่น 0.1 = +10%)
+    public void SetLovedChanceBonus(float bonus)
+    {
+        lovedChanceBonus = Mathf.Max(0f, bonus);
     }
 
     // ลูกค้าไม่ได้รอจานนี้แล้ว (เสิร์ฟแล้ว หรือเดินออก)
@@ -415,11 +626,27 @@ public class CustomerManager : MonoBehaviour
     public void ReportServed(Customer customer, RecipeData recipe)
     {
         ServedToday++;
+        SatisfactionTotalToday += customer.Satisfaction;
+        if (customer.OrderKind == CustomerOrderKind.Popular)
+        {
+            PopularServedToday++;
+        }
+        else if (customer.OrderKind == CustomerOrderKind.Substitute)
+        {
+            SubstituteServedToday++;
+        }
+
+        switch (customer.Mood)
+        {
+            case CustomerMood.Loved: LovedToday++; break;
+            case CustomerMood.Good: GoodToday++; break;
+            case CustomerMood.Meh: MehToday++; break;
+        }
 
         // ได้อาหารแล้ว: ร้านไม่ต้องรอคนนี้ (หมดเวลาแล้วและเสิร์ฟครบ = ร้านปิดได้เลย)
         ReleaseServiceSlot(customer);
 
-        if (verboseLog) Debug.Log($"CustomerManager: Served {recipe.recipeName} to {customer.name}.");
+        if (verboseLog) Debug.Log($"CustomerManager: Served {recipe.recipeName} to {customer.name} ({customer.OrderKind}, mood {customer.Mood}, satisfaction {customer.Satisfaction:0.00}).");
         OnCustomerServed?.Invoke(customer, recipe);
     }
 
@@ -470,7 +697,7 @@ public class CustomerManager : MonoBehaviour
     // จำนวนลูกค้าที่ร้านยังต้องรอ (ยังไม่ได้อาหาร รวมคนที่กำลังเดินไปนั่ง) ใช้ตัดสินว่าปิดร้านได้หรือยัง
     public int WaitingCount => waitingForService.Count;
 
-    // จำนวนลูกค้าที่นั่งแล้วและสั่งแล้ว รออาหารอยู่ = เสิร์ฟได้ตอนนี้ (ใช้แสดงบนหน้าจอ)
+    // จำนวนลูกค้าที่นั่งแล้วและรอผู้เล่นอยู่ = รออาหาร หรือถามหาเมนูนิยม (ใช้แสดงบนหน้าจอ)
     public int SeatedWaitingCount
     {
         get
@@ -478,7 +705,7 @@ public class CustomerManager : MonoBehaviour
             int count = 0;
             foreach (Customer customer in customers)
             {
-                if (customer != null && customer.State == CustomerState.WaitingForFood) count++;
+                if (customer != null && (customer.State == CustomerState.WaitingForFood || customer.State == CustomerState.Asking)) count++;
             }
             return count;
         }
@@ -506,7 +733,18 @@ public class CustomerManager : MonoBehaviour
     {
         foreach (Customer customer in customers.ToArray())
         {
-            if (customer != null && customer.State == CustomerState.WaitingForFood)
+            if (customer == null)
+            {
+                continue;
+            }
+
+            // ลูกค้าที่ถามหาเมนูนิยม: แนะนำเมนูวันนี้ก่อน แล้วค่อยเสิร์ฟ
+            if (customer.State == CustomerState.Asking)
+            {
+                customer.RecommendTodaysMenu();
+            }
+
+            if (customer.State == CustomerState.WaitingForFood)
             {
                 customer.TryServe();
             }
@@ -517,6 +755,8 @@ public class CustomerManager : MonoBehaviour
     private void DebugPrint()
     {
         Debug.Log($"CustomerManager: {customers.Count} inside, {seats.Count} seats, {FreeServings} free servings, " +
-                  $"served {ServedToday}, unhappy {LeftUnhappyToday}, earned {EarnedToday}.");
+                  $"served {ServedToday} ({PopularServedToday} popular), unhappy {LeftUnhappyToday} " +
+                  $"(asked {AskedForPopularToday}, substitutes {SubstituteServedToday}), loved {LovedToday} / good {GoodToday} / meh {MehToday}, " +
+                  $"loved chance {LovedChance:P0}, earned {EarnedToday}, avg satisfaction {AverageSatisfactionToday:0.00}.");
     }
 }

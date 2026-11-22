@@ -8,6 +8,7 @@ using UnityEngine.UI;
 // - ฝั่งซ้าย: ช่องเมนู (− / + ตั้งจำนวนจาน, กด Shift ค้าง = ทีละ 5, ✕ เอาออก)
 // - ฝั่งขวา: สูตรที่รู้ คลิกเพื่อใส่ลงช่องว่าง
 // - ปุ่ม Open Shop กดได้เมื่อมีอย่างน้อย 1 จาน / Esc หรือ Cancel = ปิดโดยยังไม่เปิดร้าน
+// - [2.4b] บรรทัดเมนูนิยมวันนี้ใต้หัวข้อ (สูตรที่ยังไม่รู้แสดงเป็นคำใบ้) และเมนูนิยมในรายการสูตรขึ้นก่อน
 // ระหว่างเปิดหน้าต่าง: นาฬิกาหยุด เดินไม่ได้ เปิดกระเป๋าไม่ได้ ใช้ Hotbar ไม่ได้
 // หมายเหตุ: วางสคริปต์นี้บนวัตถุที่เปิดอยู่ตลอด (ไม่ใช่ตัวหน้าต่างที่ถูกซ่อน)
 // สร้างและผูกอัตโนมัติได้จากเมนู Tools > Second Serving > Build Daily Menu Window
@@ -43,6 +44,12 @@ public class MenuSelectionUI : MonoBehaviour
 
     [Tooltip("ข้อความรวมจำนวนจาน (เว้นว่างได้)")]
     [SerializeField] private TMP_Text totalText;
+
+    [Tooltip("[2.4b] ข้อความเมนูนิยมวันนี้ (เว้นว่างได้)")]
+    [SerializeField] private TMP_Text popularText;
+
+    [Tooltip("[2.4b] ข้อความนำหน้าเมนูนิยม")]
+    [SerializeField] private string popularLabel = "Popular today:";
 
     [SerializeField] private Button openShopButton;
     [SerializeField] private Button cancelButton;
@@ -109,6 +116,11 @@ public class MenuSelectionUI : MonoBehaviour
 
     private void OnDestroy()
     {
+        if (PopularDishes.Instance != null)
+        {
+            PopularDishes.Instance.OnPopularChanged -= MarkDirty;
+        }
+
         if (Instance == this)
         {
             Instance = null;
@@ -119,6 +131,11 @@ public class MenuSelectionUI : MonoBehaviour
     {
         SetWindowVisible(false);
         IsOpen = false;
+
+        if (PopularDishes.Instance != null)
+        {
+            PopularDishes.Instance.OnPopularChanged += MarkDirty;
+        }
     }
 
     private void Update()
@@ -254,6 +271,7 @@ public class MenuSelectionUI : MonoBehaviour
 
         DrawSlots();
         DrawRecipes();
+        DrawPopular();
 
         int total = dailyMenu.TotalPlanned;
         if (totalText != null)
@@ -324,11 +342,14 @@ public class MenuSelectionUI : MonoBehaviour
             }
         }
 
-        // คำนวณจำนวนที่ทำได้ครั้งเดียว แล้วเรียง: ทำได้ก่อน แล้วตามประเทศ ประเภท ชื่อ
+        // คำนวณจำนวนที่ทำได้ครั้งเดียว แล้วเรียง: ทำได้ก่อน แล้วเมนูนิยม แล้วตามประเทศ ประเภท ชื่อ
+        PopularDishes popular = PopularDishes.Instance;
         Dictionary<RecipeData, int> available = new Dictionary<RecipeData, int>();
+        HashSet<RecipeData> popularSet = new HashSet<RecipeData>();
         foreach (RecipeData recipe in recipeBuffer)
         {
             available[recipe] = dailyMenu.GetAvailableServings(recipe);
+            if (popular != null && popular.IsPopular(recipe)) popularSet.Add(recipe);
         }
 
         recipeBuffer.Sort((a, b) =>
@@ -336,6 +357,9 @@ public class MenuSelectionUI : MonoBehaviour
             bool aOk = available[a] > 0;
             bool bOk = available[b] > 0;
             if (aOk != bOk) return aOk ? -1 : 1;
+            bool aPop = popularSet.Contains(a);
+            bool bPop = popularSet.Contains(b);
+            if (aPop != bPop) return aPop ? -1 : 1;
             int c = a.cuisine.CompareTo(b.cuisine);
             if (c != 0) return c;
             c = a.course.CompareTo(b.course);
@@ -361,8 +385,22 @@ public class MenuSelectionUI : MonoBehaviour
             }
 
             RecipeData recipe = recipeBuffer[i];
-            recipeItems[i].Show(recipe, available[recipe], dailyMenu.IndexOf(recipe) >= 0);
+            string marker = popular != null ? popular.Marker : "*";
+            recipeItems[i].Show(recipe, available[recipe], dailyMenu.IndexOf(recipe) >= 0, popularSet.Contains(recipe), marker);
         }
+    }
+
+    // [2.4b] บรรทัดเมนูนิยมวันนี้
+    private void DrawPopular()
+    {
+        if (popularText == null)
+        {
+            return;
+        }
+
+        PopularDishes popular = PopularDishes.Instance;
+        string summary = popular != null ? popular.GetSummaryText() : "";
+        popularText.text = string.IsNullOrEmpty(summary) ? "" : $"{popularLabel}  {summary}";
     }
 
     // ---------- ปุ่ม ----------

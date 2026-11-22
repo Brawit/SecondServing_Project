@@ -9,17 +9,18 @@ using UnityEngine.UI;
 // - สร้าง GameObject "DailyMenu" (คอมโพเนนต์ DailyMenu) ถ้ายังไม่มี แล้วผูก Inventory / RecipeBook ของ Player
 // - สร้าง MenuSelectionUI → MenuWindow บน Canvas หลัก (ช่องเมนูซ้าย, รายการสูตรขวา, ปุ่ม Cancel / Open Shop)
 // - ผูกช่องใน MenuSelectionUI / MenuSlotRowUI / MenuRecipeItemUI / SaveManager ให้
+// - [2.4b] ใส่คอมโพเนนต์ PopularDishes บนวัตถุ DailyMenu + สร้างบรรทัด PopularText ใต้หัวข้อ
 // - กดซ้ำได้ จะจัดตำแหน่งใหม่โดยไม่สร้างซ้ำ (หาจากชื่อ) กด Ctrl+Z ย้อนได้
 public static class MenuLayoutBuilder
 {
     // ---------- ขนาด (หน่วยตาม Canvas Scaler 1920x1080) ----------
 
     private const float WindowWidth = 1200f;
-    private const float WindowHeight = 760f;
+    private const float WindowHeight = 800f;
     private const float Margin = 40f;
     private const float ColumnGap = 40f;
     private const float LeftWidth = 560f;
-    private const float ListTop = 150f;
+    private const float ListTop = 190f;
     private const float BottomBarHeight = 60f;
 
     private const float RowHeight = 110f;
@@ -77,6 +78,13 @@ public static class MenuLayoutBuilder
             menuResult += " No PlayerController found: assign Inventory and Recipe Book in DailyMenu yourself.";
         }
 
+        // 1b) [2.4b] เมนูนิยมรายวัน อยู่บนวัตถุเดียวกับ DailyMenu
+        if (dailyMenu.GetComponent<PopularDishes>() == null)
+        {
+            Undo.AddComponent<PopularDishes>(dailyMenu.gameObject);
+            menuResult += " Added PopularDishes.";
+        }
+
         // 2) ตัวควบคุม (เปิดอยู่ตลอด เต็มจอ) + ตัวหน้าต่าง (ซ่อน/แสดง)
         GameObject controller = FindOrCreate(canvas.transform, "MenuSelectionUI");
         Undo.RegisterFullObjectHierarchyUndo(controller, "Build Daily Menu Window");
@@ -104,6 +112,13 @@ public static class MenuLayoutBuilder
         SetTopStretch(hint.rectTransform, Margin, Margin, 80f, 34f);
         hint.text = "Pick dishes from your recipes. Hold Shift for ±5. Ready dishes in your bag are used first.";
         hint.color = new Color(1f, 1f, 1f, 0.7f);
+
+        // [2.4b] เมนูนิยมวันนี้ (MenuSelectionUI เขียนข้อความให้ตอนเปิดหน้าต่าง)
+        TMP_Text popularText = FindOrCreateText(window.transform, "PopularText", 26, TextAlignmentOptions.Center);
+        SetTopStretch(popularText.rectTransform, Margin, Margin, 120f, 36f);
+        popularText.text = "Popular today:";
+        popularText.color = new Color(1f, 0.82f, 0.3f);
+        popularText.fontStyle = FontStyles.Bold;
 
         // 4) ฝั่งซ้าย: ช่องเมนู
         GameObject slotList = FindOrCreate(window.transform, "SlotList");
@@ -154,6 +169,7 @@ public static class MenuLayoutBuilder
         uiSo.FindProperty("recipeContainer").objectReferenceValue = recipeContent;
         uiSo.FindProperty("recipeItemTemplate").objectReferenceValue = itemTemplate;
         uiSo.FindProperty("totalText").objectReferenceValue = total;
+        uiSo.FindProperty("popularText").objectReferenceValue = popularText;
         uiSo.FindProperty("openShopButton").objectReferenceValue = openShop;
         uiSo.FindProperty("cancelButton").objectReferenceValue = cancel;
         uiSo.ApplyModifiedProperties();
