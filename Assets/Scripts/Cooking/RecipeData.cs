@@ -31,6 +31,9 @@ public class RecipeData : ScriptableObject
     // จำนวนวัตถุดิบหลักสูงสุดต่อสูตร
     public const int MaxIngredients = 4;
 
+    // ความยากสูงสุด (★)
+    public const int MaxDifficulty = 3;
+
     [Header("Save")]
     [Tooltip("รหัสประจำสูตร ใช้ในไฟล์เซฟ ต้องไม่ซ้ำ และไม่ควรเปลี่ยนหลังปล่อยเกม (เว้นว่างไว้ จะถูกตั้งจากชื่อไฟล์ให้อัตโนมัติ)")]
     public string recipeId;
@@ -67,6 +70,28 @@ public class RecipeData : ScriptableObject
     [Header("Economy")]
     [Tooltip("ราคาขายในร้าน (0 = ยังไม่ได้ตั้ง)")]
     [Min(0)] public int sellPrice = 0;
+
+    [Header("Cooking (2.5)")]
+    [Tooltip("ความยาก ★1–3 (มาจากคอลัมน์ Difficulty ในตาราง) 0 = คิดเอง: สูตรเริ่มต้น ★1 / สูตรทั่วไป ★2 / สูตรลับ ★3\n" +
+             "ความยากทำให้มินิเกมยากขึ้น และลูกค้าพอใจมากขึ้น (CookingSettings)")]
+    [Range(0, MaxDifficulty)] public int difficulty = 0;
+
+    [Tooltip("ชุดท่าทำอาหารที่ใช้ร่วมกับสูตรอื่น (เว้นว่าง = ใช้ค่าตั้งต้นตาม Course ใน CookingSettings) ตัว import ไม่เขียนทับช่องนี้")]
+    public CookingProfile cookingProfile;
+
+    [Tooltip("ขั้นตอนเฉพาะสูตรนี้ (ไม่ว่าง = ใช้แทน Cooking Profile) ใช้กับจานเด่น/สูตรลับ ตัว import ไม่เขียนทับช่องนี้")]
+    public List<CookingStep> customSteps = new List<CookingStep>();
+
+    // [2.5b] ความยากที่ใช้จริง (1–3) ช่อง difficulty เป็น 0 = คิดเองจากประเภทสูตร
+    public int Difficulty
+    {
+        get
+        {
+            if (difficulty > 0) return Mathf.Min(difficulty, MaxDifficulty);
+            if (inDemo) return 1;
+            return isSecret ? 3 : 2;
+        }
+    }
 
     // นับว่าแต่ละวัตถุดิบต้องใช้กี่ชิ้น (รวมช่องที่ใส่ซ้ำ) ข้ามช่องว่าง
     public Dictionary<ItemData, int> GetRequiredCounts()

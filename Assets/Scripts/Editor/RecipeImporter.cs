@@ -13,6 +13,7 @@ using UnityEngine;
 // - ไม่เขียนทับ icon และ description ที่ใส่เอง
 // - อ่านค่าที่ฟื้นเมื่อกิน (Health / Stamina / Mana / Fever) ใส่ให้วัตถุดิบและจานอาหาร
 // - หาคอลัมน์จากชื่อหัวคอลัมน์ ไม่ใช่ลำดับ (ย้ายคอลัมน์ได้ แต่ห้ามเปลี่ยนชื่อหัว)
+// - [2.5b] อ่านความยาก (Difficulty 1–3) ช่องว่าง = 0 (คิดเอง) / ไม่มีคอลัมน์ทั้งคอลัมน์ = เตือน แล้วไม่แตะค่าเดิม
 public static class RecipeImporter
 {
     // ---------- ตำแหน่งไฟล์ ----------
@@ -46,6 +47,7 @@ public static class RecipeImporter
     private static readonly string[] ColSecret = { "secret", "is_secret" };
     private static readonly string[] ColDemo = { "vertical slice", "in_demo", "demo" };
     private static readonly string[] ColKeys = { "key 1", "key 2", "key 3", "key 4" };
+    private static readonly string[] ColDifficulty = { "difficulty" };
     // คอลัมน์ที่ชื่อยาว ใช้หาจากคำขึ้นต้น
     private const string ColFullIngredientsPrefix = "วัตถุดิบเต็ม";
 
@@ -224,6 +226,13 @@ public static class RecipeImporter
         int colPrice = header.Find(ColSellPrice);
         FoodColumns foodCols = FoodColumns.Find(header);
 
+        // [2.5b] ความยาก: ไม่มีคอลัมน์ = CSV เก่า (export ก่อนเพิ่มคอลัมน์) เตือนแล้วคงค่าเดิมในโปรเจกต์
+        int colDifficulty = header.Find(ColDifficulty);
+        if (colDifficulty < 0)
+        {
+            report.Warn("Recipes.csv has no 'Difficulty' column. Existing difficulty values were kept (blank = auto by starter/normal/secret). Export the CSV again from the sheet.");
+        }
+
         int[] colKeys = new int[ColKeys.Length];
         for (int k = 0; k < ColKeys.Length; k++)
         {
@@ -295,6 +304,19 @@ public static class RecipeImporter
             recipe.inDemo = ParseBool(Cell(row, colDemo));
             recipe.fullIngredientsText = Cell(row, colFull);
             recipe.sellPrice = ParseInt(Cell(row, colPrice));
+
+            // [2.5b] ความยาก 1–3 (ช่องว่าง = 0 = คิดเองจากสูตรเริ่มต้น/ทั่วไป/สูตรลับ)
+            if (colDifficulty >= 0)
+            {
+                string difficultyText = Cell(row, colDifficulty);
+                int difficulty = ParseInt(difficultyText);
+                if (difficulty < 0 || difficulty > RecipeData.MaxDifficulty)
+                {
+                    report.Warn($"Recipes.csv row {r + 1} ({id}): Difficulty '{difficultyText}' is not 1-{RecipeData.MaxDifficulty}. Using auto.");
+                    difficulty = 0;
+                }
+                recipe.difficulty = difficulty;
+            }
 
             // วัตถุดิบหลัก
             recipe.ingredients.Clear();

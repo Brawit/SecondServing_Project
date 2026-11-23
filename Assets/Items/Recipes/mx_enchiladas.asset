@@ -31,3 +31,6 @@ MonoBehaviour:
     \u0E0A\u0E35\u0E2A, \u0E2B\u0E2D\u0E21\u0E2B\u0E31\u0E27\u0E43\u0E2B\u0E0D\u0E48,
     \u0E04\u0E23\u0E35\u0E21\u0E40\u0E1B\u0E23\u0E35\u0E49\u0E22\u0E27"
   sellPrice: 0
+  difficulty: 2
+  cookingProfile: {fileID: 0}
+  customSteps: []

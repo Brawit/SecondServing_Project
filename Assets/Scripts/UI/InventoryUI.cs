@@ -382,6 +382,12 @@ public class InventoryUI : MonoBehaviour
             return false;
         }
 
+        // [2.5] ระหว่างเปิดหน้าต่างทำอาหาร / เล่นมินิเกม
+        if (CookingMenuUI.IsAnyOpen || CookingSession.IsBusy)
+        {
+            return false;
+        }
+
         return true;
     }
 

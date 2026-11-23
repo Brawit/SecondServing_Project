@@ -1,0 +1,104 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd0db4251849e9c47ae5b5218b1bd59e, type: 3}
+  m_Name: CookingSettings
+  m_EditorClassIdentifier: Assembly-CSharp::CookingSettings
+  mainProfile: {fileID: 11400000, guid: a67d9d63e8038b34b83ed870b58746bb, type: 2}
+  dessertProfile: {fileID: 11400000, guid: a2173225f779e0a43867f3e48089c6ed, type: 2}
+  drinkProfile: {fileID: 11400000, guid: ef34bba60905db04c9d1fd0fb2d82f4f, type: 2}
+  timingZoneWidth: 0.24
+  timingPerfectWidth: 0.08
+  timingNeedleSpeed: 0.55
+  timingHits: 1
+  timingZoneMoveSpeed: 0.35
+  timingTimeLimit: 4
+  mashPresses: 8
+  mashTimeLimit: 4
+  mashDecayPerSecond: 0.35
+  mashDecayDelay: 0
+  mashPerfectTimeRatio: 0.6
+  sequenceLength: 4
+  sequenceTimePerKey: 1.8
+  sequenceMistakesForGood: 1
+  keyUpText: W
+  keyDownText: S
+  keyLeftText: A
+  keyRightText: D
+  holdFillSeconds: 1.8
+  holdZoneWidth: 0.16
+  holdPerfectWidth: 0.06
+  holdTargetMin: 0.55
+  holdTargetMax: 0.85
+  holdTimeLimit: 4
+  stirPanWidth: 0.32
+  stirFoodSpeed: 0.26
+  stirFoodRetargetMin: 0.7
+  stirFoodRetargetMax: 1.6
+  stirPanAcceleration: 4
+  stirPanMaxSpeed: 1.1
+  stirPanFriction: 6
+  stirFillPerSecond: 0.42
+  stirDrainPerSecond: 0.16
+  stirStartProgress: 0.2
+  stirTimeLimit: 7
+  stirPerfectTimeRatio: 0.55
+  whiskPresses: 9
+  whiskTimeLimit: 4.5
+  whiskDecayPerSecond: 0.3
+  whiskDecayDelay: 0
+  whiskPerfectTimeRatio: 0.65
+  shakePresses: 10
+  shakeTimeLimit: 4.5
+  shakeDecayPerSecond: 0.35
+  shakeDecayDelay: 0
+  shakePerfectTimeRatio: 0.65
+  difficultySpeed:
+  - 1
+  - 1.12
+  - 1.25
+  difficultyZone:
+  - 1
+  - 0.9
+  - 0.78
+  difficultyPresses:
+  - 1
+  - 1.15
+  - 1.3
+  difficultyTime:
+  - 1
+  - 0.95
+  - 0.88
+  difficultyExtraKeys: 000000000000000001000000
+  difficultySatisfaction:
+  - 1
+  - 1.1
+  - 1.25
+  starFilledText: '*'
+  starEmptyText: '-'
+  perfectAverage: 1.6
+  goodAverage: 0.6
+  resultFlashDuration: 0.5
+  stepIntroDelay: 0.35
+  timingVisual: {fileID: 0}
+  mashVisual: {fileID: 0}
+  sequenceVisual: {fileID: 0}
+  holdVisual: {fileID: 0}
+  stirVisual: {fileID: 0}
+  shakeVisual: {fileID: 0}
+  whiskVisual: {fileID: 0}
+  timingLabel: Cook!
+  mashLabel: Chop!
+  sequenceLabel: Season!
+  holdLabel: Pour!
+  stirLabel: Stir!
+  shakeLabel: Shake!
+  whiskLabel: Whisk!

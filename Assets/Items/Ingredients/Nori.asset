@@ -20,6 +20,7 @@ MonoBehaviour:
   itemType: 0
   category: 16
   source: 3
+  equipType: 0
   sellPrice: 0
   restoreHealth: 1
   restoreStamina: 5

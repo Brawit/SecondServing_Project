@@ -5,7 +5,10 @@ using UnityEngine;
 // เมนูประจำวันของร้าน (ข้อมูล) ช่องเมนูเริ่มต้น 3 ช่อง อัปเกรดเพิ่มได้
 // แต่ละช่อง = สูตร 1 สูตร + จำนวนจานที่จะขาย
 // - จำนวนจานนับจาก "จานที่ทำไว้แล้วในกระเป๋า" + "จานที่วัตถุดิบในกระเป๋าพอทำ" (หักวัตถุดิบที่ช่องอื่นจองไว้แล้ว)
-// - ของยังอยู่ในกระเป๋า (จองไว้เฉยๆ) หักจริงตอนเสิร์ฟ: ใช้จานที่ทำไว้แล้วก่อน แล้วค่อยใช้วัตถุดิบ
+// - ของยังอยู่ในกระเป๋า (จองไว้เฉยๆ) [2.5 รอบ 2] วัตถุดิบหักตอนทำที่เตา (CookingSession) จานในกระเป๋าหักตอนเสิร์ฟ
+// - [2.5 รอบ 2] เสิร์ฟได้ 2 ทาง: จานในมือ (TryTakeServingFromHand) หรือจานที่ทำไว้ในกระเป๋า (TryTakeServing)
+//   ไม่มีจานเลย = เสิร์ฟไม่ได้ ต้องไปทำที่เตาก่อน (เลิกทางลัดหักวัตถุดิบตอนเสิร์ฟแล้ว)
+// - ที่เตาทำเพิ่มได้ไม่เกิน Remaining − จานนั้นในกระเป๋า − จานในมือ (GetCookRoom)
 // - ปิดร้านแล้ว ของที่ขายไม่หมดก็อยู่ในกระเป๋าเหมือนเดิม และเมนูนี้จะเป็นค่าเริ่มต้นของวันถัดไป
 // ช่วงที่ "ล็อก" ของที่จองไว้ = ตั้งแต่เปิดร้านจนปิดร้าน ซึ่งกระเป๋าและ Hotbar ใช้ไม่ได้อยู่แล้ว
 // วางบน GameObject ระบบ (ควรมีตัวเดียวในฉาก)
@@ -441,7 +444,10 @@ public class DailyMenu : MonoBehaviour
         }
 
         int servings = useRemaining ? entry.Remaining : entry.Planned;
-        int toCook = Mathf.Max(0, servings - GetDishesInBag(entry.Recipe));
+
+        // [2.5 รอบ 2] จานในมือทำเสร็จแล้ว (วัตถุดิบหักไปแล้ว) ไม่ต้องจองวัตถุดิบเพิ่ม
+        int held = useRemaining ? HeldCount(entry.Recipe) : 0;
+        int toCook = Mathf.Max(0, servings - GetDishesInBag(entry.Recipe) - held);
         if (toCook <= 0)
         {
             return;
@@ -538,8 +544,8 @@ public class DailyMenu : MonoBehaviour
         return TryTakeServing(recipe, null, out _);
     }
 
-    // [2.5] เสิร์ฟ 1 จานโดยเลือกคุณภาพ (null = ดีที่สุดที่มี) served = คุณภาพที่เสิร์ฟจริง
-    // ไม่มีจานในกระเป๋า = หักวัตถุดิบที่จองไว้ (ชั่วคราว จนกว่าจะมีเตา รอบถัดไป) นับเป็น Good
+    // [2.5] เสิร์ฟ 1 จานจากกระเป๋าโดยเลือกคุณภาพ (null = ดีที่สุดที่มี) served = คุณภาพที่เสิร์ฟจริง
+    // [2.5 รอบ 2] ไม่มีจานในกระเป๋า = เสิร์ฟไม่ได้ (ต้องทำที่เตาก่อน)
     public bool TryTakeServing(RecipeData recipe, DishQuality? quality, out DishQuality served)
     {
         served = DishQuality.Good;
@@ -549,52 +555,92 @@ public class DailyMenu : MonoBehaviour
             return false;
         }
 
-        MenuEntry entry = entries[IndexOf(recipe)];
-
-        if (GetDishesInBag(recipe) > 0)
+        if (GetDishesInBag(recipe) <= 0)
         {
-            // คุณภาพที่เลือกหมดแล้ว (เช่น ถูกเสิร์ฟไปก่อน) = ใช้คุณภาพดีที่สุดที่เหลือ
-            DishQuality pick;
-            if (quality.HasValue && inventory.GetCount(recipe.dishItem, quality.Value) > 0)
-            {
-                pick = quality.Value;
-            }
-            else
-            {
-                inventory.TryGetBestQuality(recipe.dishItem, out pick);
-            }
+            Debug.Log($"DailyMenu: No {recipe.recipeName} in the bag. Cook it at the stove first.");
+            return false;
+        }
 
-            inventory.RemoveItem(recipe.dishItem, 1, pick);
-            served = pick;
+        // คุณภาพที่เลือกหมดแล้ว (เช่น ถูกเสิร์ฟไปก่อน) = ใช้คุณภาพดีที่สุดที่เหลือ
+        DishQuality pick;
+        if (quality.HasValue && inventory.GetCount(recipe.dishItem, quality.Value) > 0)
+        {
+            pick = quality.Value;
         }
         else
         {
-            Dictionary<ItemData, int> required = recipe.GetRequiredCounts();
+            inventory.TryGetBestQuality(recipe.dishItem, out pick);
+        }
 
-            // ตรวจให้ครบก่อน แล้วค่อยหัก (กันหักไปครึ่งเดียว)
-            foreach (KeyValuePair<ItemData, int> pair in required)
-            {
-                if (inventory.GetCount(pair.Key) < pair.Value)
-                {
-                    Debug.LogWarning($"DailyMenu: Missing {pair.Key.itemName} for {recipe.recipeName}. Serving cancelled.");
-                    entry.Remaining = 0;
-                    OnMenuChanged?.Invoke();
-                    return false;
-                }
-            }
+        if (!inventory.RemoveItem(recipe.dishItem, 1, pick))
+        {
+            Debug.LogWarning($"DailyMenu: Could not remove {recipe.recipeName} ({DishQualityUtil.Label(pick)}) from the bag.");
+            return false;
+        }
 
-            foreach (KeyValuePair<ItemData, int> pair in required)
+        served = pick;
+        CountServing(recipe, pick, "bag");
+        return true;
+    }
+
+    // [2.5 รอบ 2] เสิร์ฟจานที่ถืออยู่ในมือ (จานไม่ได้อยู่ในกระเป๋า แค่นับยอด) Customer เรียกแล้วค่อยเคลียร์มือ
+    public bool TryTakeServingFromHand(RecipeData recipe, DishQuality quality)
+    {
+        if (!CanServe(recipe))
+        {
+            return false;
+        }
+
+        CountServing(recipe, quality, "hand");
+        return true;
+    }
+
+    // นับว่าขายไป 1 จาน
+    private void CountServing(RecipeData recipe, DishQuality quality, string source)
+    {
+        MenuEntry entry = entries[IndexOf(recipe)];
+        entry.Remaining--;
+        entry.Sold++;
+        Debug.Log($"DailyMenu: Served {recipe.recipeName} ({DishQualityUtil.Label(quality)}, from {source}, {entry.Remaining} left).");
+        OnServingTaken?.Invoke(recipe);
+        OnMenuChanged?.Invoke();
+    }
+
+    // ---------- [2.5 รอบ 2] ทำที่เตาระหว่างเปิดร้าน ----------
+
+    // จานนี้อยู่ในมือผู้เล่นไหม (นับเป็น 1 จานที่ทำแล้ว)
+    private int HeldCount(RecipeData recipe)
+    {
+        return CarriedDish.Instance != null && CarriedDish.Instance.IsHolding(recipe) ? 1 : 0;
+    }
+
+    // ระหว่างเปิดร้าน สูตรนี้ทำที่เตาได้อีกกี่จาน
+    // = Remaining − จานนั้นในกระเป๋า − จานในมือ และวัตถุดิบต้องพอ (หักวัตถุดิบที่เมนูอื่นยังจองไว้)
+    public int GetCookRoom(RecipeData recipe)
+    {
+        int index = IndexOf(recipe);
+        MenuEntry entry = GetEntry(index);
+        if (!IsActive || entry == null || entry.IsEmpty || inventory == null)
+        {
+            return 0;
+        }
+
+        int need = entry.Remaining - GetDishesInBag(recipe) - HeldCount(recipe);
+        if (need <= 0)
+        {
+            return 0;
+        }
+
+        Dictionary<ItemData, int> reservedByOthers = new Dictionary<ItemData, int>();
+        for (int i = 0; i < entries.Count; i++)
+        {
+            if (i != index)
             {
-                inventory.RemoveItem(pair.Key, pair.Value);
+                AddReservedIngredients(entries[i], true, reservedByOthers);
             }
         }
 
-        entry.Remaining--;
-        entry.Sold++;
-        Debug.Log($"DailyMenu: Served {recipe.recipeName} ({DishQualityUtil.Label(served)}, {entry.Remaining} left).");
-        OnServingTaken?.Invoke(recipe);
-        OnMenuChanged?.Invoke();
-        return true;
+        return Mathf.Min(need, GetCookable(recipe, reservedByOthers));
     }
 
     // ปิดร้าน: เลิกจอง ของที่เหลืออยู่ในกระเป๋าตามเดิม เมนูที่ตั้งไว้จำไว้ใช้วันถัดไป

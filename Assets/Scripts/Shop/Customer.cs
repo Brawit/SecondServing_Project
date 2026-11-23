@@ -43,10 +43,10 @@ public enum CustomerMood
 
 // ลูกค้า 1 คน: เดินไปที่นั่ง → สั่งอาหารจากเมนูประจำวัน → รอ → (ผู้เล่นกด E เสิร์ฟ + จ่ายเงิน) → กิน → เดินออก
 // [2.5] กด E ตอนมีจานที่สั่งในกระเป๋ามากกว่า 1 คุณภาพ = เปิดแถบเลือกคุณภาพ (ServePicker) เหนือหัว
+// [2.5 รอบ 2] ถือจานที่ลูกค้าสั่ง + E = เสิร์ฟจานในมือ / ถือจานอื่น = แจ้งเตือน / ไม่มีจานเลย = บอกให้ไปทำที่เตา
 // [2.4b] บางคนถามหาเมนูนิยมที่ร้านไม่มี → ผู้เล่นกด E แนะนำเมนูวันนี้ → ลูกค้าเปลี่ยนจาน → รอ → เสิร์ฟ → กิน → อารมณ์หลังกิน
 // ถ้ารอนานเกินไป หรือไม่มีเมนูเหลือ จะเดินออกเลย
 // ได้อาหารแล้ว = ไม่นับเป็นลูกค้าที่ร้านต้องรอ (ร้านปิดได้ทันทีหลังเสิร์ฟคนสุดท้าย ส่วนลูกค้าจะกินจนเสร็จแล้วเดินออกทีหลัง)
-// ตอนนี้การเสิร์ฟเป็นแบบชั่วคราว (กด E ที่ลูกค้า) ขั้น 2.5 จะเปลี่ยนเป็นต้องถือจานที่ทำจากเตามาเสิร์ฟ
 // ต้องมี Collider2D แบบ Trigger (ให้ผู้เล่นกด E ได้) และ Rigidbody2D แบบ Kinematic บนตัวเดียวกัน
 // CustomerManager เป็นคนสร้างลูกค้าและเรียก Init
 public class Customer : MonoBehaviour, IInteractable
@@ -118,6 +118,12 @@ public class Customer : MonoBehaviour, IInteractable
 
     [Tooltip("ข้อความแจ้งเตือนตอนเสิร์ฟไม่ได้ ({0} = ชื่อเมนู)")]
     [SerializeField] private string cannotServeFormat = "Can't serve {0} right now.";
+
+    [Tooltip("[2.5] ถือจานที่ลูกค้าไม่ได้สั่ง ({0} = จานที่ลูกค้าสั่ง, {1} = จานในมือ)")]
+    [SerializeField] private string wrongDishFormat = "This customer ordered {0}, not {1}.";
+
+    [Tooltip("[2.5] ไม่มีจานนี้ทั้งในมือและในกระเป๋า ({0} = ชื่อเมนู)")]
+    [SerializeField] private string cookFirstFormat = "Cook {0} at the stove first.";
 
     // ---------- สถานะ ----------
 
@@ -483,14 +489,13 @@ public class Customer : MonoBehaviour, IInteractable
         Leave(CustomerLeaveReason.OutOfPatience);
     }
 
-    // เสิร์ฟอาหารให้ลูกค้าคนนี้ (ตอนนี้เรียกจากการกด E / ขั้น 2.5 จะเรียกตอนถือจานมาเสิร์ฟ) คืนค่า true ถ้าสำเร็จ
-    // ใช้จานคุณภาพดีที่สุดที่มี
+    // เสิร์ฟจานจากกระเป๋าให้ลูกค้าคนนี้ ใช้จานคุณภาพดีที่สุดที่มี คืนค่า true ถ้าสำเร็จ
     public bool TryServe()
     {
         return TryServe(null);
     }
 
-    // [2.5] เสิร์ฟด้วยคุณภาพที่เลือก (null = ดีที่สุดที่มี)
+    // [2.5] เสิร์ฟจานจากกระเป๋าด้วยคุณภาพที่เลือก (null = ดีที่สุดที่มี)
     public bool TryServe(DishQuality? quality)
     {
         if (State != CustomerState.WaitingForFood || Order == null)
@@ -505,6 +510,34 @@ public class Customer : MonoBehaviour, IInteractable
             return false;
         }
 
+        ApplyServed(served);
+        return true;
+    }
+
+    // [2.5 รอบ 2] เสิร์ฟจานที่ผู้เล่นถืออยู่ (ต้องเป็นจานที่ลูกค้าสั่ง) คืนค่า true ถ้าสำเร็จ
+    public bool TryServeFromHand(CarriedDish hand)
+    {
+        if (State != CustomerState.WaitingForFood || Order == null || hand == null || !hand.IsHolding(Order))
+        {
+            return false;
+        }
+
+        DailyMenu menu = DailyMenu.Instance;
+        DishQuality quality = hand.Quality;
+        if (menu == null || !menu.TryTakeServingFromHand(Order, quality))
+        {
+            NotificationUI.Post(string.Format(cannotServeFormat, Order.recipeName));
+            return false;
+        }
+
+        hand.Clear();
+        ApplyServed(quality);
+        return true;
+    }
+
+    // ได้อาหารแล้ว: ปิดแถบเลือก สุ่มอารมณ์ จ่ายเงิน เริ่มกิน
+    private void ApplyServed(DishQuality served)
+    {
         ServedQuality = served;
         if (ServePicker.Instance != null && ServePicker.Instance.IsOpenFor(this))
         {
@@ -517,6 +550,13 @@ public class Customer : MonoBehaviour, IInteractable
         // สุ่มอารมณ์หลังกินและตั้งความพอใจก่อนรายงาน ให้ CustomerManager นับรวมได้ (แสดงอารมณ์ตอนกินเสร็จ)
         Mood = manager != null ? manager.DecideMood(OrderKind, served) : CustomerMood.Good;
         Satisfaction = manager != null ? manager.GetSatisfaction(Mood) : 1f;
+
+        // [2.5b] จานยาก (★) ลูกค้าพอใจมากขึ้น (ตัวคูณใน CookingSettings)
+        CookingSettings cooking = CookingSession.Instance != null ? CookingSession.Instance.Settings : null;
+        if (cooking != null && Order != null)
+        {
+            Satisfaction *= cooking.SatisfactionScale(Order.Difficulty);
+        }
         acceptTextTimer = 0f;
 
         // จ่ายเงินตอนได้อาหาร (ร้านอาจปิดไปแล้วระหว่างที่ลูกค้ายังกินอยู่ เงินต้องนับในวันนี้)
@@ -530,7 +570,6 @@ public class Customer : MonoBehaviour, IInteractable
         timer = eatDuration;
         SetBubble(OrderKind == CustomerOrderKind.Popular ? popularEatingText : eatingText);
         if (bubbleText != null) bubbleText.color = bubbleBaseColor;
-        return true;
     }
 
     private void FinishMeal()
@@ -617,13 +656,28 @@ public class Customer : MonoBehaviour, IInteractable
     }
 
     // [2.5] กด E ที่ลูกค้าที่รออาหาร:
-    // แถบเลือกเปิดอยู่ = เสิร์ฟตัวที่เลือก / มีจานในกระเป๋า 2 คุณภาพขึ้นไป = เปิดแถบเลือก / ไม่งั้นเสิร์ฟเลย
+    // แถบเลือกเปิดอยู่ = เสิร์ฟตัวที่เลือก / [รอบ 2] ถือจานตรง = เสิร์ฟจานในมือ / ถือจานอื่น = แจ้งเตือน
+    // มือว่าง: มีจานในกระเป๋า 2 คุณภาพขึ้นไป = เปิดแถบเลือก / คุณภาพเดียว = เสิร์ฟเลย / ไม่มี = บอกให้ไปทำที่เตา
     private void HandleServeInteract(PlayerInteractor interactor)
     {
         ServePicker picker = ServePicker.Instance;
         if (picker != null && picker.IsOpenFor(this))
         {
             picker.Confirm();
+            return;
+        }
+
+        CarriedDish hand = CarriedDish.Instance;
+        if (hand != null && hand.HasDish && Order != null)
+        {
+            if (hand.IsHolding(Order))
+            {
+                TryServeFromHand(hand);
+            }
+            else
+            {
+                NotificationUI.Post(string.Format(wrongDishFormat, Order.recipeName, hand.Recipe.recipeName));
+            }
             return;
         }
 
@@ -635,6 +689,8 @@ public class Customer : MonoBehaviour, IInteractable
             List<DishQuality> qualities = new List<DishQuality>();
             if (bag.GetAvailableQualities(Order.dishItem, qualities) >= 2)
             {
+                // แถบเลือกของเตาใช้ scroll เหมือนกัน ปิดก่อน
+                Stove.CloseAnyPicker();
                 ServePicker.GetOrCreate().Open(this, interactor.transform, bag);
                 return;
             }
@@ -646,7 +702,11 @@ public class Customer : MonoBehaviour, IInteractable
             }
         }
 
-        TryServe(null);
+        // [2.5 รอบ 2] ไม่มีจานนี้เลย: ต้องไปทำที่เตาก่อน (เลิกทางลัดหักวัตถุดิบแล้ว)
+        if (Order != null)
+        {
+            NotificationUI.Post(string.Format(cookFirstFormat, Order.recipeName));
+        }
     }
 
     // ---------- ภายใน ----------
