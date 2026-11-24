@@ -28,8 +28,14 @@ public class DaySummaryData
     public int ShopLevel;
     public bool BarFull;
 
-    // [2.6b] รายได้ข้ามคืน (กล่องขาย) เข้ากระเป๋าตอนสรุป / ตอนนี้ 0
+    // [2.6b] รายได้ข้ามคืน (กล่องขาย) เข้ากระเป๋าตอนสรุป
     public int OvernightIncome;
+
+    // [2.6b] ขายของให้ร้านของชำวันนี้ (ได้เงินไปแล้วตอนขาย แค่สรุป)
+    public int StoreSales;
+
+    // [2.6b] ชื่อเสียงจากการขายจาน (รวมอยู่ใน ReputationGained แล้ว)
+    public int SalesReputation;
 
     // [2.6] เงินรวมหลังสรุป
     public int Money;
@@ -246,6 +252,17 @@ public class DayEndManager : MonoBehaviour
             data.Tips = customers.TipsToday;
             data.ReputationGained = customers.ReputationToday;
         }
+        // [2.6b] ปิดยอดกล่องขายข้ามคืน + ชื่อเสียงจากการขาย (ต้องทำก่อนอ่านหลอดชื่อเสียงและเงิน)
+        SalesLedger ledger = SalesLedger.Instance;
+        if (ledger != null)
+        {
+            ledger.SettleDay(out int overnightIncome, out int salesReputation);
+            data.OvernightIncome = overnightIncome;
+            data.SalesReputation = salesReputation;
+            data.StoreSales = ledger.ShopIncomeToday;
+            data.ReputationGained += salesReputation;
+        }
+
         ShopProgress progress = ShopProgress.Instance;
         if (progress != null)
         {
@@ -254,7 +271,6 @@ public class DayEndManager : MonoBehaviour
             data.ShopLevel = progress.Level;
             data.BarFull = progress.IsBarFull && !progress.IsMaxLevel;
         }
-        data.OvernightIncome = 0; // [2.6b] กล่องขายข้ามคืน: เพิ่มเงินเข้ากระเป๋าตรงนี้แล้วใส่ยอด
         data.Money = PlayerWallet.Instance != null ? PlayerWallet.Instance.Money : 0;
 
         if (summaryUI != null)

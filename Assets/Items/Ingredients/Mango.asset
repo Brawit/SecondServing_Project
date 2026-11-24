@@ -22,7 +22,7 @@ MonoBehaviour:
   source: 0
   equipType: 0
   sellPrice: 18
-  restoreHealth: 8
-  restoreStamina: 4
-  restoreMana: 0
+  restoreHealth: 16
+  restoreStamina: 8
+  restoreMana: 5
   restoreFever: 0

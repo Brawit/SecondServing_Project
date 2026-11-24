@@ -97,7 +97,7 @@ public class PlayerActionController : MonoBehaviour
         Mouse mouse = Mouse.current;
 
         // ระหว่างเปิดกระเป๋า / หน้าสรุปวัน / หน้าต่างเลือกเมนู / [2.5] หน้าต่างทำอาหารและมินิเกม: ไม่รับปุ่มใดๆ ของ Hotbar
-        if (IsInventoryOpen() || IsDayEnding() || MenuSelectionUI.IsAnyOpen || CookingMenuUI.IsAnyOpen || CookingSession.IsBusy || MailUI.IsAnyOpen || ConstructionUI.IsAnyOpen)
+        if (IsInventoryOpen() || IsDayEnding() || MenuSelectionUI.IsAnyOpen || CookingMenuUI.IsAnyOpen || CookingSession.IsBusy || MailUI.IsAnyOpen || ConstructionUI.IsAnyOpen || ShopUI.IsAnyOpen || ShippingBoxUI.IsAnyOpen)
         {
             StopBlocking();
             return;

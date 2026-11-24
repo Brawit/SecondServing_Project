@@ -11,7 +11,8 @@ public class Inventory : MonoBehaviour
 {
     [Header("Bag Levels")]
     [Tooltip("จำนวนสูงสุดต่อชนิดในแต่ละระดับกระเป๋า (ช่องแรก = ระดับ 1)")]
-    [SerializeField] private int[] stackCapsByLevel = { 30, 99, 300, 999 };
+    // [2.6b] เหลือ 3 ระดับ 30 → 150 → 500 (ซื้อที่ร้านกระเป๋า) ค่าในฉากตั้งโดย Build Shops
+    [SerializeField] private int[] stackCapsByLevel = { 30, 150, 500 };
 
     [Tooltip("ระดับกระเป๋าตอนเริ่มเกม (1 = ระดับแรก)")]
     [SerializeField] private int startingBagLevel = 1;

@@ -1,0 +1,66 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2dbab0ed67092d64db0a1fecfe331d50, type: 3}
+  m_Name: Bookstore
+  m_EditorClassIdentifier: Assembly-CSharp::ShopCatalog
+  shopName: Bookstore
+  openHour: 9
+  closeHour: 17
+  buysFromPlayer: 0
+  buyMultiplier: 2
+  recipeBookMultiplier: 10
+  entries:
+  - kind: 2
+    item: {fileID: 0}
+    recipe: {fileID: 11400000, guid: eebc02193557134488524d3023d456b6, type: 2}
+    bagLevel: 2
+    priceOverride: 0
+  - kind: 2
+    item: {fileID: 0}
+    recipe: {fileID: 11400000, guid: 2de81e4c518747041b323db765a975b4, type: 2}
+    bagLevel: 2
+    priceOverride: 0
+  - kind: 2
+    item: {fileID: 0}
+    recipe: {fileID: 11400000, guid: 6642941910da57f4eb62f83899554c80, type: 2}
+    bagLevel: 2
+    priceOverride: 0
+  - kind: 2
+    item: {fileID: 0}
+    recipe: {fileID: 11400000, guid: b8e9fade1063016428bf13b6ce8aa718, type: 2}
+    bagLevel: 2
+    priceOverride: 0
+  - kind: 2
+    item: {fileID: 0}
+    recipe: {fileID: 11400000, guid: a27759aa0b5b9b74ca11a7a8f2b7a7cc, type: 2}
+    bagLevel: 2
+    priceOverride: 0
+  - kind: 2
+    item: {fileID: 0}
+    recipe: {fileID: 11400000, guid: 2889a5ba045cd9e469a2b481636510c8, type: 2}
+    bagLevel: 2
+    priceOverride: 0
+  - kind: 2
+    item: {fileID: 0}
+    recipe: {fileID: 11400000, guid: 8068f21083a84844a96a981dcd83f379, type: 2}
+    bagLevel: 2
+    priceOverride: 0
+  - kind: 2
+    item: {fileID: 0}
+    recipe: {fileID: 11400000, guid: 2c8377a54ea85df408d637ea9ecb6603, type: 2}
+    bagLevel: 2
+    priceOverride: 0
+  - kind: 2
+    item: {fileID: 0}
+    recipe: {fileID: 11400000, guid: 40d0991bb1da5494db0e29bf6220290f, type: 2}
+    bagLevel: 2
+    priceOverride: 0

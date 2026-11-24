@@ -1,0 +1,191 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2dbab0ed67092d64db0a1fecfe331d50, type: 3}
+  m_Name: GeneralStore
+  m_EditorClassIdentifier: Assembly-CSharp::ShopCatalog
+  shopName: General Store
+  openHour: 9
+  closeHour: 17
+  buysFromPlayer: 1
+  buyMultiplier: 2
+  recipeBookMultiplier: 10
+  entries:
+  - kind: 0
+    item: {fileID: 11400000, guid: 20846ae587665dc4197ee6528a9a38a3, type: 2}
+    recipe: {fileID: 0}
+    bagLevel: 2
+    priceOverride: 0
+  - kind: 0
+    item: {fileID: 11400000, guid: 3473e7addb6bfa34d9edb03172fa700b, type: 2}
+    recipe: {fileID: 0}
+    bagLevel: 2
+    priceOverride: 0
+  - kind: 0
+    item: {fileID: 11400000, guid: 6927defbe6e78ed489831dd7668ded99, type: 2}
+    recipe: {fileID: 0}
+    bagLevel: 2
+    priceOverride: 0
+  - kind: 0
+    item: {fileID: 11400000, guid: 62cf83cf547412348acf94b2ce26b42b, type: 2}
+    recipe: {fileID: 0}
+    bagLevel: 2
+    priceOverride: 0
+  - kind: 0
+    item: {fileID: 11400000, guid: 15b6d027269e5cf45974e12659570eb8, type: 2}
+    recipe: {fileID: 0}
+    bagLevel: 2
+    priceOverride: 0
+  - kind: 0
+    item: {fileID: 11400000, guid: f2709281db777f84c9abf12529a045d2, type: 2}
+    recipe: {fileID: 0}
+    bagLevel: 2
+    priceOverride: 0
+  - kind: 0
+    item: {fileID: 11400000, guid: 45569172db2f3024fbd345483e0d32c1, type: 2}
+    recipe: {fileID: 0}
+    bagLevel: 2
+    priceOverride: 0
+  - kind: 0
+    item: {fileID: 11400000, guid: 92d7cd5a0e22dc44193593bcf99cd684, type: 2}
+    recipe: {fileID: 0}
+    bagLevel: 2
+    priceOverride: 0
+  - kind: 0
+    item: {fileID: 11400000, guid: 5fcf718d896f9b14493b3891b3e9993d, type: 2}
+    recipe: {fileID: 0}
+    bagLevel: 2
+    priceOverride: 0
+  - kind: 0
+    item: {fileID: 11400000, guid: 8e729bf9bf6496a48bb5d6f009d276fa, type: 2}
+    recipe: {fileID: 0}
+    bagLevel: 2
+    priceOverride: 0
+  - kind: 0
+    item: {fileID: 11400000, guid: 202d5895fbfdc1349871e02af866bebd, type: 2}
+    recipe: {fileID: 0}
+    bagLevel: 2
+    priceOverride: 0
+  - kind: 0
+    item: {fileID: 11400000, guid: 7cddff7e87c767a40b3ab37d917be18b, type: 2}
+    recipe: {fileID: 0}
+    bagLevel: 2
+    priceOverride: 0
+  - kind: 0
+    item: {fileID: 11400000, guid: 7c6c2f24c5827544ab7604887aad0655, type: 2}
+    recipe: {fileID: 0}
+    bagLevel: 2
+    priceOverride: 0
+  - kind: 0
+    item: {fileID: 11400000, guid: 417c01008de3452418a592329cd83921, type: 2}
+    recipe: {fileID: 0}
+    bagLevel: 2
+    priceOverride: 0
+  - kind: 0
+    item: {fileID: 11400000, guid: d3cf91581ebc3594abfbbb726d73e552, type: 2}
+    recipe: {fileID: 0}
+    bagLevel: 2
+    priceOverride: 0
+  - kind: 0
+    item: {fileID: 11400000, guid: 359c187fe1d9c0e4a9319ef6ac51fca8, type: 2}
+    recipe: {fileID: 0}
+    bagLevel: 2
+    priceOverride: 0
+  - kind: 0
+    item: {fileID: 11400000, guid: ca1cd1b77ef27b34fbd2e1261ff98492, type: 2}
+    recipe: {fileID: 0}
+    bagLevel: 2
+    priceOverride: 0
+  - kind: 0
+    item: {fileID: 11400000, guid: 308ae2a319dd0cc42b2e3794adce0d5d, type: 2}
+    recipe: {fileID: 0}
+    bagLevel: 2
+    priceOverride: 0
+  - kind: 0
+    item: {fileID: 11400000, guid: c586b1e0d2bb8464799139217f0d0f3a, type: 2}
+    recipe: {fileID: 0}
+    bagLevel: 2
+    priceOverride: 0
+  - kind: 0
+    item: {fileID: 11400000, guid: 834240f8d3897c247989097d934c1253, type: 2}
+    recipe: {fileID: 0}
+    bagLevel: 2
+    priceOverride: 0
+  - kind: 0
+    item: {fileID: 11400000, guid: d8d5c16ae60f88d40a7297aea67368b8, type: 2}
+    recipe: {fileID: 0}
+    bagLevel: 2
+    priceOverride: 0
+  - kind: 0
+    item: {fileID: 11400000, guid: 95bfd9efbb26cb64e9b2b18098ce3b32, type: 2}
+    recipe: {fileID: 0}
+    bagLevel: 2
+    priceOverride: 0
+  - kind: 0
+    item: {fileID: 11400000, guid: f846e2bdaf60a384a8d1227452f12634, type: 2}
+    recipe: {fileID: 0}
+    bagLevel: 2
+    priceOverride: 0
+  - kind: 0
+    item: {fileID: 11400000, guid: eba9bcb2df8988a429318bdc6cbfac95, type: 2}
+    recipe: {fileID: 0}
+    bagLevel: 2
+    priceOverride: 0
+  - kind: 0
+    item: {fileID: 11400000, guid: c569b2d805d94674a947716b97cb0653, type: 2}
+    recipe: {fileID: 0}
+    bagLevel: 2
+    priceOverride: 0
+  - kind: 0
+    item: {fileID: 11400000, guid: 5b9f3c7acd3bfa04ab5fadbbf2e8be4d, type: 2}
+    recipe: {fileID: 0}
+    bagLevel: 2
+    priceOverride: 0
+  - kind: 0
+    item: {fileID: 11400000, guid: 36aa19d36e5fe5f459edbd8d3936c902, type: 2}
+    recipe: {fileID: 0}
+    bagLevel: 2
+    priceOverride: 0
+  - kind: 0
+    item: {fileID: 11400000, guid: 298e1d21ca33a6642a3208d5e1f56f3b, type: 2}
+    recipe: {fileID: 0}
+    bagLevel: 2
+    priceOverride: 0
+  - kind: 0
+    item: {fileID: 11400000, guid: 65b00d6ec3f2c40488cca7d1a84d18ad, type: 2}
+    recipe: {fileID: 0}
+    bagLevel: 2
+    priceOverride: 0
+  - kind: 0
+    item: {fileID: 11400000, guid: c35a2787cf5c88a48a0633b7a02e8cc7, type: 2}
+    recipe: {fileID: 0}
+    bagLevel: 2
+    priceOverride: 0
+  - kind: 0
+    item: {fileID: 11400000, guid: 2f83a5add666a1447aba9d8028e33503, type: 2}
+    recipe: {fileID: 0}
+    bagLevel: 2
+    priceOverride: 0
+  - kind: 0
+    item: {fileID: 11400000, guid: 8a7f4db5ee21f2643bd7113c2dc6b6cc, type: 2}
+    recipe: {fileID: 0}
+    bagLevel: 2
+    priceOverride: 0
+  - kind: 0
+    item: {fileID: 11400000, guid: 8753b40049e26ab41b0913307d3ad62e, type: 2}
+    recipe: {fileID: 0}
+    bagLevel: 2
+    priceOverride: 0
+  - kind: 0
+    item: {fileID: 11400000, guid: 87c3815a9acd46a469663cfa907c1cf5, type: 2}
+    recipe: {fileID: 0}
+    bagLevel: 2
+    priceOverride: 0

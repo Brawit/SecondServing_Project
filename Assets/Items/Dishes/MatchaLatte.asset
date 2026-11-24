@@ -24,5 +24,5 @@ MonoBehaviour:
   sellPrice: 145
   restoreHealth: 12
   restoreStamina: 35
-  restoreMana: 7
+  restoreMana: 15
   restoreFever: 0

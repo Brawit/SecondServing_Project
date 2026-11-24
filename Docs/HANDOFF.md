@@ -1,7 +1,7 @@
 # Second Serving – HANDOFF
 
 > ไฟล์นี้สรุปสถานะโปรเจกต์ให้ Claude ในแชทใหม่อ่านต่อได้ทันที
-> อัปเดตล่าสุด: 24 พฤศจิกายน 2026 (ขั้น 2.6 **เสร็จ**: เงิน B + ราคา + ทิป + ชื่อเสียงแบบหลอด + ช่างอัปเกรดร้าน 3 ขั้น + หน้าสรุปวัน + เซฟ v8 / ถัดไป 2.6b ร้านค้า + กล่องขายข้ามคืน)
+> อัปเดตล่าสุด: 24 พฤศจิกายน 2026 (ขั้น 2.6b **เสร็จ**: ร้านค้า 3 ร้าน + กล่องขายข้ามคืน + ชื่อเสียงจากการขายจาน + กระเป๋า 3 ระดับ + สมุดสูตร 9 เล่ม + Mana/ค่าวัตถุดิบดิบใหม่ในตาราง / ถัดไป 2.6c ของป่าสำหรับสูตรเริ่มต้น)
 > ตำแหน่งไฟล์: `D:\SecondServing_Project\Docs\HANDOFF.md` (อยู่นอก Assets ตั้งใจไม่ให้ Unity import)
 
 ---
@@ -59,6 +59,7 @@
   - ✅ **Import Recipes & Ingredients** ตั้งใจให้กดซ้ำ (ทับชื่อ/วัตถุดิบ/ค่าฟื้น/ความยาก/ทางได้สูตร ไม่ทับ icon, description, ชุดท่า, portrait) ห้ามเปลี่ยนชื่อหัวคอลัมน์
   - ✅ Build Customer / Cooking / Daily Menu / Equipment / Service Timer / **Mail System**: มีอยู่แล้ว = kept (บางตัวหาวัตถุจากชื่อ เช่น ShopEntryFront / OutsideFront เปลี่ยนชื่อแล้วอาจสร้างซ้ำ)
   - ✅ [2.6] **Build Economy** มีแล้ว = kept
+  - ✅ [2.6b] **Build Shops** มีแล้ว = kept (รายการร้าน/เคาน์เตอร์/กล่อง/SalesLedger/UI) / ตั้งเพดานกระเป๋า Player เป็น {30,150,500} ทุกครั้งที่ยังไม่ตรง / อยากได้ layout หน้าต่างใหม่ = ลบ `ShopUI` / `ShippingBoxUI` ใต้ Canvas แล้วกดซ้ำ
   - ❌ **Build Inventory Window Layout / Build Stats HUD / Build Hotbar HUD / Build Day Summary Layout / Reset Cooking Tuning** ห้ามกดหลังขัดเกลา (จัด UI กลับ / ทับค่ามินิเกม) / เฟส 4 อาจลบตัวจัด UI ทิ้ง
 - **ตาราง Claude Sheets แก้ได้โดยตรง** ผ่าน Claude Docs connector (engine `workbook`): read project ด้วยลิงก์ → node `6ff77ff6-e2a8` / container `1b797e5d-8903-4602-9369-4747a7de916f` → `applyEdits` (ต้องส่ง `base` = revision ล่าสุด) / อ่าน `guide topic.sheets` ก่อน
 
@@ -122,7 +123,7 @@
 - กระเป๋าวิเศษ: ของไม่เน่า ไม่เสีย คงสภาพเดิม ไม่มีช่องให้จัด แสดงแบบ Collectibles (ยังไม่เคยเจอ = เงาดำ)
 - 5 แท็บ: Ingredients / Dishes / Recipes (สมุดสูตร) / Equipment (อาวุธ เครื่องมือ ชุด) / Accessory
 - สูตรลับที่ยังไม่รู้: ซ่อนทั้งในแท็บ Recipes และจานของสูตรนั้นในแท็บ Dishes (ไม่แสดงแม้แต่เงาดำ) จานจะแสดงเมื่อรู้สูตร **หรือมี/เคยได้จานนั้นมาแล้ว** (เช่น NPC ให้)
-- เพดานต่อชนิดตามระดับกระเป๋า: 30 → 99 → 300 → 999 (ระดับ 4 ได้จากบอสหรือเควสต์)
+- เพดานต่อชนิดตามระดับกระเป๋า: **[2.6b] 30 → 150 → 500 (3 ระดับ ซื้อที่ร้านกระเป๋า B 2,500 / B 20,000)** ตัดระดับ 4 ทิ้ง (ผู้ใช้: 999 มากไป / รางวัลบอสเป็นอย่างอื่น) / ผู้ใช้เคยถามว่าควรกลับไปใช้กระเป๋าแบบช่องของ Stardew ไหม → **ไม่** (ต้อง rework ระบบเกือบทั้งหมด 1.5–3 สัปดาห์ + วัตถุดิบ 83 / จาน 87×3 คุณภาพ ช่องเต็มเร็ว ขัด cozy / เพดานต่อชนิดให้ความตึงแบบเบาแล้ว)
 - จานอาหารเป็นไอเทม ไม่เน่า ทำนอกเวลาเปิดร้านได้ ใช้ให้ NPC / กิน / ขาย
 - **ระบบผสม (เมนูประจำวัน):** เลือกได้ 3 เมนู (อัปเกรดเพิ่มได้) กด +/- ตั้งจำนวนจาน นับจากจานที่ทำไว้แล้วในกระเป๋า + วัตถุดิบที่จองไว้ วัตถุดิบหักตอนทำจริง ขายไม่หมดก็คืนเข้ากระเป๋า
   - (ขั้น D) เลือกเมนูโดย**กด E ที่เคาน์เตอร์ช่วง 17:00–19:00** → หน้าต่างเลือกเมนู → ปุ่ม Open Shop (ต้องมีอย่างน้อย 1 จาน) / Esc หรือ Cancel ปิด
@@ -211,7 +212,22 @@
   - ระบบก่อสร้างกลาง (ทาง B): งานใหม่เฟส 3 (บ้าน, ส่วนเสริม, บ่อกุ้ง, บ่อปลา, **เรือนกระจกปลูกได้ทุกฤดู**) = ไฟล์ `ConstructionProject` ใหม่ + `ConstructionEffect` ใหม่ (ต่อท้าย) + โค้ดใน `ConstructionManager.ApplyEffect`
   - **หน้าสรุปวัน**: จานที่ขาย, ลูกค้าเดินออก, รายได้ร้าน (**ได้รับแล้ว** แค่สรุป: ค่าอาหาร + ทิป), บรรทัดกล่องขายข้ามคืน (**ได้รับตอนนี้** 2.6b), รวม, ชื่อเสียง +N (หลอด, เลเวล), หลอดเต็ม = ชวนไปหาช่าง, เงินรวม
   - **ทางขายของ (2.6b)**: A ขายตรงกับ NPC ได้เงินทันที + **กล่องขายข้ามคืนแบบ Stardew** ขายตามราคา เงินขึ้นหน้าสรุปวัน = ที่ทิ้งของที่ไม่ใช้ (ผู้ใช้เลือกหลังคุย ภูต/ศาลเจ้าที่/รถพ่อค้าคนกลาง/กล่องคุณยาย ยังไม่กำหนดเหตุผลในเรื่อง) / ขายออนไลน์ผ่านคอม = ไม่เอา / ของแนบ**เงิน**ในจดหมายทำแล้ว
+- **ร้านค้า + กล่องขายข้ามคืน (ขั้น 2.6b) แบบร่าง: `Docs/2.6b-design.md` / แผน: `Docs/2.6b-plan.md`** (ผู้ใช้ทดสอบแล้วพอใจ)
+  - กล่องขาย + ร้านของชำรับซื้อ **100% ของ sellPrice** แบบ Stardew / จาน × คุณภาพ **OK 1.0 / Good 1.1 / Perfect 1.25** (ปัดลงต่อชิ้น) / ขายได้เมื่อ sellPrice > 0
+  - ร้านขายให้ผู้เล่น **×2** ทุกอย่าง (ร้าน "ซื้อเวลา" ทั้งร้าน: ผู้ใช้ตั้งใจให้ทุกวัตถุดิบหาเองได้ในเกมเต็ม ปลูกข้าว→แป้ง, ตีมอนสเตอร์/ล่าสัตว์ได้เนื้อ, ตกปลา/ดักกุ้ง, ไข่หายากในป่า → เฟส 3 เปลี่ยนคอลัมน์ Source ของเนื้อ/ข้าว/แป้ง/ไข่ จาก Market)
+  - **ชื่อเสียงจากการขายจาน** (ร้าน + กล่องนับรวม): ทุก 5 จานในวันเดียวกัน = **+2** ไม่สะสมข้ามวัน **สูงสุด +10/วัน** วัตถุดิบไม่นับ / คิดตอนจบวัน (ผู้ใช้: เงินเยอะแต่อัปเกรดร้านไม่ได้ถ้าไม่เปิดร้าน = ชื่อเสียงเป็นตัวกั้น) / เปิดร้านดีๆ ≈ +20–35/วัน
+  - **ราคาตามความยาก ★ = ไม่เอาไปก่อน** (มินิเกมพลาดยังได้จาน → ★3 เป็นแค่เครื่องผลิตเงิน / รางวัลความยากอยู่ในร้านผ่านความพอใจ) ทบทวนตอนเล่นทดสอบทั้งวงจร
+  - ร้าน 3 ร้าน (จุดชั่วคราว ยังไม่มี NPC) เปิด **09:00–17:00** ไม่จำกัดจำนวน: **General Store** วัตถุดิบ 34 ชนิด (สูตรเริ่มต้น 18 + สูตรในสมุด 16) + แท็บ Sell / **Bag Shop** อัปเกรดกระเป๋า (แสดงเฉพาะขั้นถัดไป) / **Bookstore** สมุดสูตร 9 เล่ม ราคา = ราคาจาน ×10 ซื้อ = รู้สูตรทันที รู้แล้ว = `Learned` / **ยังไม่ขายเมล็ด** (รอระบบปลูก เฟส 3 แค่เพิ่มในไฟล์รายการ)
+  - **ซื้อ (ผู้ใช้ขอหลังทดสอบ):** ขอเกินที่ว่างหรือเงิน = ได้เท่าที่ได้ จ่ายเท่าที่ได้ (`Bought Tomato x4 (bag full)`) ไม่เอาเปรียบผู้เล่น / **ค้าง Shift = ×10** (Buy 10 / Buy 50, ขาย 10)
+  - **ขายแบบคลิกเดียว ทั้งกล่องและร้านของชำเหมือนกัน (ผู้ใช้ขอ):** คลิกซ้าย = ทั้งกอง / คลิกขวา = 1 / Shift + คลิกขวา = 10 / จานแยกแถวตามคุณภาพ
+  - กล่อง: ย้ายของออกจากกระเป๋าทันที **เอาคืนได้ทุกชิ้นจนกว่าจะนอน** (กระเป๋าเต็ม = คืนได้เท่าที่ใส่ได้) / ขายตอนจบวัน (นอนหรือสลบ) → `OvernightIncome` + ชื่อเสียงจากการขายบนหน้าสรุปวัน / หน้าสรุปมีบรรทัดยอดขายร้านของชำด้วย
+  - ใช้ร้าน/กล่องไม่ได้ระหว่างเปิดร้านอาหาร (รวม Last call) / หน้าสรุปวัน / มีหน้าต่างอื่นเปิด / หน้าต่างเปิด = นาฬิกาหยุด เดินไม่ได้ / **ไม่เพิ่มเวอร์ชันเซฟ** (เซฟตอนจบวันหลังปิดยอดกล่องแล้ว)
+  - ตาราง rev 114: Mana จากอาหาร 27 → **44 จาน** (เดิม ×2 ปัด 5 สูงสุด 40 / ใหม่ 15–30 รวมข้าวเหนียวมะม่วง + อากัวเฟรสกา) / วัตถุดิบกินดิบได้ 36 ชนิด HP/Stamina ×2 + ผลไม้/สมุนไพร Mana 3–10 / จานที่ฟื้นน้อยกว่าวัตถุดิบดิบ = ค่าวัตถุดิบ +5 / CSV สร้างใหม่ + import แล้ว
 - **ไอเดียเฟส 3 (ผู้ใช้, 24 พ.ย.):** งานครบรอบร้านให้ผู้เล่น (ใช้ชื่อเสียงรวม)
+- **ไอเดียเฟส 3 (ผู้ใช้, 24 พ.ย.) — กันเบื่อมินิเกมช่วงกลางเกม:** ผู้ใช้กังวลว่าเล่นนานๆ แล้วเบื่อมินิเกม (ไม่ลึกพอจะเล่นซ้ำได้ไม่จำกัดแบบระบบต่อสู้) → แนวทาง = **ลดจำนวนครั้งที่ต้องเล่นเมื่อเก่งแล้ว + ให้ผู้เล่นเลือก** (ทำเฟส 3 พร้อม proficiency)
+  1. **ความชำนาญรายสูตร → Quick Cook:** ทำสูตรเดิมครบ N ครั้ง (เช่น 10 ครั้งที่ได้ Good+) ปลดล็อกทำเร็ว = ข้ามมินิเกม ได้ Good แน่นอน / **Perfect ยังต้องเล่นเอง** / สูตรต้นเกมปลดล็อกก่อน = ยังมีค่า
+  2. **Batch:** เล่น 1 รอบ ได้หลายจานคุณภาพเดียวกัน (1 → 3 → 5 จาน อัปเกรดหม้อ/เตาผ่านระบบช่าง)
+  3. หุ่นทำอาหาร / เตาอัตโนมัติท้ายเกม (มีอยู่แล้วด้านล่าง)  4. [เฟส 4] ตั้งค่าความยากมินิเกม / ปิดมินิเกม (ได้ Good) เพื่อการเข้าถึง
 - **ไอเดียเฟส 3 (ผู้ใช้, 24 พ.ย.):** **หุ่นทำอาหาร (craft ได้) เป็นขั้น OK → Good → Perfect** ช่วงท้ายเกมช่วยทำอาหารให้หยิบไปเสิร์ฟ เพราะถ้าไม่ได้เตรียมจานไว้แล้วต้องทำเองที่เตา+มินิเกมทั้งหมด = มือระวิง / ผู้ใช้มองว่าต้นเกมร้านดูว่าง (ขายได้ไม่กี่จาน) เป็นเรื่องปกติ
 - **ไอเดียเฟส 3 (ผู้ใช้):** สิ่งประดิษฐ์ไฮเทคของตัวเอก (สาย CS): เตาอัตโนมัติ (ทำจานคุณภาพ OK เอง), เครื่องรดน้ำอัตโนมัติ (ปลูกเมล็ดจากป่าที่บ้าน), เครื่องพรวนดินแทนจอบ
 - **ไอเดียเฟส 3 (ผู้ใช้):** ยานพาหนะ/สิ่งอำนวยความสะดวก เช่น มอเตอร์ไซค์ ม้า ให้เดินทางเร็วขึ้นและมีลูกเล่นมากกว่า Stardew / ร้านอัปเกรดได้ (เมนูยอดนิยมเพิ่ม ช่องเมนูเพิ่ม) ด้วยเงิน/ชื่อเสียงจาก 2.6
@@ -419,6 +435,19 @@ Construction/BuilderCounter.cs [2.6] เคาน์เตอร์ช่าง 
 UI/ConstructionUI.cs      [2.6] หน้าต่างช่าง (เลเวล, หลอด, ราคา, เวลา, ปลดล็อก, สถานะสีแดง/เขียว, Hire → ConfirmPanel Yes/No → TryStart → ปิดหน้าต่าง) static IsAnyOpen
 Editor/EconomySetupBuilder.cs [2.6] Tools > Second Serving > Build Economy: PlayerWallet + ConstructionManager + shop_upgrade_2/3/4 + prefab BuilderCounter (วางซ้าย OutsideFront 3)
                           + MoneyPanel ใต้ ClockPanel + ConstructionUI + ผูก SaveManager / kept
+Shop/Commerce/SalesLedger.cs  [2.6b] singleton (-50): BoxEntry, CanSell, UnitSellPrice(item, quality), QualityMultiplier, SellNow (ขายตรง), PutInBox / TakeBack(index, amount),
+                          Box, BoxTotal, DishesInBox, DishesCountedToday, PendingReputation, ReputationFor, SettleDay(out income, out rep) (DayEndManager เรียก),
+                          ตัวนับรายวันรีเซ็ต OnDayStarted / กันให้ชื่อเสียงซ้ำ (ReputationGrantedToday) / Debug: Print Status, Sell Box Now
+Shop/Commerce/ShopCatalog.cs  [2.6b] SO (Create > Cozy > Shop Catalog): shopName, openHour/closeHour, buysFromPlayer, buyMultiplier 2, recipeBookMultiplier 10, entries
+                          + ShopEntry (kind Item / BagUpgrade / RecipeBook, item, recipe, bagLevel, priceOverride) + enum ShopEntryKind (ต่อท้ายเท่านั้น) / GetPrice
+Shop/Commerce/ShopPurchase.cs [2.6b] static: IsCommerceBlocked, IsAnyOtherWindowOpen, IsVisible, GetBuyableAmount (จำกัดตามที่ว่าง + เงิน), CanBuy, TryBuy(out bought, out reason, out limitNote)
+Shop/Commerce/ShopKeeperCounter.cs [2.6b] IInteractable: catalog, เวลาเปิดจาก catalog, ป้ายชื่อร้าน, Ignore Hours (Debug) → ShopUI.Open(catalog)
+Shop/Commerce/ShippingBox.cs  [2.6b] IInteractable → ShippingBoxUI / ป้ายแสดงยอดในกล่อง
+UI/ShopUI.cs, ShopEntryRowUI.cs [2.6b] หน้าต่างร้าน (แท็บ Buy/Sell, Shift ×10, static IsAnyOpen)
+UI/SellPanelUI.cs, SellItemSlotUI.cs [2.6b] แผงขายคลิกเดียวใช้ร่วม (Configure(callback, verb)) / แถว IPointerClickHandler
+UI/ShippingBoxUI.cs, BoxEntryRowUI.cs [2.6b] หน้าต่างกล่อง (ซ้ายแผงขาย ขวาของในกล่อง + Take 1 / Take all + ตัวนับชื่อเสียง)
+Editor/ShopSetupBuilder.cs   [2.6b] Tools > Second Serving > Build Shops: Assets/Shops/GeneralStore, BagShop, Bookstore + prefab ShopKeeperCounter / ShippingBox
+                          + วางร้านซ้ายเคาน์เตอร์ช่าง (ห่าง 2.5) + กล่องขวาตู้จดหมาย + SalesLedger + ShopUI + ShippingBoxUI + เพดานกระเป๋า / kept
 Editor/DaySummaryLayoutBuilder.cs [2.6] Tools > Second Serving > Build Day Summary Layout (จัดหน้าต่างสรุปวัน: พื้นเข้ม 900x660) ⚠️ ตัวจัด UI ห้ามกดหลังขัดเกลา
 Editor/RecipeImporter.cs           Tools > Second Serving > Import Recipes & Ingredients ([2.5b] อ่านคอลัมน์ Difficulty / [2.5c] Chefs.csv + Obtain/Chef/Letter)
 Editor/InventoryLayoutBuilder.cs   Tools > Second Serving > Build Inventory Window Layout (จัดหน้าต่างกระเป๋าอัตโนมัติ)
@@ -443,6 +472,7 @@ Editor/EquipmentLayoutBuilder.cs   Tools > Second Serving > Build Equipment Pane
 - **กล้อง:** Main Camera (Cinemachine Brain) + PlayerFollowCam (Position Composer, Ortho 5, Confiner 2D)
 - **Grid:** Ground, Obstacles, CameraBoundsMap, CameraBounds_Shop
 - **ร้าน:** ประตู 4 บาน (Door), ShopCounter, Bed และจุดวาร์ป ShopEntry_Front/Back, Outside_Front/Back, BedWakePoint, HospitalWakePoint
+- **[2.6b]** วัตถุ **SalesLedger** / เคาน์เตอร์ **GeneralStoreCounter, BagShopCounter, BookstoreCounter** (ซ้าย BuilderCounter) / **ShippingBox** (ขวาตู้จดหมาย) / Canvas มี **ShopUI** → ShopWindow + **ShippingBoxUI** → ShippingBoxWindow / Inventory บน Player เพดาน {30,150,500}
 - **[2.6]** Player มี **PlayerWallet** / วัตถุ **ConstructionManager** / **BuilderCounter** (ซ้าย OutsideFront 3) / Canvas มี **MoneyPanel** (ใต้ ClockPanel) + **ConstructionUI** → BuilderWindow (+ ConfirmPanel) / หน้าต่างสรุปวัน SummaryWindow จัดใหม่แล้ว / SaveManager ผูก PlayerWallet + ConstructionManager
 - **[2.5c]** ShopManager มี **ShopProgress** / วัตถุ **MailSystem** / **Mailbox** (ขวา OutsideFront) / **PopularBoard** (ซ้าย OutsideFront) / **MailDesk** (ข้างเตียง) / Canvas มี **MailUI** → MailWindow 1200x800 (ListScrollView, LetterPanel + AttachmentRow) / SaveManager ผูก ShopProgress + MailSystem / ชื่อจุดวาร์ปจริงในฉาก: `OutsideFront`, `OutsideBack`, `ShopEntryFront`, `ShopEntryBack` (ไม่มีขีดล่าง)
 - **ระบบ:** GameClock, ShopManager, DailyMenu (+ **PopularDishes**), **CustomerManager** (+ GridPathfinder, ลูก Customers), DayEndManager, ForageSpawner, SaveManager (ItemDatabase, Inventory, ForageSpawner, RecipeDatabase, RecipeBook, Hotbar, PlayerStats, PlayerEquipment, DailyMenu)
@@ -483,6 +513,7 @@ UI ทั้งหมดตอนนี้เป็นแบบใช้งา�
 - **ขั้น 2.5b:** มินิเกม Hold / Stir (คุมกระทะ) / Whisk / Shake + ความยาก ★1–3 จากตาราง + ความพอใจตามความยาก + Debug ตามชนิดมินิเกม (ผู้ใช้ทดสอบแล้วพอใจ)
 - **ขั้น 2.5c:** ทางได้สูตร (RecipeSource + คอลัมน์ Obtain) + จดหมายเชฟ 20 ฉบับ + จดหมายทั่วไป (LetterData, สลบ) + ตู้จดหมาย/โต๊ะคอม/ช่องของแนบแบบ Stardew + ShopProgress + กระดานเมนูนิยม + แจ้งเมนูนิยมตอนเช้า + เซฟ v7 (ผู้ใช้กด Build แล้ว คอมไพล์ผ่าน / ทดสอบละเอียดและขัดเกลาตอนมีภาพ+แผนที่จริง)
 - **ขั้น 2.6:** เงิน B (ตัวเลขวิ่ง) + ราคาวัตถุดิบ/จาน + ทิป + ชื่อเสียงแบบหลอดทีละเลเวล + ชื่อเสียงรวม + ระบบก่อสร้างกลาง + ช่างอัปเกรดร้าน 3 ขั้น (Yes/No, เริ่มวันถัดไป, ติดงาน = ยุ่ง) + หน้าสรุปวัน + เงินแนบจดหมาย + เซฟ v8 (ผู้ใช้ทดสอบการอัปเกรดแล้วโอเค)
+- **ขั้น 2.6b:** ร้านค้า 3 ร้าน (ของชำ ซื้อ/ขาย · กระเป๋า · หนังสือ) + กล่องขายข้ามคืน + ชื่อเสียงจากการขายจาน + กระเป๋า 30/150/500 + สมุดสูตร 9 เล่ม + ซื้อได้เท่าที่ได้ + Shift ×10 + ขายคลิกเดียว + Mana/ค่าวัตถุดิบดิบใหม่ (ผู้ใช้ทดสอบแล้วพอใจ)
 - **ขั้น C:** Equipment Slots 8 ช่อง (Stats 4 + Fashion 4) ในหน้าต่างกระเป๋า ลากใส่/ถอด/สลับ + เซฟ v4 (ผู้ใช้ทดสอบเบื้องต้นแล้ว ใช้งานได้)
 
 **⬜ เฟส 2 (เหลือประมาณ 6–8 สัปดาห์)**
@@ -494,26 +525,28 @@ UI ทั้งหมดตอนนี้เป็นแบบใช้งา�
 | **2.5c** ✅ | ทางได้สูตร + จดหมายเชฟ/จดหมายทั่วไป + ตู้/โต๊ะ/ของแนบ + ShopProgress + กระดานเมนูนิยม (แทนโหมดลองผสม) | 3–4 วัน |
 | – | ~~ปรับความยาวรอบขาย + ความถี่ลูกค้า~~ **เลื่อนไปช่วงเล่นทดสอบทั้งวงจร** (24 พ.ย. ต้นเกมว่างเป็นปกติ ขายหมด = ร้านปิดเอง / ท้ายเกมจะมีหุ่นทำอาหาร / รอราคาจาก 2.6) | 0.5 วัน |
 | **2.6** ✅ | เงิน (ต่อจาก CustomerManager.OnCustomerPaid / EarnedToday + ของแนบเงินในจดหมาย) ชื่อเสียง → **ShopProgress.AddReputation** (LeftUnhappyToday, Satisfaction/Mood รายวัน) + เลเวลร้าน **ShopProgress.SetLevel** ราคาจากต้นทุน ความชำนาญ โบนัสความหลากหลาย + จุดอัปเกรดร้านที่เรียก `PopularDishes.SetBonusCount` / `CustomerManager.SetLovedChanceBonus` | 3–4 วัน |
-| **2.6b** ← ถัดไป | ร้านค้าพื้นฐาน (ซื้อ/ขาย ขายตรงได้เงินทันที) + **กล่องขายข้ามคืนแบบ Stardew** (เงินเข้าหน้าสรุปวัน `DaySummaryData.OvernightIncome`) + อัปเกรดกระเป๋า + **สมุดสูตร (Obtain = Shop Book)** | 4–6 วัน |
-| 2.6c | ของป่าสำหรับสูตรเริ่มต้น 12 ชนิด (prefab + โซนงอก) | 2–3 วัน |
+| **2.6b** ✅ | ร้านค้าพื้นฐาน (ซื้อ/ขาย ขายตรงได้เงินทันที) + **กล่องขายข้ามคืนแบบ Stardew** (เงินเข้าหน้าสรุปวัน `DaySummaryData.OvernightIncome`) + อัปเกรดกระเป๋า + **สมุดสูตร (Obtain = Shop Book)** | 4–6 วัน |
+| **2.6c** ← ถัดไป | ของป่าสำหรับสูตรเริ่มต้น 12 ชนิด (prefab + โซนงอก) + **ไข่หายากในป่า** (ผู้ใช้) | 2–3 วัน |
 | 2.7 | ~~สรุปรายวัน~~ ส่วนใหญ่ทำแล้วใน 2.6 เหลือขัดเกลา | 0.5 วัน |
 | – | เล่นทดสอบทั้งวงจร | 4–5 วัน |
 
 🎯 จบเฟส 2 = Vertical Slice เล่นครบวงจรด้วย 8 สูตรเริ่มต้น
 
 **⬜ เฟส 3 (ประมาณ 8–11 เดือน)**
-NPC และบทสนทนา, ความสนิทและรสนิยมอาหาร (+ จดหมาย NPC ผ่าน LetterData), side story / อีเวนต์ / แข่งทำอาหารเทศกาล = สูตรลับ (คอลัมน์ Obtain + Story Notes), ทางได้สูตร Monster Pages / Boss / Dig Box / Fishing Bottle / Food Truck / Request Board, แจ้งเทศกาลทางจดหมาย, สิ่งประดิษฐ์ไฮเทค (เตาอัตโนมัติ เครื่องรดน้ำ เครื่องพรวนดิน), ฟีเจอร์คอมบนโต๊ะ, ฤดูกาลและอากาศ, เควสต์และเทศกาล, แบ่งแผนที่เป็นโซน, พ่อค้าเร่, ร้านค้าเต็มรูปแบบ, ปลูกพืช, เลี้ยงสัตว์, เครื่องแปรรูป, โซนทะเลและตกปลา, **ระบบต่อสู้ + มอนสเตอร์ + บอส + ถ้ำ (8–12 สัปดาห์)** (ต่อจาก PlayerActionController: hitbox, ดาเมจ, เรียก `RegisterCombatHit`, ต้นทุนท่าย้ายไปอยู่ที่ข้อมูลอาวุธ, FEVER จาก Skill), **ความชำนาญ (proficiency) แต่ละอาวุธแบบ Stardew** (ให้แหล่งฟื้น Mana), โพชั่น, ของสวมใส่ที่มีผลกับค่าสถานะ, บทลงโทษตอนสลบ/Health หมด, ลูกค้าเป็นกลุ่ม + ลูกค้าหลายแบบ (ความอดทน/รสนิยมต่างกัน), NPC ใช้ GridPathfinder เดินทั่วเมือง, สิ่งประดิษฐ์ช่วงปลายเกม
+NPC และบทสนทนา, ความสนิทและรสนิยมอาหาร (+ จดหมาย NPC ผ่าน LetterData), side story / อีเวนต์ / แข่งทำอาหารเทศกาล = สูตรลับ (คอลัมน์ Obtain + Story Notes), ทางได้สูตร Monster Pages / Boss / Dig Box / Fishing Bottle / Food Truck / Request Board, แจ้งเทศกาลทางจดหมาย, สิ่งประดิษฐ์ไฮเทค (เตาอัตโนมัติ เครื่องรดน้ำ เครื่องพรวนดิน), ฟีเจอร์คอมบนโต๊ะ, ฤดูกาลและอากาศ, เควสต์และเทศกาล, แบ่งแผนที่เป็นโซน, พ่อค้าเร่, ร้านค้าเต็มรูปแบบ, ปลูกพืช, เลี้ยงสัตว์, เครื่องแปรรูป, โซนทะเลและตกปลา, **ระบบต่อสู้ + มอนสเตอร์ + บอส + ถ้ำ (8–12 สัปดาห์)** (ต่อจาก PlayerActionController: hitbox, ดาเมจ, เรียก `RegisterCombatHit`, ต้นทุนท่าย้ายไปอยู่ที่ข้อมูลอาวุธ, FEVER จาก Skill), **ความชำนาญ (proficiency) แต่ละอาวุธแบบ Stardew** (ให้แหล่งฟื้น Mana), **ความชำนาญรายสูตร → Quick Cook + Batch (กันเบื่อมินิเกม ดูหัวข้อ 6)**, โพชั่น, ของสวมใส่ที่มีผลกับค่าสถานะ, บทลงโทษตอนสลบ/Health หมด, ลูกค้าเป็นกลุ่ม + ลูกค้าหลายแบบ (ความอดทน/รสนิยมต่างกัน), NPC ใช้ GridPathfinder เดินทั่วเมือง, สิ่งประดิษฐ์ช่วงปลายเกม
 
 **⬜ เฟส 4 (ประมาณ 4–7 เดือน)**
 ภาพ (ไอคอนประมาณ 170 ชิ้น), polish UI ทั้งหมด (หน้าต่างเมนู ฯลฯ), ตัวบอกสถานะวิ่งบนจอ, เสียง, เมนูหลัก, ปรับสมดุล, ฟอนต์ไทย, เช็กภาพสั่น (Interpolate), เดโมเว็บ (SaveSync.jslib), หน้า Steam (ควรขึ้นช่วงกลางเฟส 3), ปล่อยเกม
 
-## 10. ขั้นถัดไป: 2.6b ร้านค้า + กล่องขายข้ามคืน
+## 10. ขั้นถัดไป: 2.6c ของป่าสำหรับสูตรเริ่มต้น
 
-2.6 เสร็จ (24 พ.ย.) ผู้ใช้ทดสอบการอัปเกรดร้านแล้วโอเค → **2.6b** (ใช้ skill brainstorming ก่อนเขียนโค้ด):
-- ร้านค้า/ตลาด NPC: ซื้อของ (ซื้อเวลา, เครื่องมือ, ของนอกฤดู) + ขายของได้เงินทันที (ตอนนี้ยังไม่มี NPC → จุดชั่วคราวแบบเคาน์เตอร์ช่าง)
-- **กล่องขายข้ามคืนแบบ Stardew**: เงินเข้าตอนจบวัน ใส่ `DaySummaryData.OvernightIncome` ใน `DayEndManager` (มีช่องรอไว้แล้ว) / เป็นที่ทิ้งของที่ไม่ใช้
-- อัปเกรดกระเป๋า (`Inventory.UpgradeBag` มีแล้ว) / สมุดสูตร (Obtain = Shop Book 9 สูตร) / ItemData.sellPrice มีราคาแล้ว
-- ข้อควรถาม: ขายของได้กี่ % ของราคา, จานคุณภาพต่างกันขายต่างกันไหม, ร้านเปิดกี่โมง
+2.6b เสร็จ (24 พ.ย.) ผู้ใช้ทดสอบแล้วพอใจ → **2.6c** (ใช้ skill brainstorming ก่อนเขียนโค้ด):
+- ของป่าที่สูตรเริ่มต้น 8 สูตรใช้ (Source = Forage) ให้เก็บได้จริงในแผนที่: prefab แบบ Mushroom_Pickup / Corn_Pickup + ForageSpawnZone / ForageSpawner (มีระบบอยู่แล้วตั้งแต่เฟส 1)
+- **ไข่หายากในป่า** (ผู้ใช้: ช่วงแรกหาเก็บได้ในป่าแต่เจอยาก)
+- ตอนนี้ของเนื้อ/ข้าว/แป้ง/ไข่ ซื้อได้ที่ General Store ×2 ไปก่อน
+- ข้อควรถาม: ของป่าชนิดไหนงอกโซนไหน, จำนวนต่อวัน, ของหายาก (ไข่) โอกาสเท่าไร
+
+**2.6b ที่ยังไม่ได้ยืนยันว่าทดสอบครบ**: โหลดเซฟเก่าที่กระเป๋าระดับ 4, สลบตี 3 หลังใส่กล่อง, ชื่อเสียงจากการขายบนหน้าสรุปวัน → ถ้าเจอบั๊กระหว่าง 2.6c แก้ได้เลย
 
 **2.6 ที่ยังไม่ได้ยืนยันว่าทดสอบครบ**: ตัวเลขวิ่ง, หน้าสรุปวัน (Build Day Summary Layout), จดหมายตามเกณฑ์ใหม่, โหลดเซฟระหว่างก่อสร้าง → ถ้าเจอบั๊กระหว่าง 2.6b แก้ได้เลย
 
@@ -523,6 +556,7 @@ NPC และบทสนทนา, ความสนิทและรสน�
 - ช่วง Last call (หมดเวลาแต่ลูกค้ายังอยู่) ดูคล้ายโหมดสำรวจ → ทำให้ชัดขึ้น / แจ้งตอนร้านปิดจริงว่าเก็บจานในมือเข้ากระเป๋าแล้ว
 
 **วิธีทดสอบที่ใช้อยู่**
+- [2.6b] ร้าน/กล่อง: SalesLedger คลิกขวา `Debug: Print Status`, `Debug: Sell Box Now` (ขายกล่องทันทีไม่ต้องนอน) / เคาน์เตอร์ร้าน ติ๊ก `Ignore Hours` = เปิดทุกเวลา / ร้านเปิด 09:00–17:00
 - [2.6] เงิน: PlayerWallet (บน Player) คลิกขวา `Debug: Money +100,000` / ชื่อเสียง: ShopProgress `Debug: Fill Reputation Bar` / ก่อสร้าง: ConstructionManager `Debug: Finish Construction Now`, `Print Status` / ช่างเปิด 09:00–16:00 (F7 เร่งเวลา)
 - [2.5c] จดหมาย: ShopProgress (บน ShopManager) คลิกขวา `Debug: Reputation +100` แล้วนอน / MailSystem คลิกขวา `Debug: Check Mail Now`, `Deliver All Chef Letters`, `Send Pass-Out Letter Now`, `Print Mail Status`
 - [2.5c] เมนูนิยมที่ยังไม่รู้: PopularDishes → `Unknown Recipe Chance` = 1 ชั่วคราว แล้ว Reroll

@@ -388,8 +388,8 @@ public class InventoryUI : MonoBehaviour
             return false;
         }
 
-        // [2.5c] ระหว่างเปิดหน้าต่างจดหมาย
-        if (MailUI.IsAnyOpen || ConstructionUI.IsAnyOpen)
+        // [2.5c] ระหว่างเปิดหน้าต่างจดหมาย / [2.6] ช่าง / [2.6b] ร้านค้า + กล่องขาย
+        if (MailUI.IsAnyOpen || ConstructionUI.IsAnyOpen || ShopUI.IsAnyOpen || ShippingBoxUI.IsAnyOpen)
         {
             return false;
         }

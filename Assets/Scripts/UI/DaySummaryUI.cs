@@ -41,6 +41,10 @@ public class DaySummaryUI : MonoBehaviour
     [SerializeField] private string shopIncomeFormat = "Restaurant (already received)   {0}   (dishes {1} + tips {2})";
     [Tooltip("{0} = รายได้ข้ามคืน")]
     [SerializeField] private string overnightFormat = "Shipping box (received now)   {0}";
+    [Tooltip("{0} = ยอดขายให้ร้านของชำวันนี้")]
+    [SerializeField] private string storeSalesFormat = "General store sales (already received)   {0}";
+    [Tooltip("{0} = ชื่อเสียงจากการขายจาน")]
+    [SerializeField] private string salesReputationFormat = "Dish sales reputation +{0}";
     [Tooltip("{0} = รวมวันนี้")]
     [SerializeField] private string totalFormat = "Total today   {0}";
     [Tooltip("{0} = ชื่อเสียงที่ได้, {1} = หลอด, {2} = ขนาดหลอด, {3} = เลเวลร้าน")]
@@ -159,15 +163,23 @@ public class DaySummaryUI : MonoBehaviour
         {
             sb.AppendLine(string.Format(overnightFormat, PlayerWallet.Format(data.OvernightIncome)));
         }
-        if (data.OpenedShop || data.OvernightIncome > 0)
+        if (data.StoreSales > 0)
         {
-            sb.AppendLine(string.Format(totalFormat, PlayerWallet.Format(data.ShopIncome + data.OvernightIncome)));
+            sb.AppendLine(string.Format(storeSalesFormat, PlayerWallet.Format(data.StoreSales)));
+        }
+        if (data.OpenedShop || data.OvernightIncome > 0 || data.StoreSales > 0)
+        {
+            sb.AppendLine(string.Format(totalFormat, PlayerWallet.Format(data.ShopIncome + data.OvernightIncome + data.StoreSales)));
         }
 
         // [2.6] ชื่อเสียง + เงินรวม
         if (data.BarSize > 0)
         {
             sb.AppendLine(string.Format(reputationFormat, data.ReputationGained, data.Reputation, data.BarSize, data.ShopLevel));
+        }
+        if (data.SalesReputation > 0)
+        {
+            sb.AppendLine(string.Format(salesReputationFormat, data.SalesReputation));
         }
         if (data.BarFull)
         {
