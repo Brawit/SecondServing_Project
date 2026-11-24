@@ -21,7 +21,7 @@ MonoBehaviour:
   category: 9
   source: 3
   equipType: 0
-  sellPrice: 0
+  sellPrice: 25
   restoreHealth: 6
   restoreStamina: 6
   restoreMana: 0

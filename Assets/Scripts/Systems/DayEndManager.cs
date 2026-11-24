@@ -8,12 +8,31 @@ public enum DayEndReason
     PassedOut  // ไม่ได้นอนจนถึงเวลาสลบ
 }
 
-// ข้อมูลที่ส่งให้หน้าสรุปวัน (เพิ่มเงิน/ชื่อเสียงในเฟสต่อไป)
+// ข้อมูลที่ส่งให้หน้าสรุปวัน
 public class DaySummaryData
 {
     public int Day;
     public DayEndReason Reason;
     public bool OpenedShop;
+
+    // [2.6] ร้าน (เงินเข้ากระเป๋าไปแล้วตอนขาย หน้าสรุปแค่แสดง)
+    public int DishesSold;
+    public int CustomersLeft;
+    public int ShopIncome;      // ราคา + ทิป
+    public int Tips;
+
+    // [2.6] ชื่อเสียง
+    public int ReputationGained;
+    public int Reputation;
+    public int BarSize;
+    public int ShopLevel;
+    public bool BarFull;
+
+    // [2.6b] รายได้ข้ามคืน (กล่องขาย) เข้ากระเป๋าตอนสรุป / ตอนนี้ 0
+    public int OvernightIncome;
+
+    // [2.6] เงินรวมหลังสรุป
+    public int Money;
 }
 
 // ตัวจัดการการจบวัน: นอน/สลบ -> หน้าสรุป -> เซฟ (ผ่าน OnDayEnded) -> วันใหม่ 06:00 -> ย้ายผู้เล่นไปจุดตื่น
@@ -216,6 +235,27 @@ public class DayEndManager : MonoBehaviour
         data.Day = clock != null ? clock.Day : 0;
         data.Reason = reason;
         data.OpenedShop = ShopManager.Instance != null && ShopManager.Instance.OpenedToday;
+
+        // [2.6] สถิติร้าน + ชื่อเสียง + เงิน (สถิติลูกค้ารีเซ็ตตอนเริ่มวันใหม่ จึงยังเป็นของวันนี้)
+        CustomerManager customers = CustomerManager.Instance;
+        if (customers != null)
+        {
+            data.DishesSold = customers.ServedToday;
+            data.CustomersLeft = customers.LeftUnhappyToday;
+            data.ShopIncome = customers.EarnedToday;
+            data.Tips = customers.TipsToday;
+            data.ReputationGained = customers.ReputationToday;
+        }
+        ShopProgress progress = ShopProgress.Instance;
+        if (progress != null)
+        {
+            data.Reputation = progress.Reputation;
+            data.BarSize = progress.BarSize;
+            data.ShopLevel = progress.Level;
+            data.BarFull = progress.IsBarFull && !progress.IsMaxLevel;
+        }
+        data.OvernightIncome = 0; // [2.6b] กล่องขายข้ามคืน: เพิ่มเงินเข้ากระเป๋าตรงนี้แล้วใส่ยอด
+        data.Money = PlayerWallet.Instance != null ? PlayerWallet.Instance.Money : 0;
 
         if (summaryUI != null)
         {

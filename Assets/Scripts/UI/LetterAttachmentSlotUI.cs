@@ -70,6 +70,10 @@ public class LetterAttachmentSlotUI : MonoBehaviour
                 icon = attachment.item.icon;
                 label = string.Format(itemFormat, attachment.item.itemName, Mathf.Max(1, attachment.amount));
             }
+            else if (attachment.kind == LetterAttachmentKind.Money)
+            {
+                label = PlayerWallet.Format(attachment.money);
+            }
         }
 
         if (iconImage != null)

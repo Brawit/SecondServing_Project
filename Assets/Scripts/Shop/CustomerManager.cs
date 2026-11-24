@@ -79,6 +79,22 @@ public class CustomerManager : MonoBehaviour
     [FormerlySerializedAs("substituteSatisfaction")]
     [Min(0f)] [SerializeField] private float mehSatisfaction = 0.7f;
 
+    [Header("Money & Reputation (2.6)")]
+    [Tooltip("ทิป = ราคา × max(0, ความพอใจ − ค่านี้) × Tip Scale (ความพอใจ: ชอบมาก 1.5 / อร่อยดี 1.0 / เฉยๆ 0.7 คูณความยาก)")]
+    [Min(0f)] [SerializeField] private float tipThreshold = 0.9f;
+
+    [Tooltip("ตัวคูณทิป")]
+    [Min(0f)] [SerializeField] private float tipScale = 1f;
+
+    [Tooltip("ชื่อเสียงที่ได้เมื่อลูกค้าชอบมาก")]
+    [Min(0)] [SerializeField] private int reputationLoved = 3;
+
+    [Tooltip("ชื่อเสียงที่ได้เมื่อลูกค้าอร่อยดี")]
+    [Min(0)] [SerializeField] private int reputationGood = 2;
+
+    [Tooltip("ชื่อเสียงที่ได้เมื่อลูกค้าเฉยๆ (ลูกค้าเดินออก = 0 ไม่หัก)")]
+    [Min(0)] [SerializeField] private int reputationMeh = 1;
+
     [Header("Debug")]
     [Tooltip("แสดง Log ทุกครั้งที่ลูกค้าเข้า/ออก")]
     [SerializeField] private bool verboseLog = true;
@@ -107,6 +123,10 @@ public class CustomerManager : MonoBehaviour
     public int ServedToday { get; private set; }
     public int LeftUnhappyToday { get; private set; }
     public int EarnedToday { get; private set; }
+
+    // [2.6] ทิปรวมวันนี้ (รวมอยู่ใน EarnedToday แล้ว) / ชื่อเสียงที่ลูกค้าให้วันนี้ (นับเต็ม แม้หลอดเต็ม)
+    public int TipsToday { get; private set; }
+    public int ReputationToday { get; private set; }
 
     // [2.4b] จำนวนลูกค้าที่ได้กินเมนูนิยม / ที่ถามหาเมนูนิยมที่ไม่มี / ที่เปลี่ยนจานแล้วได้กิน
     public int PopularServedToday { get; private set; }
@@ -276,6 +296,8 @@ public class CustomerManager : MonoBehaviour
         ServedToday = 0;
         LeftUnhappyToday = 0;
         EarnedToday = 0;
+        TipsToday = 0;
+        ReputationToday = 0;
         PopularServedToday = 0;
         AskedForPopularToday = 0;
         SubstituteServedToday = 0;
@@ -695,11 +717,52 @@ public class CustomerManager : MonoBehaviour
         OnCustomerServed?.Invoke(customer, recipe);
     }
 
-    public void ReportPaid(Customer customer, int amount)
+    // [2.6] ทิปจากความพอใจ: ราคา × max(0, ความพอใจ − tipThreshold) × tipScale
+    public int ComputeTip(int price, float satisfaction)
     {
-        EarnedToday += Mathf.Max(0, amount);
-        if (verboseLog) Debug.Log($"CustomerManager: {customer.name} paid {amount} (money system comes in step 2.6).");
-        OnCustomerPaid?.Invoke(customer, amount);
+        if (price <= 0) return 0;
+        return Mathf.Max(0, Mathf.RoundToInt(price * Mathf.Max(0f, satisfaction - tipThreshold) * tipScale));
+    }
+
+    // [2.6] ชื่อเสียงตามอารมณ์หลังกิน
+    public int GetReputation(CustomerMood mood)
+    {
+        switch (mood)
+        {
+            case CustomerMood.Loved: return reputationLoved;
+            case CustomerMood.Good: return reputationGood;
+            case CustomerMood.Meh: return reputationMeh;
+            default: return 0;
+        }
+    }
+
+    // [2.6] ลูกค้าจ่ายเงิน (ตอนได้อาหาร แม้ร้านปิดไปแล้ว): เงินเข้ากระเป๋าทันที + ชื่อเสียงเข้าหลอด
+    public void ReportPaid(Customer customer, int price, int tip)
+    {
+        price = Mathf.Max(0, price);
+        tip = Mathf.Max(0, tip);
+        int total = price + tip;
+
+        EarnedToday += total;
+        TipsToday += tip;
+        if (PlayerWallet.Instance != null)
+        {
+            PlayerWallet.Instance.Add(total);
+        }
+        else
+        {
+            Debug.LogWarning("CustomerManager: No PlayerWallet in the scene. Money was not added. Run Build Economy.");
+        }
+
+        int reputation = GetReputation(customer.Mood);
+        ReputationToday += reputation;
+        if (ShopProgress.Instance != null)
+        {
+            ShopProgress.Instance.AddReputation(reputation);
+        }
+
+        if (verboseLog) Debug.Log($"CustomerManager: {customer.name} paid {price} + tip {tip} ({customer.Mood}), reputation +{reputation}.");
+        OnCustomerPaid?.Invoke(customer, total);
     }
 
     public void ReportLeft(Customer customer, CustomerLeaveReason reason)

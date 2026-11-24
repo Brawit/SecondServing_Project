@@ -7,8 +7,8 @@ using UnityEngine;
 public enum LetterAttachmentKind
 {
     Recipe, // สูตรอาหาร (รับ = เรียนรู้สูตร)
-    Item    // ไอเทม/อาหาร (รับ = เข้ากระเป๋า)
-    // [2.6] Money
+    Item,   // ไอเทม/อาหาร (รับ = เข้ากระเป๋า)
+    Money   // [2.6] เงิน (รับ = เข้ากระเป๋าเงิน)
 }
 
 [Serializable]
@@ -24,6 +24,9 @@ public class LetterAttachment
 
     [Tooltip("จำนวน (ใช้เมื่อ Kind = Item)")]
     [Min(1)] public int amount = 1;
+
+    [Tooltip("[2.6] จำนวนเงิน (ใช้เมื่อ Kind = Money)")]
+    [Min(0)] public int money;
 }
 
 // [2.5c] เหตุที่ส่งจดหมายเอง (Manual = ระบบอื่นเรียก MailSystem.QueueLetter เอง)

@@ -564,7 +564,9 @@ public class Customer : MonoBehaviour, IInteractable
         {
             manager.ReleasePending(Order);
             manager.ReportServed(this, Order);
-            manager.ReportPaid(this, Order.sellPrice);
+            // [2.6] ราคาจาน + ทิปตามความพอใจ (ตั้งค่าใน CustomerManager)
+            int price = Order.sellPrice;
+            manager.ReportPaid(this, price, manager.ComputeTip(price, Satisfaction));
         }
 
         timer = eatDuration;

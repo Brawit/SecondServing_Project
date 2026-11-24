@@ -61,7 +61,7 @@ public class Mailbox : MonoBehaviour, IInteractable
 
     public bool CanInteract(PlayerInteractor interactor)
     {
-        return !MailUI.IsAnyOpen && !CookingSession.IsBusy && !MenuSelectionUI.IsAnyOpen && !CookingMenuUI.IsAnyOpen;
+        return !MailUI.IsAnyOpen && !ConstructionUI.IsAnyOpen && !CookingSession.IsBusy && !MenuSelectionUI.IsAnyOpen && !CookingMenuUI.IsAnyOpen;
     }
 
     public void Interact(PlayerInteractor interactor)

@@ -105,6 +105,9 @@ public class MailSystem : MonoBehaviour
     [Tooltip("กระเป๋าเต็ม ({0} = จำนวน, {1} = ชื่อ)")]
     [SerializeField] private string bagFullFormat = "Your bag can't hold {1} x{0}. It stays in the letter for now.";
 
+    [Tooltip("[2.6] รับเงินจากจดหมาย ({0} = จำนวนเงิน)")]
+    [SerializeField] private string moneyClaimedFormat = "Got {0}!";
+
     [Tooltip("รู้สูตรนี้อยู่แล้ว ({0} = ชื่อสูตร)")]
     [SerializeField] private string alreadyKnownFormat = "You already know {0}.";
 
@@ -266,9 +269,8 @@ public class MailSystem : MonoBehaviour
             return 0;
         }
 
+        // [2.6] เกณฑ์ = เลเวลร้าน + ชื่อเสียงในหลอดของเลเวลนั้น (ShopProgress.HasReached: เลเวลที่ผ่านแล้ว/หลอดที่จ่ายไปอัปเกรด = ถึงแล้ว)
         ShopProgress progress = ShopProgress.Instance;
-        int level = progress != null ? progress.Level : 1;
-        int reputation = progress != null ? progress.Reputation : 0;
 
         // ลำดับ: เกณฑ์ง่ายก่อน แล้วตามลำดับในฐานข้อมูล
         List<KeyValuePair<RecipeData, int>> candidates = new List<KeyValuePair<RecipeData, int>>();
@@ -278,7 +280,7 @@ public class MailSystem : MonoBehaviour
             RecipeData recipe = all[i];
             if (recipe == null || !recipe.IsChefMail || HasChefLetterFor(recipe)) continue;
             if (recipeBook != null && recipeBook.Knows(recipe)) continue; // รู้สูตรแล้วจากทางอื่น ไม่ต้องส่ง
-            if (checkThresholds && (level < recipe.mailShopLevel || reputation < recipe.mailReputation)) continue;
+            if (checkThresholds && !Reached(progress, recipe.mailShopLevel, recipe.mailReputation)) continue;
             candidates.Add(new KeyValuePair<RecipeData, int>(recipe, i));
         }
 
@@ -297,6 +299,12 @@ public class MailSystem : MonoBehaviour
             Debug.Log($"MailSystem: Letter from {pair.Key.chef.displayName} arrived ({pair.Key.recipeName}, day {day}).");
         }
         return candidates.Count;
+    }
+
+    private static bool Reached(ShopProgress progress, int level, int reputation)
+    {
+        if (progress == null) return level <= 1 && reputation <= 0;
+        return progress.HasReached(Mathf.Max(1, level), reputation);
     }
 
     private void Announce(int delivered)
@@ -385,6 +393,17 @@ public class MailSystem : MonoBehaviour
                     return false;
                 }
                 NotificationUI.Post(string.Format(itemClaimedFormat, amount, attachment.item.itemName));
+                break;
+
+            case LetterAttachmentKind.Money:
+                if (attachment.money <= 0) return false;
+                if (PlayerWallet.Instance == null)
+                {
+                    Debug.LogWarning("MailSystem: No PlayerWallet in the scene. Run Build Economy.");
+                    return false;
+                }
+                PlayerWallet.Instance.Add(attachment.money);
+                NotificationUI.Post(string.Format(moneyClaimedFormat, PlayerWallet.Format(attachment.money)));
                 break;
 
             default:

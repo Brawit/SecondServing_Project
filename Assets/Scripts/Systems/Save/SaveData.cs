@@ -13,7 +13,8 @@ public class SaveData
     // 5 = เพิ่มเมนูประจำวันล่าสุด (ใช้เป็นค่าเริ่มต้นของวันถัดไป)
     // 6 = จานอาหารในกระเป๋าแยกจำนวนตามคุณภาพ (qualityOk / qualityGood / qualityPerfect ใน InventoryEntrySave)
     // 7 = เลเวลร้าน + ชื่อเสียง และจดหมาย (ได้แล้ว / วันที่ได้ / อ่านแล้ว / ของแนบที่รับแล้ว / รอส่ง)
-    public const int CurrentVersion = 7;
+    // 8 = เงิน, ชื่อเสียงรวมตลอดเกม, หลอดที่จ่ายไปอัปเกรดแล้ว, งานก่อสร้างที่ค้างอยู่
+    public const int CurrentVersion = 8;
 
     public int version = CurrentVersion;
 
@@ -68,6 +69,20 @@ public class SaveData
 
     // [v7] จดหมายทั่วไปที่รอส่งเช้าถัดไป (เช่น จดหมายตอนสลบ) / จดหมายเชฟที่ยังไม่มาไม่ต้องเซฟ (คำนวณใหม่ทุกเช้า)
     public List<string> mailPendingIds = new List<string>();
+
+    // [v8] เงินในกระเป๋า (ก่อน v8 = เงินเริ่มต้นของ PlayerWallet)
+    public int money = 500;
+
+    // [v8] ชื่อเสียงรวมตลอดเกม / จ่ายหลอดของเลเวลนี้ไปอัปเกรดแล้ว (รอช่างสร้างเสร็จ)
+    public int lifetimeReputation = 0;
+    public bool reputationBarSpent = false;
+
+    // [v8] งานก่อสร้างที่กำลังทำ ("" = ไม่มี) + วันที่เหลือ
+    public string constructionId = "";
+    public int constructionDaysLeft = 0;
+
+    // [v8] จ้างแล้วแต่ช่างยังไม่เริ่ม (เริ่มเช้าถัดไป)
+    public bool constructionStartsTomorrow = false;
 }
 
 // ของหนึ่งชนิดในกระเป๋า

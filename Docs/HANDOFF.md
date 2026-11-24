@@ -1,7 +1,7 @@
 # Second Serving – HANDOFF
 
 > ไฟล์นี้สรุปสถานะโปรเจกต์ให้ Claude ในแชทใหม่อ่านต่อได้ทันที
-> อัปเดตล่าสุด: 23 พฤศจิกายน 2026 (ขั้น 2.5b **เสร็จ ผู้ใช้ทดสอบแล้วพอใจ**: Hold / Stir (คุมกระทะ) / Whisk / Shake + ความยาก ★1–3 / ถัดไป 2.5c โหมดลองผสม)
+> อัปเดตล่าสุด: 24 พฤศจิกายน 2026 (ขั้น 2.6 **เสร็จ**: เงิน B + ราคา + ทิป + ชื่อเสียงแบบหลอด + ช่างอัปเกรดร้าน 3 ขั้น + หน้าสรุปวัน + เซฟ v8 / ถัดไป 2.6b ร้านค้า + กล่องขายข้ามคืน)
 > ตำแหน่งไฟล์: `D:\SecondServing_Project\Docs\HANDOFF.md` (อยู่นอก Assets ตั้งใจไม่ให้ Unity import)
 
 ---
@@ -12,6 +12,8 @@
 - **แนว:** Cozy Simulation 2D มุมมอง top-down แบบ Stardew Valley + Dave the Diver ผสม RPG เบาๆ
 - **วงจรการเล่น:** เช้าถึงบ่ายออกสำรวจเก็บวัตถุดิบ / 17:00–19:00 เปิดร้านอาหารนานาชาติได้ / นอนแล้วขึ้นวันใหม่
 - **ธีม:** อาหารคือความทรงจำ ("Second Serving" = ได้ลิ้มรสความทรงจำอีกครั้ง) สูตรลับบางสูตรมาจาก side story ของ NPC
+- **[2.5c] เนื้อเรื่องตัวเอก:** นักศึกษา Computer Science ที่ฝึกงานล้มเหลว มีแผลใจกับการทำงานร่วมกับคนอื่น ตั้งใจเรียนจนจบแล้วมาเปิดร้านอาหารนานาชาติในชนบท / โลกมีเทคโนโลยีและอินเทอร์เน็ตระดับหนึ่ง (ร้านดังจากรีวิวออนไลน์)
+- **[2.5c] ภาษาในเกม = อังกฤษ** (ผู้ใช้อยากขายทั่วโลก แม้คุยกับ Claude เป็นไทย) ข้อความ จดหมาย ชื่อทั้งหมดในเกมเป็นอังกฤษ
 - **เป้าหมาย:** ปล่อยบน Steam (PC) และทำเดโมบนเว็บ (itch.io)
 - **ทำคนเดียว:** ยังไม่มีสไปรต์จริง ใช้สี่เหลี่ยมแทน
 
@@ -53,6 +55,11 @@
 - ไฟล์ HANDOFF.md นี้เป็น UTF-8 (ไม่มี BOM) + CRLF
 - [23 พ.ย.] มี `device_bash` (shell บนเครื่องผู้ใช้ scoped โฟลเดอร์ที่ให้สิทธิ์) ใช้ `md5sum` เทียบไฟล์หลัง commit แทน stage+cmp ได้ / แก้ HANDOFF.md ด้วย python บนเครื่องได้เลย
 - **Console ของ Unity อ่านได้จาก `C:\Users\HP\AppData\Local\Unity\Editor\Editor.log`** (ขอสิทธิ์โฟลเดอร์นั้นแล้วครั้งหนึ่ง) ใช้ grep ดู Debug.Log ลำดับเหตุการณ์ตอนผู้ใช้เจอปัญหาได้ (เคยใช้หาสาเหตุ "จานไม่เข้ากระเป๋าตอน Last call")
+- **[2.5c] เครื่องมือ Tools กดซ้ำได้ไหม (ผู้ใช้ถามเรื่องเฟส 3):** ก่อนกดอะไรให้ commit ก่อนเสมอ / เครื่องมือ Build = ตัวติดตั้งครั้งแรก
+  - ✅ **Import Recipes & Ingredients** ตั้งใจให้กดซ้ำ (ทับชื่อ/วัตถุดิบ/ค่าฟื้น/ความยาก/ทางได้สูตร ไม่ทับ icon, description, ชุดท่า, portrait) ห้ามเปลี่ยนชื่อหัวคอลัมน์
+  - ✅ Build Customer / Cooking / Daily Menu / Equipment / Service Timer / **Mail System**: มีอยู่แล้ว = kept (บางตัวหาวัตถุจากชื่อ เช่น ShopEntryFront / OutsideFront เปลี่ยนชื่อแล้วอาจสร้างซ้ำ)
+  - ✅ [2.6] **Build Economy** มีแล้ว = kept
+  - ❌ **Build Inventory Window Layout / Build Stats HUD / Build Hotbar HUD / Build Day Summary Layout / Reset Cooking Tuning** ห้ามกดหลังขัดเกลา (จัด UI กลับ / ทับค่ามินิเกม) / เฟส 4 อาจลบตัวจัด UI ทิ้ง
 - **ตาราง Claude Sheets แก้ได้โดยตรง** ผ่าน Claude Docs connector (engine `workbook`): read project ด้วยลิงก์ → node `6ff77ff6-e2a8` / container `1b797e5d-8903-4602-9369-4747a7de916f` → `applyEdits` (ต้องส่ง `base` = revision ล่าสุด) / อ่าน `guide topic.sheets` ก่อน
 
 ## 5. ข้อมูลสูตรอาหารและวัตถุดิบ
@@ -60,18 +67,23 @@
 - **ตารางต้นฉบับ (Claude Sheets):** https://claude.ai/artifact/4PmyMFeRHbk51BCE1eq4eJ
   - ชีต `อ่านก่อน` / `Recipes` (87 สูตร) / `Ingredients` (83 ชนิด)
   - Recipes: `#`, ชื่อเมนู, Name (EN), Country, Course, Secret, Key 1–4 (item_id), สถานะ, Vertical Slice, recipe_id, วัตถุดิบเต็ม, หมายเหตุ, Sell Price, Unlock, Rumor, Story Notes
+    (`Unlock` / `Rumor` เดิมไม่ใช้แล้ว แทนด้วย `Obtain` ข้อความข่าวลือเก็บไว้เป็นคำใบ้อีเวนต์/เทศกาลเฟส 3)
+  - **[2.5c] Recipes Z–AE:** `Obtain` (dropdown 12 ทาง), `Obtain Note`, `Mail Shop Lv`, `Mail Reputation` (เฉพาะ Chef Mail), `Chef` (chef_id), `Letter` (เนื้อจดหมายอังกฤษ) / Claude จัดค่าตั้งต้นให้ ผู้ใช้จะขัดเกลาตอนเฟส 3
+  - **[2.5c] ชีต `Chefs`:** chef_id, Name, Country, Sign-off, Bio (เชฟ 6 คน ชาติละคน: Malai Srisuk / Kenji Morita / Lin Wei / Giulia Rossi / Dan Walker / Rosa Delgado)
   - Ingredients: item_id, ชื่อไทย, Name (EN), Category, Source (Forage/Sea/Market/Artisan/Pantry), ใช้ในกี่สูตร (สูตร COUNTIF), รวมมาจาก, Sell Price
   - **[ใหม่] คอลัมน์ค่าที่ฟื้นเมื่อกิน `Health / Stamina / Mana / Fever`** ท้ายทั้งสองชีต (Recipes = T:W, Ingredients = I:L) เป็น**ค่าสุ่มตั้งต้น** ผู้ใช้จะไปปรับเอง
     - วัตถุดิบที่ทุกค่าเป็น 0 = กินดิบไม่ได้ (แป้ง เนื้อดิบ ข้าวสาร เห็ด ฯลฯ) / อาหารฟื้น Mana บางจาน / FEVER ในอาหารปกติมีไม่กี่จาน (เมนูเผ็ด) / สูตรลับทุกจานเพิ่ม FEVER
   - Sell Price ยังว่างทุกแถว
 - **[2.5b] ตาราง Recipes มีคอลัมน์ X `Difficulty` (1–3) + Y `Difficulty Note` (เหตุผลสั้นๆ) แล้ว** Claude กรอกให้ครบ 87 สูตร (★1 28 / ★2 35 / ★3 24) ผู้ใช้แก้ในตารางได้ แล้วสร้าง CSV ใหม่ + import ซ้ำ
-- **CSV ในโปรเจกต์:** `Assets/Data/Recipes.csv`, `Assets/Data/Ingredients.csv` (มีคอลัมน์ Health/Stamina/Mana/Fever + Difficulty/Difficulty Note แล้ว / ยังไม่มี Unlock / Rumor / Story Notes)
+- **CSV ในโปรเจกต์:** `Assets/Data/Recipes.csv`, `Assets/Data/Ingredients.csv`, **`Assets/Data/Chefs.csv`** (Recipes มี Health/Stamina/Mana/Fever + Difficulty/Difficulty Note + [2.5c] Obtain, Obtain Note, Mail Shop Lv, Mail Reputation, Chef, Letter ต่อท้าย / ไม่มี Unlock / Rumor / Story Notes)
+  - เนื้อจดหมายมีขึ้นบรรทัดในช่อง → ต้องอยู่ในเครื่องหมายคำพูด (ใช้ python `csv` เขียน) ตัว import รองรับแล้ว
   - วิธีสร้าง CSV ใหม่: อ่านตารางด้วย Claude Docs connector แล้ว**ต่อคอลัมน์ท้ายแถวเดิมหรือเขียนใหม่ทั้งไฟล์** เป็น UTF-8 with BOM + CRLF หัวคอลัมน์ต้องตรงกับตาราง
 - **ตัว import:** เมนู `Tools > Second Serving > Import Recipes & Ingredients` (`Scripts/Editor/RecipeImporter.cs`)
   - หาคอลัมน์จาก**ชื่อหัวคอลัมน์** (ห้ามเปลี่ยนชื่อหัว)
   - อ่าน Health/Stamina/Mana/Fever ใส่ `restoreHealth/Stamina/Mana/Fever` ของวัตถุดิบ และของไอเทมจานอาหาร (จากชีต Recipes) ถ้าไม่มีคอลัมน์จะไม่แตะค่าเดิม
   - สร้าง/อัปเดต ItemData ตาม itemId (ไฟล์ใหม่อยู่ที่ `Assets/Items/`) ไม่เขียนทับ icon และ description
-  - สร้าง RecipeData ใน `Assets/Recipes/` + `RecipeDatabase.asset`
+  - RecipeData ที่มีอยู่จริงอยู่ที่ **`Assets/Items/Recipes/`** (หาตาม recipeId) สูตรใหม่จะถูกสร้างใน `Assets/Recipes/` + `RecipeDatabase.asset`
+  - [2.5c] อ่าน Chefs.csv ก่อน → สร้าง/อัปเดต `Assets/Chefs/<chef_id>.asset` (ไม่ทับ portrait) / อ่าน Obtain ฯลฯ (ไม่มีคอลัมน์ = เตือน + คงค่าเดิม) / Chef Mail ที่ไม่มีเชฟหรือจดหมาย = เตือน
   - สร้างไอเทมจานอาหาร (ItemType.Dish, itemId = recipe_id) ใน `Assets/Items/Dishes/`
   - ItemDatabase (`Assets/ItemDatabase.asset`) มี 170 ไอเทม (วัตถุดิบ 83 + จาน 87)
 - **ถ้าผู้ใช้แก้ตาราง:** Claude สร้าง CSV ใหม่จากตาราง (อ่านด้วย Claude Docs connector) แล้วให้ผู้ใช้รัน import ซ้ำ
@@ -172,6 +184,36 @@
     - เกณฑ์คุณภาพคงเดิม (≥ 1.6 Perfect / ≥ 0.6 Good)
     - **บทเรียน:** `Reset Cooking Tuning` เขียนค่าตั้งต้นจากโค้ดทับ CookingSettings + ชุดท่าตัวอย่าง 9 ไฟล์ → ผู้ใช้แก้ใน Inspector แล้วหายตอนกด Reset → **ค่าที่ผู้ใช้จูนจนพอใจให้ย้ายไปเป็นค่าตั้งต้นในโค้ด** ทุกครั้ง
     - Debug ที่ RecipeBook (คลิกขวา ระหว่าง Play): `Learn & Stock Stir / Whisk / Shake / Hold Recipes` (หาสูตรจากขั้นตอนจริง เรียนรู้ + ให้วัตถุดิบสูตรละ Debug Servings = 5 จาน อัปเกรดกระเป๋าให้เองถ้าของเกินเพดาน ⚠️ นอนแล้วระดับกระเป๋าติดไปในเซฟ)
+- **ทางได้สูตร + จดหมาย (ขั้น 2.5c) แบบร่าง: `Docs/2.5c-design.md` / แผน: `Docs/2.5c-plan.md`**
+  - **ตัด "โหมดลองผสม" ทิ้ง** (ผู้ใช้: ขึ้นกับดวงเกินไป) ทุกทางได้สูตรต้องไม่พึ่งดวงล้วน มีหลักประกันเสมอ
+  - `RecipeData.obtainSource` (enum `RecipeSource` ต่อท้ายเท่านั้น): Starter, **ChefMail** (ทำแล้ว), ShopBook (2.6b), MonsterPages, Boss, DigBox, FishingBottle, FoodTruck, RequestBoard (เฟส 3), Story / Event / Festival (**สูตรลับเท่านั้น** เฟส 3)
+    - Monster Pages: เศษหน้าสูตรครบ 3 = 1 สูตร / แท็บ Recipes วางเมาส์ขึ้น `2/3` + ภาพสูตรค่อยๆ เผยตามหน้าที่มี (ผู้ใช้ขอ)
+    - Boss: ตีครั้งแรกได้สูตรแน่นอน (ผู้ใช้ต้องการ) / Dig Box: กล่องข้าวเก่า/ไทม์แคปซูลของเจ้าของที่ดินคนเก่า / Fishing Bottle: ขวดจดหมาย / Dig + Fishing สุ่มเฉพาะสูตรที่ยังไม่รู้ (ข้อเสนอ ตัดสินตอนเฟส 3) / Food Truck: กินจานครบ N ครั้ง / Request Board: กระดานคำขอ / Festival: ชนะแข่งทำอาหาร = สูตรลับ
+    - ข้อ "ทีวีสอนสูตร" ผู้ใช้กลัวเหมือน Stardew → แทนด้วยจดหมายเชฟ
+  - **จดหมายเชฟ:** เชฟผู้มีประสบการณ์ส่งสูตรพร้อมเล่าเรื่องตัวเองกับสูตรนั้น เงื่อนไข **เลเวลร้าน ≥ n และชื่อเสียง ≥ n** → มาตู้**เช้าวันถัดไป** (MailSystem เช็กทุกเช้า ไม่จำกัดจำนวน) / Claude ร่างจดหมาย 20 ฉบับ (สูตร Chef Mail 20 สูตร Lv 1–4 ชื่อเสียง 20–700) เชฟเห็นร้านจากรีวิวออนไลน์ / Kenji (ญี่ปุ่น) สะท้อนตัวเอก
+  - **จดหมายทั่วไป** `LetterData` (ผู้ส่ง, บรรทัดรอง, หัวข้อ, เนื้อความ, คำลงท้าย, ของแนบ, trigger) สำหรับ สลบ / แจ้งเทศกาล / NPC สนิท / NPC สนับสนุน (เฟส 3 เรียก `MailSystem.QueueLetter`) สร้างที่ `Assets > Create > Cozy > Letter Data` แล้วกด Build Mail System ให้เข้า Letter Library
+    - **สลบ** = สุ่มจดหมาย trigger PassOut มาเช้าถัดไป / ตัวอย่าง `Assets/Letters/passout_neighbor` จาก "A worried neighbor" **ไม่มีของแนบ** (ผู้ใช้: แค่บอกว่ามี NPC เจอเราสลบแล้วพาไปส่งบ้าน/คลินิกชนบท)
+  - **UI แบบ Stardew (ผู้ใช้ขอ):** ตู้จดหมายหน้าร้าน = หยิบฉบับใหม่อ่านทีละฉบับ (`The mailbox is empty.`) / ช่องของแนบด้านล่างกลางจดหมาย **ต้องคลิกรับ** (สูตร = เรียนรู้, ไอเทม/อาหาร = เข้ากระเป๋า) / **โต๊ะคอมในห้องนอน** = กล่องจดหมายที่อ่านแล้วทั้งหมด อ่านซ้ำได้ (เฟส 3 ใช้คอมนี้ต่อได้ เช่น อ่านรีวิวร้าน)
+    - Claude ตัดสินเอง: ของแนบที่ยังไม่รับไม่หาย รับที่โต๊ะได้ / กระเป๋าเต็ม = ยังไม่ได้รับ / เงินเป็นของแนบได้ตอน 2.6 / ระหว่างอ่านนาฬิกาหยุด เดินไม่ได้ / เปิดร้านอยู่ = เปิดตู้/โต๊ะไม่ได้
+  - **ShopProgress** (บน ShopManager) เลเวลร้าน (เริ่ม 1) + ชื่อเสียง (เริ่ม 0) ตอนนี้ปรับด้วย Debug เท่านั้น **2.6 ต้องเพิ่มชื่อเสียงจากความพอใจลูกค้า + อัปเกรดเลเวลที่นี่**
+  - **เมนูนิยมเห็นได้ทั้งวัน (ผู้ใช้):** แจ้งเตือนตอนเช้า `Popular today: …` + **กระดานเมนูนิยมหน้าร้าน** (`PopularBoard` กด E แสดง/ซ่อน) / สูตรที่ยังไม่รู้ = `??? (Thai main) · a chef may write` (คำใบ้ = **ป้ายบอกทาง** ไม่ได้ปลดล็อกสูตร)
+  - `NotificationUI` ข้อความหลายอันในเฟรมเดียวต่อกันคนละบรรทัด (ไม่มีคิว)
+  - **ผู้ใช้: ขัดเกลาจดหมาย/ตู้/โต๊ะ/กระดาน ตอนมีภาพจริง + แผนที่จริง**
+- **เงิน + ชื่อเสียง + ก่อสร้าง (ขั้น 2.6) แบบร่าง: `Docs/2.6-design.md` / แผน: `Docs/2.6-plan.md`**
+  - สกุล **B (Baht)** `B 1,250` เริ่ม 500 (`PlayerWallet` บน Player) / เงินบนจอแผงแยกใต้นาฬิกา (นาฬิกาถูกซ่อนตอนเปิดร้าน) **ตัวเลขวิ่ง** เข้า = ทอง ออก = แดง (ผู้ใช้ขอ)
+  - **ราคาตามความหายากในเกม** (ผู้ใช้: ไม่อิงราคาจริง) Claude กรอกร่างแรกในตาราง: วัตถุดิบ 6–65 / จาน = round5(ผลรวมวัตถุดิบหลัก × 1.6 + Main 20 / Dessert 15 / Drink 10) สูตรลับ ×1.2 → B 25–300 / ไม่ขึ้นกับความยาก
+  - ลูกค้าจ่าย **ราคา + ทิป** ตอนได้จาน (Last call ด้วย) ทิป = round(ราคา × max(0, ความพอใจ − 0.9)) / **ชื่อเสียง** ชอบมาก +3 อร่อยดี +2 เฉยๆ +1 เดินออก 0 (ไม่หัก) ตั้งใน CustomerManager
+  - **หลอดชื่อเสียงแบบ EXP ทีละเลเวล** (ผู้ใช้กันดองชื่อเสียง): 500 → 1,500 → 3,000 (Lv4 = สูงสุด หลอด 3,000 ใช้แค่เป็นเกณฑ์จดหมาย) **เต็มแล้วหยุด** / จ้างอัปเกรด = หลอดกลับ 0 (`BarSpent` = หลอดเลเวลนี้นับว่าเต็มแล้ว) / ชื่อเสียงระหว่างก่อสร้างเข้าหลอดใหม่ / **ชื่อเสียงรวมตลอดเกม** แยกไว้ (ผู้ใช้: ใช้ทำงานครบรอบร้านให้ผู้เล่นเฟส 3)
+  - สิ่งที่ปลดล็อก (ตาราง `levels` ใน ShopProgress): Lv2 ช่องเมนู +1 / Lv3 เมนูนิยม +1 + ชอบมาก +5% / Lv4 ช่องเมนู +1 (รวม +2) + ชอบมาก +10%
+  - **จดหมายเชฟ**: เกณฑ์ = เลเวล + ชื่อเสียงในหลอดเลเวลนั้น (`ShopProgress.HasReached`) / ตาราง Mail Reputation กระจายใหม่: Lv1 50–450, Lv2 150–1,300, Lv3 500–2,500, Lv4 1,000–2,500
+  - **ช่างแบบ Stardew** (ผู้ใช้): จ่ายเงิน (+ ของ ตอนนี้ยังว่าง) ที่ **เคาน์เตอร์ในบ้านช่าง** (`BuilderCounter` ตอนนี้วางซ้าย OutsideFront ย้ายเข้าบ้านช่างตอนมีแผนที่) เปิด **09:00–16:00** / **Hire = กล่องยืนยัน Yes/No** / สร้างได้ทีละงาน / **ช่างเริ่มวันถัดไปหลังจ้าง** (งาน 1 วัน จ้างวันที่ 1 → เริ่มวันที่ 2 → เสร็จเช้าวันที่ 3) / **ช่างติดงาน = กด E ไม่เปิดหน้าต่าง ขึ้นข้อความว่ายุ่ง** / เปิดร้านได้ปกติระหว่างสร้าง
+  - อัปเกรดร้าน **20,000 / 75,000 / 150,000 · 1 / 2 / 3 วัน** (`Assets/Construction/shop_upgrade_2/3/4`) / ผู้ใช้ตั้งราคาสูงให้เล่นนานและหาเงินทางอื่น (เช่น Stardew ตกปลารวยต้นเกม)
+  - ระบบก่อสร้างกลาง (ทาง B): งานใหม่เฟส 3 (บ้าน, ส่วนเสริม, บ่อกุ้ง, บ่อปลา, **เรือนกระจกปลูกได้ทุกฤดู**) = ไฟล์ `ConstructionProject` ใหม่ + `ConstructionEffect` ใหม่ (ต่อท้าย) + โค้ดใน `ConstructionManager.ApplyEffect`
+  - **หน้าสรุปวัน**: จานที่ขาย, ลูกค้าเดินออก, รายได้ร้าน (**ได้รับแล้ว** แค่สรุป: ค่าอาหาร + ทิป), บรรทัดกล่องขายข้ามคืน (**ได้รับตอนนี้** 2.6b), รวม, ชื่อเสียง +N (หลอด, เลเวล), หลอดเต็ม = ชวนไปหาช่าง, เงินรวม
+  - **ทางขายของ (2.6b)**: A ขายตรงกับ NPC ได้เงินทันที + **กล่องขายข้ามคืนแบบ Stardew** ขายตามราคา เงินขึ้นหน้าสรุปวัน = ที่ทิ้งของที่ไม่ใช้ (ผู้ใช้เลือกหลังคุย ภูต/ศาลเจ้าที่/รถพ่อค้าคนกลาง/กล่องคุณยาย ยังไม่กำหนดเหตุผลในเรื่อง) / ขายออนไลน์ผ่านคอม = ไม่เอา / ของแนบ**เงิน**ในจดหมายทำแล้ว
+- **ไอเดียเฟส 3 (ผู้ใช้, 24 พ.ย.):** งานครบรอบร้านให้ผู้เล่น (ใช้ชื่อเสียงรวม)
+- **ไอเดียเฟส 3 (ผู้ใช้, 24 พ.ย.):** **หุ่นทำอาหาร (craft ได้) เป็นขั้น OK → Good → Perfect** ช่วงท้ายเกมช่วยทำอาหารให้หยิบไปเสิร์ฟ เพราะถ้าไม่ได้เตรียมจานไว้แล้วต้องทำเองที่เตา+มินิเกมทั้งหมด = มือระวิง / ผู้ใช้มองว่าต้นเกมร้านดูว่าง (ขายได้ไม่กี่จาน) เป็นเรื่องปกติ
+- **ไอเดียเฟส 3 (ผู้ใช้):** สิ่งประดิษฐ์ไฮเทคของตัวเอก (สาย CS): เตาอัตโนมัติ (ทำจานคุณภาพ OK เอง), เครื่องรดน้ำอัตโนมัติ (ปลูกเมล็ดจากป่าที่บ้าน), เครื่องพรวนดินแทนจอบ
 - **ไอเดียเฟส 3 (ผู้ใช้):** ยานพาหนะ/สิ่งอำนวยความสะดวก เช่น มอเตอร์ไซค์ ม้า ให้เดินทางเร็วขึ้นและมีลูกเล่นมากกว่า Stardew / ร้านอัปเกรดได้ (เมนูยอดนิยมเพิ่ม ช่องเมนูเพิ่ม) ด้วยเงิน/ชื่อเสียงจาก 2.6
     - ผู้ใช้เลือกทาง A (แยกชิ้น Stove / CookingSession / มินิเกมแบบละคลาส / CarriedDish) + อยากให้แต่ละเมนูมีเอกลักษณ์
     - **ขั้นตอน 3 ชั้น:** `RecipeData.customSteps` → `RecipeData.cookingProfile` (CookingProfile asset ใช้ร่วมหลายสูตร) → ตาม Course ใน `CookingSettings` / ตัว import ไม่แตะ 2 ช่องนี้
@@ -265,7 +307,8 @@ Cooking/DailyMenu.cs      singleton (วัตถุ DailyMenu ในฉาก):
 Cooking/RecipeBook.cs     สูตรที่รู้ (บน Player): เริ่มด้วยสูตร inDemo, Knows, Learn, SetKnown, Debug: Learn All Recipes,
                           [2.5] Debug Servings + Debug: Give Starter Ingredients / Give Ingredients For Known Recipes,
                           [2.5b] Debug: Learn & Stock Stir / Whisk / Shake / Hold Recipes
-Cooking/PopularDishes.cs  [2.4b] singleton (บนวัตถุ DailyMenu): Today, IsPopular, IsKnown, GetDisplayName (คำใบ้ ??? ในหน้าต่างเมนู),
+Cooking/PopularDishes.cs  [2.4b] singleton (บนวัตถุ DailyMenu): Today, IsPopular, IsKnown, GetDisplayName (คำใบ้ ??? + [2.5c] · ทางได้สูตร),
+                          [2.5c] แจ้งเตือนเมนูนิยมตอนเช้า (morningNoticeFormat) + ข้อความคำใบ้ต่อทางใน Inspector (Source Hints),
                           GetRequestName (คำที่ลูกค้าถามหา), GetSummaryText, Marker, SetBonusCount, Reroll, สุ่มตอน OnDayStarted + สุ่มเองตอนถูกเรียกครั้งแรกของวัน,
                           event OnPopularChanged, Debug: Reroll Popular Dishes / Print Popular Dishes
 Navigation/GridPathfinder.cs  singleton (บน CustomerManager): A* บนช่อง Grid, walkableTilemaps (Ground), blockingTilemaps (Obstables),
@@ -313,15 +356,18 @@ Systems/ShopManager.cs    ShopState (BeforeOpening/CanOpen/Serving/ClosedForDay)
                           OnShopOpened/OnServiceTimeUp/OnShopClosed, F8 ปิดร้านทันที
 Systems/DayEndManager.cs  นอน/สลบ → สรุป → EndDay (เซฟ) → ตื่นที่เตียง/โรงพยาบาล
 Systems/ForageSpawner.cs  ของงอกรายวัน, CaptureState/RestoreState
-Systems/Save/SaveData.cs     version 6: day, inventory, groundItems, discoveredItems, knownRecipes, bagLevel,
+Systems/Save/SaveData.cs     version 8: day, inventory, groundItems, discoveredItems, knownRecipes, bagLevel,
                              [v3] hotbarItems (itemId 10 ช่อง, ว่าง = ""), fever, bonusMaxHealth/Stamina/Mana
                              [v4] equippedItems (8 ช่องตามลำดับ EquipSlot, ของที่สวมไม่อยู่ใน inventory)
                              [v5] menuRecipes / menuServings (เมนูที่ตั้งไว้ล่าสุดทีละช่อง)
                              [v6] InventoryEntrySave.qualityOk / qualityGood / qualityPerfect (จานแยกตามคุณภาพ เซฟเก่า = 0 → นับเป็น Good)
+                             [v7] shopLevel, reputation, mailIds / mailDays / mailRead / mailClaimed (บิต) / mailPendingIds
+                             [v8] money, lifetimeReputation, reputationBarSpent, constructionId, constructionDaysLeft, constructionStartsTomorrow
+                             (SaveManager คืน ShopProgress ก่อนเมนู เพื่อให้ช่องเมนูโบนัสพร้อม / คืนงานก่อสร้างไม่หักเงินซ้ำ)
 Systems/Save/SaveManager.cs  เซฟตอน OnDayEnded, โหลดตอนเปิดเกม, รองรับเซฟ v1–v5 (Hotbar ว่าง, FEVER 0, โบนัส 0, ไม่ได้สวมอะไร, เมนูว่าง, จานเป็น Good), F9 ลบเซฟ
                              ผูก playerHotbar / playerStats / playerEquipment / dailyMenu (ว่างไว้จะหาเอง) โหลดแล้วตั้งโบนัส → FEVER → RefillForNewDay
                              ไม่เซฟค่าปัจจุบัน HP/ST/MP (โหลด = วันใหม่ เต็มเสมอ) / ไอเทม Hotbar ต้องอยู่ใน ItemDatabase
-UI/ClockUI.cs, NotificationUI.cs (NotificationUI.Post), DaySummaryUI.cs
+UI/ClockUI.cs, NotificationUI.cs (NotificationUI.Post / [2.5c] หลายข้อความในเฟรมเดียว = ต่อบรรทัด), DaySummaryUI.cs
 UI/InventoryUI.cs      กระเป๋า 5 แท็บ: I เปิด/ปิด, Esc ปิด, Q/E เปลี่ยนแท็บ, คลิกช่องดูรายละเอียด,
                        hideUnknownSecretRecipes (ซ่อนสูตรลับที่ยังไม่รู้ + จานของสูตรนั้นในแท็บ Dishes ผ่าน IsHiddenSecretDish)
                        [2.5] กล่องคุณภาพจานตอนวางเมาส์ (DishQualityTooltip สร้างเองบน Canvas) + บรรทัด Quality ในแผงรายละเอียด
@@ -337,7 +383,44 @@ UI/MenuSlotRowUI.cs    แถวช่องเมนู (ชื่อ, ready+co
 UI/MenuRecipeItemUI.cs รายการสูตรฝั่งขวา (คลิก = ใส่ช่องว่าง) สร้างจาก RecipeItemTemplate, [2.4b] เมนูนิยม = `*` + ชื่อสีทอง + "Popular today!"
 UI/ServiceTimerUI.cs   ซ่อน ClockPanel / แสดง ServiceTimerPanel ระหว่างเปิดร้าน (TimerText ใช้ <mspace>, StatusText)
 UI/DragIconUI.cs       ไอคอนลอยตามเมาส์ตอนลาก สร้างตัวเองบน Canvas หลัก (ไม่ต้องวางในฉาก)
-Editor/RecipeImporter.cs           Tools > Second Serving > Import Recipes & Ingredients ([2.5b] อ่านคอลัมน์ Difficulty)
+Cooking/RecipeSource.cs   [2.5c] enum RecipeSource (ทางได้สูตร ต่อท้ายเท่านั้น) + RecipeSourceUtil.TryParse ("Chef Mail" → ChefMail)
+Cooking/RecipeData.cs     [2.5c] เพิ่ม obtainSource, obtainNote, mailShopLevel, mailReputation, chef, letterBody, IsChefMail
+Mail/ChefData.cs          [2.5c] เชฟ (chefId, displayName, cuisine, signOff, portrait, bio) Assets/Chefs/
+Mail/LetterData.cs        [2.5c] จดหมายทั่วไป (letterId, senderName, senderSubtitle, subject, body, signOff, attachments, trigger)
+                          + LetterAttachment (Recipe / Item + amount) + enum LetterAttachmentKind / LetterTrigger (Manual, PassOut) ต่อท้ายเท่านั้น
+Mail/MailSystem.cs        [2.5c] singleton (วัตถุ MailSystem, DefaultExecutionOrder -50): Letters, UnreadCount, NextUnread, QueueLetter(LetterData),
+                          OnDayStarted = ส่งที่รอ + จดหมายเชฟที่ถึงเกณฑ์ / OnPassedOut = สุ่มจดหมาย PassOut, MarkRead, TryClaim(letter, index),
+                          CaptureState/RestoreState(SaveData), letterLibrary, event OnMailChanged,
+                          Debug: Check Mail Now / Deliver All Chef Letters / Send Pass-Out Letter Now / Print Mail Status
+                          MailLetter: recipe หรือ data, Id ("chef:<recipeId>" / "letter:<letterId>"), Sender, Subject, Body, SignOff, GetAttachment, IsClaimed, HasUnclaimed
+Mail/Mailbox.cs           [2.5c] ตู้จดหมาย IInteractable: E = MailUI.OpenMailbox (ฉบับยังไม่อ่านที่เก่าสุด) / "!" เมื่อมีจดหมายใหม่ / [E] Mail
+Mail/MailDesk.cs          [2.5c] โต๊ะคอมในห้องนอน IInteractable: E = MailUI.OpenArchive (จดหมายทั้งหมด)
+Systems/ShopProgress.cs   [2.5c] บน ShopManager: Level, Reputation, SetLevel, SetReputation, AddReputation, SetAll, OnProgressChanged,
+                          Debug: Level +1 / Reputation +100 / Apply Values / Reset Progress / Print Progress
+Shop/PopularBoard.cs      [2.5c] กระดานเมนูนิยมหน้าร้าน: E = แสดง/ซ่อนรายการเหนือกระดาน เดินห่าง = ซ่อน
+UI/MailUI.cs              [2.5c] หน้าต่างจดหมาย 2 โหมด (Mailbox = ทีละฉบับ ไม่มีรายการ / Archive = รายการซ้าย) static IsAnyOpen, ช่องของแนบด้านล่าง (คลิก = รับ),
+                          แสดง = อ่านแล้ว, Esc/Close, นาฬิกาหยุด + ล็อกเดิน
+UI/MailListItemUI.cs      [2.5c] รายการจดหมาย (NEW + ผู้ส่ง / หัวข้อ · Day n · gift)
+UI/LetterAttachmentSlotUI.cs [2.5c] ช่องของแนบ (ไอคอน, ชื่อ x จำนวน, กรอบเรืองตอนยังไม่รับ, (taken))
+Editor/MailSetupBuilder.cs [2.5c] Tools > Second Serving > Build Mail System: ShopProgress + MailSystem + prefab Mailbox / PopularBoard / MailDesk
+                          + วางตู้ (ขวา OutsideFront) กระดาน (ซ้าย OutsideFront) โต๊ะ (ขวาเตียง) + จดหมายตัวอย่างสลบ + เติม Letter Library + MailUI + ผูก SaveManager
+                          ทุกส่วนมีแล้ว = kept (MailUI แบบเก่าที่ไม่มีช่องของแนบ = สร้างใหม่)
+Player/PlayerWallet.cs    [2.6] กระเป๋าเงิน: Money, Add, CanAfford, TrySpend, SetMoney, StartMoney, OnMoneyChanged(old,new), static Format → "B 1,250", Debug: +1,000/+10,000/+100,000/Reset
+UI/MoneyUI.cs             [2.6] เงินบนจอ ตัวเลขวิ่ง (rollSeconds, extraSecondsPer10k, maxRollSeconds, สีเข้า/ออก)
+Systems/ShopProgress.cs   [2.6 เขียนใหม่] ShopLevelInfo (barSize, bonusMenuSlots, bonusPopular, bonusLovedChance, unlockText) ตาราง levels (ว่าง = ค่าตั้งต้น 4 เลเวล),
+                          Level, Reputation (ในหลอด), LifetimeReputation, BarSpent, BarSize, IsBarFull, IsMaxLevel, AddReputation (เต็มแล้วหยุด คืนที่เข้าจริง),
+                          SpendBar, LevelUp, HasReached(level, rep), SetAll(level, rep, lifetime, barSpent), ApplyBonuses (DailyMenu/PopularDishes/CustomerManager), OnLevelUp,
+                          Debug: Reputation +100 / Fill Reputation Bar / Level +1 / Apply Values / Reset Progress / Print Progress
+Construction/ConstructionProject.cs [2.6] งานก่อสร้าง (projectId, displayName, description, money, materials, days, requiredShopLevel, requiresFullReputation, effect)
+                          + MaterialCost + enum ConstructionEffect (ShopLevelUp ต่อท้ายเท่านั้น)
+Construction/ConstructionManager.cs [2.6] singleton (-60): projects, Current, DaysLeft, IsBuilding, StartsTomorrow, NextShopUpgrade, FindById, CanStart(out reason),
+                          TryStart (ตรวจซ้ำ → หักเงิน → ของ → หลอด), เช้าแรก = เริ่ม, เช้าถัดไป −1 → เสร็จ ApplyEffect, Capture/RestoreState, Debug: Finish Construction Now / Print Status
+Construction/BuilderCounter.cs [2.6] เคาน์เตอร์ช่าง IInteractable: เวลาเปิด 9–16, ช่างติดงาน = ข้อความว่ายุ่ง, ไม่งั้นเปิด ConstructionUI
+UI/ConstructionUI.cs      [2.6] หน้าต่างช่าง (เลเวล, หลอด, ราคา, เวลา, ปลดล็อก, สถานะสีแดง/เขียว, Hire → ConfirmPanel Yes/No → TryStart → ปิดหน้าต่าง) static IsAnyOpen
+Editor/EconomySetupBuilder.cs [2.6] Tools > Second Serving > Build Economy: PlayerWallet + ConstructionManager + shop_upgrade_2/3/4 + prefab BuilderCounter (วางซ้าย OutsideFront 3)
+                          + MoneyPanel ใต้ ClockPanel + ConstructionUI + ผูก SaveManager / kept
+Editor/DaySummaryLayoutBuilder.cs [2.6] Tools > Second Serving > Build Day Summary Layout (จัดหน้าต่างสรุปวัน: พื้นเข้ม 900x660) ⚠️ ตัวจัด UI ห้ามกดหลังขัดเกลา
+Editor/RecipeImporter.cs           Tools > Second Serving > Import Recipes & Ingredients ([2.5b] อ่านคอลัมน์ Difficulty / [2.5c] Chefs.csv + Obtain/Chef/Letter)
 Editor/InventoryLayoutBuilder.cs   Tools > Second Serving > Build Inventory Window Layout (จัดหน้าต่างกระเป๋าอัตโนมัติ)
 Editor/CookingSetupBuilder.cs      [2.5 รอบ 2] Tools > Second Serving > Build Cooking System (CookingSettings + Profiles ตัวอย่าง + ตั้ง 8 สูตรเริ่มต้น
                                    (ไม่ทับที่ตั้งไว้) + prefab Stove + วางเตาข้าง ShopCounter ถ้ายังไม่มี + CookingSystem + CarriedDish + UI)
@@ -360,6 +443,8 @@ Editor/EquipmentLayoutBuilder.cs   Tools > Second Serving > Build Equipment Pane
 - **กล้อง:** Main Camera (Cinemachine Brain) + PlayerFollowCam (Position Composer, Ortho 5, Confiner 2D)
 - **Grid:** Ground, Obstacles, CameraBoundsMap, CameraBounds_Shop
 - **ร้าน:** ประตู 4 บาน (Door), ShopCounter, Bed และจุดวาร์ป ShopEntry_Front/Back, Outside_Front/Back, BedWakePoint, HospitalWakePoint
+- **[2.6]** Player มี **PlayerWallet** / วัตถุ **ConstructionManager** / **BuilderCounter** (ซ้าย OutsideFront 3) / Canvas มี **MoneyPanel** (ใต้ ClockPanel) + **ConstructionUI** → BuilderWindow (+ ConfirmPanel) / หน้าต่างสรุปวัน SummaryWindow จัดใหม่แล้ว / SaveManager ผูก PlayerWallet + ConstructionManager
+- **[2.5c]** ShopManager มี **ShopProgress** / วัตถุ **MailSystem** / **Mailbox** (ขวา OutsideFront) / **PopularBoard** (ซ้าย OutsideFront) / **MailDesk** (ข้างเตียง) / Canvas มี **MailUI** → MailWindow 1200x800 (ListScrollView, LetterPanel + AttachmentRow) / SaveManager ผูก ShopProgress + MailSystem / ชื่อจุดวาร์ปจริงในฉาก: `OutsideFront`, `OutsideBack`, `ShopEntryFront`, `ShopEntryBack` (ไม่มีขีดล่าง)
 - **ระบบ:** GameClock, ShopManager, DailyMenu (+ **PopularDishes**), **CustomerManager** (+ GridPathfinder, ลูก Customers), DayEndManager, ForageSpawner, SaveManager (ItemDatabase, Inventory, ForageSpawner, RecipeDatabase, RecipeBook, Hotbar, PlayerStats, PlayerEquipment, DailyMenu)
 - **Canvas:** ClockUI, NotificationUI, DaySummaryUI, InventoryUI → InventoryWindow (TitleText, ProgressText, BagLevelText, TabBar ที่มีปุ่ม 5 แท็บ, SlotScrollView/Viewport/Content, DetailPanel, **EquipmentPanel** (EquipSlot_Shoes … EquipSlot_Back), SlotGrid เดิมถูกปิดไว้),
   **StatsHUD** (StatsUI, แถว HealthRow/StaminaRow/ManaRow/FeverRow), **HotbarHUD** (HotbarUI, Slot_1–Slot_10, SelectedNameText),
@@ -396,6 +481,8 @@ UI ทั้งหมดตอนนี้เป็นแบบใช้งา�
 - **ขั้น D = 2.3:** เมนูประจำวัน (DailyMenu + หน้าต่างเลือกเมนูที่เคาน์เตอร์ + จอง/เสิร์ฟ/ปิดร้าน + เซฟ v5) ผู้ใช้ทดสอบแล้วใช้ได้ (UI จะ polish ทีหลัง)
 - **ขั้น 2.5a รอบ 2:** เตา + ระบบขั้นตอน 3 ชั้น (customSteps → cookingProfile → ตาม Course) + มินิเกม Timing/Mash/Sequence + ถือจาน/เสิร์ฟจานในมือ/Q เก็บ + หน้าต่างทำอาหารนอกร้าน (ผู้ใช้ทดสอบแล้วใช้ได้)
 - **ขั้น 2.5b:** มินิเกม Hold / Stir (คุมกระทะ) / Whisk / Shake + ความยาก ★1–3 จากตาราง + ความพอใจตามความยาก + Debug ตามชนิดมินิเกม (ผู้ใช้ทดสอบแล้วพอใจ)
+- **ขั้น 2.5c:** ทางได้สูตร (RecipeSource + คอลัมน์ Obtain) + จดหมายเชฟ 20 ฉบับ + จดหมายทั่วไป (LetterData, สลบ) + ตู้จดหมาย/โต๊ะคอม/ช่องของแนบแบบ Stardew + ShopProgress + กระดานเมนูนิยม + แจ้งเมนูนิยมตอนเช้า + เซฟ v7 (ผู้ใช้กด Build แล้ว คอมไพล์ผ่าน / ทดสอบละเอียดและขัดเกลาตอนมีภาพ+แผนที่จริง)
+- **ขั้น 2.6:** เงิน B (ตัวเลขวิ่ง) + ราคาวัตถุดิบ/จาน + ทิป + ชื่อเสียงแบบหลอดทีละเลเวล + ชื่อเสียงรวม + ระบบก่อสร้างกลาง + ช่างอัปเกรดร้าน 3 ขั้น (Yes/No, เริ่มวันถัดไป, ติดงาน = ยุ่ง) + หน้าสรุปวัน + เงินแนบจดหมาย + เซฟ v8 (ผู้ใช้ทดสอบการอัปเกรดแล้วโอเค)
 - **ขั้น C:** Equipment Slots 8 ช่อง (Stats 4 + Fashion 4) ในหน้าต่างกระเป๋า ลากใส่/ถอด/สลับ + เซฟ v4 (ผู้ใช้ทดสอบเบื้องต้นแล้ว ใช้งานได้)
 
 **⬜ เฟส 2 (เหลือประมาณ 6–8 สัปดาห์)**
@@ -404,41 +491,41 @@ UI ทั้งหมดตอนนี้เป็นแบบใช้งา�
 |---|---|---|
 | **2.5a รอบ 2** ✅ ทดสอบแล้ว | เตา + ระบบขั้นตอน 3 ชั้น + มินิเกม Timing/Mash/Sequence + ถือจาน + เสิร์ฟจานในมือ + Q เก็บจาน + เลือกเมนูที่เตา + หน้าต่างทำอาหารนอกร้าน | 4–6 วัน |
 | **2.5b** ✅ ทดสอบแล้ว | มินิเกม Hold / Stir (คุมกระทะ) / Whisk / Shake + ความยากตามสูตร ★1–3 (คอลัมน์ Difficulty) + ความพอใจตามความยาก | 2–3 วัน |
-| **2.5c** ← ถัดไป | โหมดลองผสม (ค้นพบสูตร Rumor) | 3–4 วัน |
-| – | ปรับความยาวรอบขาย + ความถี่ลูกค้า หลังมีการทำอาหาร | 0.5 วัน |
-| 2.6 | เงิน (ต่อจาก CustomerManager.OnCustomerPaid / EarnedToday) ชื่อเสียง (LeftUnhappyToday, Satisfaction/Mood รายวัน) ราคาจากต้นทุน ความชำนาญ โบนัสความหลากหลาย + จุดอัปเกรดร้านที่เรียก `PopularDishes.SetBonusCount` / `CustomerManager.SetLovedChanceBonus` | 3–4 วัน |
-| 2.6b | ร้านค้าพื้นฐาน (ซื้อ/ขาย) + อัปเกรดกระเป๋า | 4–6 วัน |
+| **2.5c** ✅ | ทางได้สูตร + จดหมายเชฟ/จดหมายทั่วไป + ตู้/โต๊ะ/ของแนบ + ShopProgress + กระดานเมนูนิยม (แทนโหมดลองผสม) | 3–4 วัน |
+| – | ~~ปรับความยาวรอบขาย + ความถี่ลูกค้า~~ **เลื่อนไปช่วงเล่นทดสอบทั้งวงจร** (24 พ.ย. ต้นเกมว่างเป็นปกติ ขายหมด = ร้านปิดเอง / ท้ายเกมจะมีหุ่นทำอาหาร / รอราคาจาก 2.6) | 0.5 วัน |
+| **2.6** ✅ | เงิน (ต่อจาก CustomerManager.OnCustomerPaid / EarnedToday + ของแนบเงินในจดหมาย) ชื่อเสียง → **ShopProgress.AddReputation** (LeftUnhappyToday, Satisfaction/Mood รายวัน) + เลเวลร้าน **ShopProgress.SetLevel** ราคาจากต้นทุน ความชำนาญ โบนัสความหลากหลาย + จุดอัปเกรดร้านที่เรียก `PopularDishes.SetBonusCount` / `CustomerManager.SetLovedChanceBonus` | 3–4 วัน |
+| **2.6b** ← ถัดไป | ร้านค้าพื้นฐาน (ซื้อ/ขาย ขายตรงได้เงินทันที) + **กล่องขายข้ามคืนแบบ Stardew** (เงินเข้าหน้าสรุปวัน `DaySummaryData.OvernightIncome`) + อัปเกรดกระเป๋า + **สมุดสูตร (Obtain = Shop Book)** | 4–6 วัน |
 | 2.6c | ของป่าสำหรับสูตรเริ่มต้น 12 ชนิด (prefab + โซนงอก) | 2–3 วัน |
-| 2.7 | สรุปรายวัน (ส่วนที่เหลือ: ยอดขาย/ลูกค้า/เงิน จาก DailyMenu + CustomerManager) | 1–2 วัน |
+| 2.7 | ~~สรุปรายวัน~~ ส่วนใหญ่ทำแล้วใน 2.6 เหลือขัดเกลา | 0.5 วัน |
 | – | เล่นทดสอบทั้งวงจร | 4–5 วัน |
 
 🎯 จบเฟส 2 = Vertical Slice เล่นครบวงจรด้วย 8 สูตรเริ่มต้น
 
 **⬜ เฟส 3 (ประมาณ 8–11 เดือน)**
-NPC และบทสนทนา, ความสนิทและรสนิยมอาหาร, ข่าวลือและ side story สูตรลับ (ใช้คอลัมน์ Rumor / Story Notes), ฤดูกาลและอากาศ, เควสต์และเทศกาล, แบ่งแผนที่เป็นโซน, พ่อค้าเร่, ร้านค้าเต็มรูปแบบ, ปลูกพืช, เลี้ยงสัตว์, เครื่องแปรรูป, โซนทะเลและตกปลา, **ระบบต่อสู้ + มอนสเตอร์ + บอส + ถ้ำ (8–12 สัปดาห์)** (ต่อจาก PlayerActionController: hitbox, ดาเมจ, เรียก `RegisterCombatHit`, ต้นทุนท่าย้ายไปอยู่ที่ข้อมูลอาวุธ, FEVER จาก Skill), **ความชำนาญ (proficiency) แต่ละอาวุธแบบ Stardew** (ให้แหล่งฟื้น Mana), โพชั่น, ของสวมใส่ที่มีผลกับค่าสถานะ, บทลงโทษตอนสลบ/Health หมด, ลูกค้าเป็นกลุ่ม + ลูกค้าหลายแบบ (ความอดทน/รสนิยมต่างกัน), NPC ใช้ GridPathfinder เดินทั่วเมือง, สิ่งประดิษฐ์ช่วงปลายเกม
+NPC และบทสนทนา, ความสนิทและรสนิยมอาหาร (+ จดหมาย NPC ผ่าน LetterData), side story / อีเวนต์ / แข่งทำอาหารเทศกาล = สูตรลับ (คอลัมน์ Obtain + Story Notes), ทางได้สูตร Monster Pages / Boss / Dig Box / Fishing Bottle / Food Truck / Request Board, แจ้งเทศกาลทางจดหมาย, สิ่งประดิษฐ์ไฮเทค (เตาอัตโนมัติ เครื่องรดน้ำ เครื่องพรวนดิน), ฟีเจอร์คอมบนโต๊ะ, ฤดูกาลและอากาศ, เควสต์และเทศกาล, แบ่งแผนที่เป็นโซน, พ่อค้าเร่, ร้านค้าเต็มรูปแบบ, ปลูกพืช, เลี้ยงสัตว์, เครื่องแปรรูป, โซนทะเลและตกปลา, **ระบบต่อสู้ + มอนสเตอร์ + บอส + ถ้ำ (8–12 สัปดาห์)** (ต่อจาก PlayerActionController: hitbox, ดาเมจ, เรียก `RegisterCombatHit`, ต้นทุนท่าย้ายไปอยู่ที่ข้อมูลอาวุธ, FEVER จาก Skill), **ความชำนาญ (proficiency) แต่ละอาวุธแบบ Stardew** (ให้แหล่งฟื้น Mana), โพชั่น, ของสวมใส่ที่มีผลกับค่าสถานะ, บทลงโทษตอนสลบ/Health หมด, ลูกค้าเป็นกลุ่ม + ลูกค้าหลายแบบ (ความอดทน/รสนิยมต่างกัน), NPC ใช้ GridPathfinder เดินทั่วเมือง, สิ่งประดิษฐ์ช่วงปลายเกม
 
 **⬜ เฟส 4 (ประมาณ 4–7 เดือน)**
 ภาพ (ไอคอนประมาณ 170 ชิ้น), polish UI ทั้งหมด (หน้าต่างเมนู ฯลฯ), ตัวบอกสถานะวิ่งบนจอ, เสียง, เมนูหลัก, ปรับสมดุล, ฟอนต์ไทย, เช็กภาพสั่น (Interpolate), เดโมเว็บ (SaveSync.jslib), หน้า Steam (ควรขึ้นช่วงกลางเฟส 3), ปล่อยเกม
 
-## 10. ขั้นถัดไป: 2.5c โหมดลองผสม (ค้นพบสูตรลับแบบ Rumor)
+## 10. ขั้นถัดไป: 2.6b ร้านค้า + กล่องขายข้ามคืน
 
-2.5a รอบ 2 และ 2.5b เสร็จแล้ว ผู้ใช้ทดสอบแล้วพอใจ (23 พ.ย.) → **เริ่ม 2.5c ด้วยการคุยออกแบบก่อนเขียนโค้ด** (ใช้ skill brainstorming / ถามทีละข้อ)
+2.6 เสร็จ (24 พ.ย.) ผู้ใช้ทดสอบการอัปเกรดร้านแล้วโอเค → **2.6b** (ใช้ skill brainstorming ก่อนเขียนโค้ด):
+- ร้านค้า/ตลาด NPC: ซื้อของ (ซื้อเวลา, เครื่องมือ, ของนอกฤดู) + ขายของได้เงินทันที (ตอนนี้ยังไม่มี NPC → จุดชั่วคราวแบบเคาน์เตอร์ช่าง)
+- **กล่องขายข้ามคืนแบบ Stardew**: เงินเข้าตอนจบวัน ใส่ `DaySummaryData.OvernightIncome` ใน `DayEndManager` (มีช่องรอไว้แล้ว) / เป็นที่ทิ้งของที่ไม่ใช้
+- อัปเกรดกระเป๋า (`Inventory.UpgradeBag` มีแล้ว) / สมุดสูตร (Obtain = Shop Book 9 สูตร) / ItemData.sellPrice มีราคาแล้ว
+- ข้อควรถาม: ขายของได้กี่ % ของราคา, จานคุณภาพต่างกันขายต่างกันไหม, ร้านเปิดกี่โมง
 
-**ที่ตัดสินแล้วจากก่อนหน้า**
-- สูตรลับ 12 สูตร: **Rumor** = ได้ยินข่าวลือ (คำใบ้อ้อมๆ ไม่สปอยล์) แล้วไปลองผสมที่เตาเอง / **Story** = side story ของ NPC (เฟส 3)
-- ตาราง Recipes มีคอลัมน์ `Unlock` (Rumor / Story), `Rumor` (ข้อความข่าวลือ), `Story Notes` แล้ว แต่ **CSV/ตัว import ยังไม่อ่าน 3 คอลัมน์นี้** → 2.5c ต้องเพิ่ม (ต่อคอลัมน์ท้าย CSV + RecipeImporter + RecipeData)
-- เมนูนิยมประจำวัน (2.4b) มีสูตรที่ยังไม่รู้ปนมา 25% เป็นคำใบ้ชั่วคราว `??? (Japanese dessert)` → อาจโยงกับข่าวลือได้
+**2.6 ที่ยังไม่ได้ยืนยันว่าทดสอบครบ**: ตัวเลขวิ่ง, หน้าสรุปวัน (Build Day Summary Layout), จดหมายตามเกณฑ์ใหม่, โหลดเซฟระหว่างก่อสร้าง → ถ้าเจอบั๊กระหว่าง 2.6b แก้ได้เลย
 
-**คำถามที่ต้องถามผู้ใช้ก่อน (ยังไม่ได้ตัดสิน)**
-- ลองผสมที่ไหน/อย่างไร: เลือกวัตถุดิบ 1–4 อย่างที่เตา (นอกเวลาร้าน?) แล้วถ้าตรงสูตรที่ยังไม่รู้ = ได้สูตร / ผิดได้อะไร (เสียวัตถุดิบไหม ได้จาน "ทดลอง" ไหม)
-- ต้องเล่นมินิเกมตอนลองผสมไหม / สูตรปกติ (ไม่ใช่สูตรลับ) ค้นพบด้วยการลองผสมได้ไหม หรือเฉพาะ Rumor
-- ข่าวลือได้มาจากไหนตอนนี้ (ยังไม่มี NPC): ลูกค้าในร้าน? กระดานข่าว? / คำใบ้ช่วยแค่ไหนถ้าใส่ผิดบ่อย
-- จบ 2.5 ทั้งหมดแล้ว: ปรับความยาวรอบขาย + ความถี่ลูกค้า, สรุป roadmap + อัปเดต HANDOFF.md
+**2.5c ที่ยังไม่ได้ทดสอบละเอียด**: จดหมาย/ของแนบ/เซฟจดหมาย/จดหมายสลบ/กระดานเมนูนิยม (ขัดเกลาตอนมีภาพ+แผนที่จริง)
 
 **งานค้างไว้ขัดเกลา (ผู้ใช้ขอ)**
 - ช่วง Last call (หมดเวลาแต่ลูกค้ายังอยู่) ดูคล้ายโหมดสำรวจ → ทำให้ชัดขึ้น / แจ้งตอนร้านปิดจริงว่าเก็บจานในมือเข้ากระเป๋าแล้ว
 
 **วิธีทดสอบที่ใช้อยู่**
+- [2.6] เงิน: PlayerWallet (บน Player) คลิกขวา `Debug: Money +100,000` / ชื่อเสียง: ShopProgress `Debug: Fill Reputation Bar` / ก่อสร้าง: ConstructionManager `Debug: Finish Construction Now`, `Print Status` / ช่างเปิด 09:00–16:00 (F7 เร่งเวลา)
+- [2.5c] จดหมาย: ShopProgress (บน ShopManager) คลิกขวา `Debug: Reputation +100` แล้วนอน / MailSystem คลิกขวา `Debug: Check Mail Now`, `Deliver All Chef Letters`, `Send Pass-Out Letter Now`, `Print Mail Status`
+- [2.5c] เมนูนิยมที่ยังไม่รู้: PopularDishes → `Unknown Recipe Chance` = 1 ชั่วคราว แล้ว Reroll
 - คลิกขวาที่หัวคอมโพเนนต์ (PlayerStats / Hotbar / PlayerEquipment / DailyMenu / CustomerManager) ระหว่าง Play เพื่อใช้เมนู Debug
 - อยากได้ไอเทมใดๆ: ที่คอมโพเนนต์ Hotbar กรอก `Debug Item Id` (+ `Debug Amount`) แล้วคลิกขวาหัว > `Debug: Give Item By Id`
 - สูตรทั้งหมด: คลิกขวาหัว RecipeBook > `Debug: Learn All Recipes`

@@ -48,6 +48,12 @@ public class SaveManager : MonoBehaviour
     [Tooltip("[2.5c] ระบบจดหมายเชฟ (คอมโพเนนต์ MailSystem) เว้นว่างไว้ จะหาในฉากเอง")]
     [SerializeField] private MailSystem mailSystem;
 
+    [Tooltip("[2.6] กระเป๋าเงิน (คอมโพเนนต์ PlayerWallet บนตัว Player) เว้นว่างไว้ จะหาเอง")]
+    [SerializeField] private PlayerWallet playerWallet;
+
+    [Tooltip("[2.6] ตัวจัดการก่อสร้าง (คอมโพเนนต์ ConstructionManager) เว้นว่างไว้ จะหาในฉากเอง")]
+    [SerializeField] private ConstructionManager constructionManager;
+
     [Header("Settings")]
     [Tooltip("ชื่อไฟล์เซฟ")]
     [SerializeField] private string fileName = "save.json";
@@ -146,6 +152,26 @@ public class SaveManager : MonoBehaviour
         if (mailSystem == null)
         {
             Debug.LogWarning("SaveManager: Mail System not found. Chef letters will not be saved.", this);
+        }
+        if (playerWallet == null && playerInventory != null)
+        {
+            playerWallet = playerInventory.GetComponent<PlayerWallet>();
+        }
+        if (playerWallet == null)
+        {
+            playerWallet = FindFirstObjectByType<PlayerWallet>(FindObjectsInactive.Include);
+        }
+        if (playerWallet == null)
+        {
+            Debug.LogWarning("SaveManager: Player Wallet not found. Money will not be saved. Run Build Economy.", this);
+        }
+        if (constructionManager == null)
+        {
+            constructionManager = FindFirstObjectByType<ConstructionManager>(FindObjectsInactive.Include);
+        }
+        if (constructionManager == null)
+        {
+            Debug.LogWarning("SaveManager: Construction Manager not found. Construction will not be saved. Run Build Economy.", this);
         }
         if (playerHotbar == null)
         {
@@ -292,6 +318,18 @@ public class SaveManager : MonoBehaviour
         {
             data.shopLevel = shopProgress.Level;
             data.reputation = shopProgress.Reputation;
+            data.lifetimeReputation = shopProgress.LifetimeReputation;
+            data.reputationBarSpent = shopProgress.BarSpent;
+        }
+
+        // [v8] เงิน + งานก่อสร้าง
+        if (playerWallet != null)
+        {
+            data.money = playerWallet.Money;
+        }
+        if (constructionManager != null)
+        {
+            constructionManager.CaptureState(data);
         }
         if (mailSystem != null)
         {
@@ -503,6 +541,14 @@ public class SaveManager : MonoBehaviour
             RestoreEquipment(data.equippedItems);
         }
 
+        // 6.5) [v7/v8] เลเวลร้าน + ชื่อเสียง (ต้องก่อนคืนเมนู: เลเวลให้ช่องเมนูเพิ่ม ไม่งั้นเมนูช่องที่ 4+ จะหาย)
+        if (data.version >= 7 && shopProgress != null)
+        {
+            int lifetime = data.version >= 8 ? data.lifetimeReputation : data.reputation;
+            bool barSpent = data.version >= 8 && data.reputationBarSpent;
+            shopProgress.SetAll(data.shopLevel, data.reputation, lifetime, barSpent);
+        }
+
         // 7) [v5] เมนูที่ตั้งไว้ล่าสุด (เซฟ v1–v4 = เมนูว่าง) จำนวนจานจะถูกตรวจกับของในกระเป๋าตอนเปิดหน้าต่างเมนู
         if (data.version >= 5)
         {
@@ -512,14 +558,20 @@ public class SaveManager : MonoBehaviour
         // 8) [v7] เลเวลร้าน + ชื่อเสียง และจดหมายเชฟ (เซฟ v1–v6 = เลเวล 1 ชื่อเสียง 0 ไม่มีจดหมาย ค่าตั้งต้นอยู่แล้ว)
         if (data.version >= 7)
         {
-            if (shopProgress != null)
-            {
-                shopProgress.SetAll(data.shopLevel, data.reputation);
-            }
             if (mailSystem != null)
             {
                 mailSystem.RestoreState(data);
             }
+        }
+
+        // 9) [v8] เงิน + งานก่อสร้าง (เซฟเก่า = เงินเริ่มต้น ไม่มีงาน) คืนค่าเฉยๆ ไม่หักเงินซ้ำ
+        if (playerWallet != null)
+        {
+            playerWallet.SetMoney(data.version >= 8 ? data.money : playerWallet.StartMoney);
+        }
+        if (data.version >= 8 && constructionManager != null)
+        {
+            constructionManager.RestoreState(data);
         }
 
         int inventoryCount = data.inventory != null ? data.inventory.Count : 0;

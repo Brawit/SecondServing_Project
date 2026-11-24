@@ -33,14 +33,14 @@ MonoBehaviour:
     \u0E19\u0E49\u0E33\u0E21\u0E30\u0E02\u0E32\u0E21\u0E40\u0E1B\u0E35\u0E22\u0E01,
     \u0E19\u0E49\u0E33\u0E1B\u0E25\u0E32, \u0E19\u0E49\u0E33\u0E15\u0E32\u0E25\u0E1B\u0E35\u0E4A\u0E1A,
     \u0E19\u0E49\u0E33\u0E21\u0E31\u0E19\u0E1E\u0E37\u0E0A"
-  sellPrice: 0
+  sellPrice: 160
   difficulty: 2
   cookingProfile: {fileID: 11400000, guid: 293b41c46f21701439a585332125a853, type: 2}
   customSteps: []
   obtainSource: 1
   obtainNote: "\u0E40\u0E0A\u0E1F\u0E44\u0E17\u0E22"
   mailShopLevel: 1
-  mailReputation: 50
+  mailReputation: 180
   chef: {fileID: 11400000, guid: 9027734d34a03bb43947e2332bd51243, type: 2}
   letterBody: 'Dear owner,
 

@@ -34,6 +34,21 @@ public class DaySummaryUI : MonoBehaviour
     [SerializeField] private string shopNotOpenedLine = "Shop: Not opened";
     [SerializeField] private string continueHintLine = "Press Space to continue";
 
+    [Header("Text (2.6)")]
+    [Tooltip("{0} = จานที่ขาย, {1} = ลูกค้าที่เดินออก")]
+    [SerializeField] private string dishesFormat = "Dishes sold: {0}   Customers who left: {1}";
+    [Tooltip("{0} = รายได้ร้าน, {1} = ค่าอาหาร, {2} = ทิป")]
+    [SerializeField] private string shopIncomeFormat = "Restaurant (already received)   {0}   (dishes {1} + tips {2})";
+    [Tooltip("{0} = รายได้ข้ามคืน")]
+    [SerializeField] private string overnightFormat = "Shipping box (received now)   {0}";
+    [Tooltip("{0} = รวมวันนี้")]
+    [SerializeField] private string totalFormat = "Total today   {0}";
+    [Tooltip("{0} = ชื่อเสียงที่ได้, {1} = หลอด, {2} = ขนาดหลอด, {3} = เลเวลร้าน")]
+    [SerializeField] private string reputationFormat = "Reputation +{0}   ({1:N0} / {2:N0}, shop level {3})";
+    [SerializeField] private string barFullLine = "<color=#FFD24A>Reputation bar is full! Visit the builder to upgrade your shop.</color>";
+    [Tooltip("{0} = เงินรวม")]
+    [SerializeField] private string moneyFormat = "Money   {0}";
+
     // หน้าต่างเปิดอยู่หรือไม่
     public bool IsOpen { get; private set; }
 
@@ -131,6 +146,34 @@ public class DaySummaryUI : MonoBehaviour
         StringBuilder sb = new StringBuilder();
         sb.AppendLine(data.Reason == DayEndReason.PassedOut ? passedOutLine : sleptLine);
         sb.AppendLine(data.OpenedShop ? shopOpenedLine : shopNotOpenedLine);
+
+        // [2.6] ร้าน (เงินเข้าไปแล้วตอนขาย แค่สรุป)
+        if (data.OpenedShop)
+        {
+            sb.AppendLine(string.Format(dishesFormat, data.DishesSold, data.CustomersLeft));
+            sb.AppendLine(string.Format(shopIncomeFormat, PlayerWallet.Format(data.ShopIncome), PlayerWallet.Format(data.ShopIncome - data.Tips), PlayerWallet.Format(data.Tips)));
+        }
+
+        // [2.6b] รายได้ข้ามคืน (เข้ากระเป๋าตอนนี้)
+        if (data.OvernightIncome > 0)
+        {
+            sb.AppendLine(string.Format(overnightFormat, PlayerWallet.Format(data.OvernightIncome)));
+        }
+        if (data.OpenedShop || data.OvernightIncome > 0)
+        {
+            sb.AppendLine(string.Format(totalFormat, PlayerWallet.Format(data.ShopIncome + data.OvernightIncome)));
+        }
+
+        // [2.6] ชื่อเสียง + เงินรวม
+        if (data.BarSize > 0)
+        {
+            sb.AppendLine(string.Format(reputationFormat, data.ReputationGained, data.Reputation, data.BarSize, data.ShopLevel));
+        }
+        if (data.BarFull)
+        {
+            sb.AppendLine(barFullLine);
+        }
+        sb.AppendLine(string.Format(moneyFormat, PlayerWallet.Format(data.Money)));
         sb.AppendLine();
         sb.Append(continueHintLine);
         return sb.ToString();

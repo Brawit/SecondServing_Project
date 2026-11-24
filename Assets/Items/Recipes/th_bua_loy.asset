@@ -29,14 +29,14 @@ MonoBehaviour:
   fullIngredientsText: "\u0E41\u0E1B\u0E49\u0E07\u0E02\u0E49\u0E32\u0E27\u0E40\u0E2B\u0E19\u0E35\u0E22\u0E27,
     \u0E1F\u0E31\u0E01\u0E17\u0E2D\u0E07, \u0E40\u0E1C\u0E37\u0E2D\u0E01, \u0E01\u0E30\u0E17\u0E34,
     \u0E19\u0E49\u0E33\u0E15\u0E32\u0E25, \u0E40\u0E01\u0E25\u0E37\u0E2D"
-  sellPrice: 0
+  sellPrice: 95
   difficulty: 2
   cookingProfile: {fileID: 0}
   customSteps: []
   obtainSource: 1
   obtainNote: "\u0E40\u0E0A\u0E1F\u0E44\u0E17\u0E22 \u0E02\u0E2D\u0E07\u0E2B\u0E27\u0E32\u0E19\u0E1A\u0E49\u0E32\u0E19\u0E46"
   mailShopLevel: 2
-  mailReputation: 150
+  mailReputation: 340
   chef: {fileID: 11400000, guid: 9027734d34a03bb43947e2332bd51243, type: 2}
   letterBody: 'Dear owner,
 

@@ -26,7 +26,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: f846e2bdaf60a384a8d1227452f12634, type: 2}
   fullIngredientsText: "\u0E1C\u0E07\u0E21\u0E31\u0E17\u0E09\u0E30, \u0E19\u0E21\u0E2A\u0E14,
     \u0E19\u0E49\u0E33\u0E15\u0E32\u0E25, \u0E19\u0E49\u0E33\u0E41\u0E02\u0E47\u0E07"
-  sellPrice: 0
+  sellPrice: 145
   difficulty: 1
   cookingProfile: {fileID: 0}
   customSteps: []

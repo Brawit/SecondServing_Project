@@ -29,7 +29,7 @@ MonoBehaviour:
   fullIngredientsText: "\u0E41\u0E1B\u0E49\u0E07\u0E2A\u0E32\u0E25\u0E35, \u0E44\u0E02\u0E48\u0E44\u0E01\u0E48,
     \u0E19\u0E21\u0E2A\u0E14, \u0E40\u0E19\u0E22, \u0E1C\u0E07\u0E1F\u0E39, \u0E19\u0E49\u0E33\u0E15\u0E32\u0E25,
     \u0E40\u0E21\u0E40\u0E1B\u0E34\u0E25\u0E44\u0E0B\u0E23\u0E31\u0E1B"
-  sellPrice: 0
+  sellPrice: 185
   difficulty: 1
   cookingProfile: {fileID: 0}
   customSteps: []
