@@ -33,3 +33,27 @@ MonoBehaviour:
   difficulty: 2
   cookingProfile: {fileID: 0}
   customSteps: []
+  obtainSource: 1
+  obtainNote: "\u0E40\u0E0A\u0E1F\u0E2D\u0E34\u0E15\u0E32\u0E25\u0E35 \u0E09\u0E1A\u0E31\u0E1A\u0E41\u0E23\u0E01"
+  mailShopLevel: 1
+  mailReputation: 80
+  chef: {fileID: 11400000, guid: 556ecd75ee852ce4a93c60357c4eb4f6, type: 2}
+  letterBody: 'Ciao!
+
+
+    I am Giulia, from a small trattoria in Rome. A customer
+    of yours posted photos online, and I saw bruschetta on your menu. Not bad! But
+    where is the pasta? We must fix this.
+
+
+    Carbonara is the dish my nonna made
+    when there was almost nothing in the house: eggs, cheese, a little cured pork,
+    pasta. No cream! Never cream. Nonna would come back to haunt me.
+
+
+    Mix the
+    eggs and cheese, toss with hot pasta off the heat, and let the warmth turn it
+    into silk.
+
+
+    Little ingredients, big love.'

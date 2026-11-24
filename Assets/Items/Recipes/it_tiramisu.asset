@@ -34,3 +34,27 @@ MonoBehaviour:
   difficulty: 2
   cookingProfile: {fileID: 0}
   customSteps: []
+  obtainSource: 1
+  obtainNote: "\u0E40\u0E0A\u0E1F\u0E2D\u0E34\u0E15\u0E32\u0E25\u0E35 \u0E02\u0E2D\u0E07\u0E2B\u0E27\u0E32\u0E19\u0E02\u0E36\u0E49\u0E19\u0E0A\u0E37\u0E48\u0E2D"
+  mailShopLevel: 4
+  mailReputation: 600
+  chef: {fileID: 11400000, guid: 556ecd75ee852ce4a93c60357c4eb4f6, type: 2}
+  letterBody: 'Dear friend,
+
+
+    Giulia once more. Your restaurant is famous now!
+    I tell everyone I knew you before.
+
+
+    Tiramisu means "pick me up." It is the
+    dessert I ate the night I almost closed my trattoria, when the bills were too
+    much. My cook made one without a word and put it in front of me. We kept going.
+
+
+    Ladyfingers
+    soaked in espresso, layered with mascarpone whipped with egg and sugar, cocoa
+    on top. Let it rest overnight.
+
+
+    Everyone needs someone who picks them up.
+    Now you have five old chefs cheering for you from far away.'

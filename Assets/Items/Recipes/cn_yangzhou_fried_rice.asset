@@ -34,3 +34,27 @@ MonoBehaviour:
   difficulty: 2
   cookingProfile: {fileID: 11400000, guid: 293b41c46f21701439a585332125a853, type: 2}
   customSteps: []
+  obtainSource: 1
+  obtainNote: "\u0E40\u0E0A\u0E1F\u0E08\u0E35\u0E19 \u0E09\u0E1A\u0E31\u0E1A\u0E41\u0E23\u0E01"
+  mailShopLevel: 1
+  mailReputation: 40
+  chef: {fileID: 11400000, guid: 3edf825c44ba8994197fd4cca4373a22, type: 2}
+  letterBody: 'Hello,
+
+
+    A traveler who ate at your shop left a long review online.
+    He said the food tasted like someone cared. That is rare, so I am writing.
+
+
+    My
+    name is Lin Wei. My grandfather ran a teahouse, and the first thing he ever let
+    me cook was fried rice made from yesterday''s rice. He said, "Fresh rice is for
+    the rich. Day-old rice is for the clever."
+
+
+    Shrimp, a little ham, egg, and
+    rice that has dried out overnight. Keep the fire high and keep your hand moving.
+
+
+    Nothing
+    wasted, everything shared. That is a good way to run a kitchen.'

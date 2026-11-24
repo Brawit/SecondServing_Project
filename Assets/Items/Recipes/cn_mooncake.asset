@@ -32,3 +32,27 @@ MonoBehaviour:
   difficulty: 3
   cookingProfile: {fileID: 0}
   customSteps: []
+  obtainSource: 1
+  obtainNote: "\u0E40\u0E0A\u0E1F\u0E08\u0E35\u0E19 \u0E02\u0E19\u0E21\u0E40\u0E17\u0E28\u0E01\u0E32\u0E25"
+  mailShopLevel: 3
+  mailReputation: 400
+  chef: {fileID: 11400000, guid: 3edf825c44ba8994197fd4cca4373a22, type: 2}
+  letterBody: 'Hello, my friend,
+
+
+    May I call you that now? Lin Wei here.
+
+
+    Mooncakes
+    are for the Mid-Autumn Festival, when families gather under the full moon. For
+    many years I worked abroad and spent the festival alone. Every year, my grandfather
+    mailed me a single mooncake, wrapped so carefully it never broke.
+
+
+    Sweet
+    red bean paste with a salted egg yolk in the center, like the moon, wrapped in
+    thin pastry and pressed in a mold.
+
+
+    Distance does not break a family. Neither
+    does silence. Send something warm to someone you miss.'

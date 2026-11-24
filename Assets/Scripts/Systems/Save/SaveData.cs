@@ -12,7 +12,8 @@ public class SaveData
     // 4 = เพิ่มของที่สวมอยู่ (8 ช่อง)
     // 5 = เพิ่มเมนูประจำวันล่าสุด (ใช้เป็นค่าเริ่มต้นของวันถัดไป)
     // 6 = จานอาหารในกระเป๋าแยกจำนวนตามคุณภาพ (qualityOk / qualityGood / qualityPerfect ใน InventoryEntrySave)
-    public const int CurrentVersion = 6;
+    // 7 = เลเวลร้าน + ชื่อเสียง และจดหมาย (ได้แล้ว / วันที่ได้ / อ่านแล้ว / ของแนบที่รับแล้ว / รอส่ง)
+    public const int CurrentVersion = 7;
 
     public int version = CurrentVersion;
 
@@ -52,6 +53,21 @@ public class SaveData
     // [v5] เมนูที่ตั้งไว้ล่าสุด ทีละช่อง: รหัสสูตร (ช่องว่าง = "") และจำนวนจานที่ตั้งไว้
     public List<string> menuRecipes = new List<string>();
     public List<int> menuServings = new List<int>();
+
+    // [v7] เลเวลร้านและชื่อเสียง (ShopProgress)
+    public int shopLevel = 1;
+    public int reputation = 0;
+
+    // [v7] จดหมายที่ได้แล้ว ตามลำดับที่ได้ (ทุกรายการลำดับเดียวกัน)
+    // รหัส: "chef:<recipeId>" = จดหมายสูตรจากเชฟ / "letter:<letterId>" = จดหมายทั่วไป (LetterData)
+    // mailClaimed = บิตของแนบที่รับแล้ว (บิตที่ i = ชิ้นที่ i)
+    public List<string> mailIds = new List<string>();
+    public List<int> mailDays = new List<int>();
+    public List<bool> mailRead = new List<bool>();
+    public List<int> mailClaimed = new List<int>();
+
+    // [v7] จดหมายทั่วไปที่รอส่งเช้าถัดไป (เช่น จดหมายตอนสลบ) / จดหมายเชฟที่ยังไม่มาไม่ต้องเซฟ (คำนวณใหม่ทุกเช้า)
+    public List<string> mailPendingIds = new List<string>();
 }
 
 // ของหนึ่งชนิดในกระเป๋า

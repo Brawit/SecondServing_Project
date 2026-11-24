@@ -82,6 +82,28 @@ public class RecipeData : ScriptableObject
     [Tooltip("ขั้นตอนเฉพาะสูตรนี้ (ไม่ว่าง = ใช้แทน Cooking Profile) ใช้กับจานเด่น/สูตรลับ ตัว import ไม่เขียนทับช่องนี้")]
     public List<CookingStep> customSteps = new List<CookingStep>();
 
+    [Header("Obtain (2.5c)")]
+    [Tooltip("ทางที่ผู้เล่นได้สูตรนี้ (คอลัมน์ Obtain) ตอนนี้ทำงานจริงแค่ Starter กับ Chef Mail")]
+    public RecipeSource obtainSource = RecipeSource.Starter;
+
+    [Tooltip("โน้ตสั้นๆ ว่าทำไมได้จากทางนี้ (คอลัมน์ Obtain Note) ไม่แสดงในเกม")]
+    public string obtainNote;
+
+    [Tooltip("Chef Mail: เลเวลร้านขั้นต่ำ (คอลัมน์ Mail Shop Lv)")]
+    [Min(0)] public int mailShopLevel = 0;
+
+    [Tooltip("Chef Mail: ชื่อเสียงขั้นต่ำ (คอลัมน์ Mail Reputation)")]
+    [Min(0)] public int mailReputation = 0;
+
+    [Tooltip("Chef Mail: เชฟที่ส่งจดหมาย (คอลัมน์ Chef)")]
+    public ChefData chef;
+
+    [Tooltip("Chef Mail: เนื้อจดหมาย ภาษาอังกฤษ (คอลัมน์ Letter)")]
+    [TextArea(4, 12)] public string letterBody;
+
+    // [2.5c] สูตรนี้ได้จากจดหมายเชฟ และข้อมูลครบพอส่งจดหมาย
+    public bool IsChefMail => obtainSource == RecipeSource.ChefMail && chef != null && !string.IsNullOrWhiteSpace(letterBody);
+
     // [2.5b] ความยากที่ใช้จริง (1–3) ช่อง difficulty เป็น 0 = คิดเองจากประเภทสูตร
     public int Difficulty
     {

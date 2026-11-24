@@ -40,6 +40,23 @@ public class PopularDishes : MonoBehaviour
     [Tooltip("คำที่ลูกค้าใช้ถามหาสูตรที่ผู้เล่นยังไม่รู้ ({0} = สัญชาติ, {1} = ประเภท) เช่น \"Got that Japanese dessert?\"")]
     [SerializeField] private string unknownRequestFormat = "that {0} {1}";
 
+    [Header("Source Hints (2.5c)")]
+    [Tooltip("ต่อท้ายคำใบ้ในหน้าต่างเมนูว่าสูตรนี้หาได้จากทางไหน ({0} = คำใบ้เดิม, {1} = ข้อความของทางนั้น)")]
+    [SerializeField] private string sourceHintFormat = "{0} · {1}";
+
+    [Header("Morning Notice (2.5c)")]
+    [Tooltip("แจ้งเมนูนิยมตอนเช้า ({0} = รายการ) เว้นว่าง = ไม่แจ้ง")]
+    [SerializeField] private string morningNoticeFormat = "Popular today: {0}";
+
+    [Tooltip("Chef Mail")] [SerializeField] private string hintChefMail = "a chef may write";
+    [Tooltip("Shop Book")] [SerializeField] private string hintShopBook = "sold in shops";
+    [Tooltip("Monster Pages")] [SerializeField] private string hintMonsterPages = "pages dropped by monsters";
+    [Tooltip("Boss")] [SerializeField] private string hintBoss = "a boss guards it";
+    [Tooltip("Dig Box")] [SerializeField] private string hintDigBox = "buried somewhere";
+    [Tooltip("Fishing Bottle")] [SerializeField] private string hintFishingBottle = "drifts in from the sea";
+    [Tooltip("Food Truck")] [SerializeField] private string hintFoodTruck = "a food truck knows it";
+    [Tooltip("Request Board")] [SerializeField] private string hintRequestBoard = "a townsperson may ask";
+
     [Header("Debug")]
     [SerializeField] private bool verboseLog = true;
 
@@ -141,6 +158,12 @@ public class PopularDishes : MonoBehaviour
     private void HandleDayStarted(int day)
     {
         Roll(day);
+
+        // [2.5c] แจ้งตอนเช้า ให้ผู้เล่นวางแผนหาวัตถุดิบได้ทั้งวัน (ดูซ้ำได้ที่กระดานหน้าร้าน PopularBoard)
+        if (!string.IsNullOrEmpty(morningNoticeFormat) && today.Count > 0)
+        {
+            NotificationUI.Post(string.Format(morningNoticeFormat, GetSummaryText(" · ")));
+        }
     }
 
     // ---------- คำถามจากระบบอื่น ----------
@@ -177,7 +200,27 @@ public class PopularDishes : MonoBehaviour
             return recipe.recipeName;
         }
 
-        return string.Format(unknownHintFormat, CuisineAdjective(recipe.cuisine), CourseWord(recipe.course));
+        // [2.5c] ต่อท้ายว่าหาสูตรได้จากทางไหน (ทางที่ไม่มีข้อความ = ไม่ต่อท้าย)
+        string hint = string.Format(unknownHintFormat, CuisineAdjective(recipe.cuisine), CourseWord(recipe.course));
+        string source = SourceHint(recipe.obtainSource);
+        return string.IsNullOrEmpty(source) ? hint : string.Format(sourceHintFormat, hint, source);
+    }
+
+    // [2.5c] ข้อความบอกทางได้สูตร (Story / Event / Festival / Starter ไม่บอก)
+    private string SourceHint(RecipeSource source)
+    {
+        switch (source)
+        {
+            case RecipeSource.ChefMail: return hintChefMail;
+            case RecipeSource.ShopBook: return hintShopBook;
+            case RecipeSource.MonsterPages: return hintMonsterPages;
+            case RecipeSource.Boss: return hintBoss;
+            case RecipeSource.DigBox: return hintDigBox;
+            case RecipeSource.FishingBottle: return hintFishingBottle;
+            case RecipeSource.FoodTruck: return hintFoodTruck;
+            case RecipeSource.RequestBoard: return hintRequestBoard;
+            default: return "";
+        }
     }
 
     // ชื่อที่ลูกค้าใช้ถามหา: รู้สูตรแล้ว = ชื่อจริง / ยังไม่รู้ = คำใบ้ เช่น "that Japanese dessert"

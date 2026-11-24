@@ -37,3 +37,28 @@ MonoBehaviour:
   difficulty: 2
   cookingProfile: {fileID: 11400000, guid: 293b41c46f21701439a585332125a853, type: 2}
   customSteps: []
+  obtainSource: 1
+  obtainNote: "\u0E40\u0E0A\u0E1F\u0E44\u0E17\u0E22"
+  mailShopLevel: 1
+  mailReputation: 50
+  chef: {fileID: 11400000, guid: 9027734d34a03bb43947e2332bd51243, type: 2}
+  letterBody: 'Dear owner,
+
+
+    It''s Malai again. I hear the basil pork is doing
+    well. Good!
+
+
+    Pad Thai is the dish every visitor asks me for, so you should
+    have it too. When I was young I thought it was too simple to be proud of. Then
+    a tourist cried at my table because it reminded her of her honeymoon. Simple
+    food carries big memories.
+
+
+    Soak the noodles, don''t boil them. Shrimp,
+    tofu, egg, then the sauce: tamarind, fish sauce, palm sugar. Bean sprouts at
+    the very end so they stay crisp.
+
+
+    Don''t let anyone tell you a small shop
+    can''t be a great one.'

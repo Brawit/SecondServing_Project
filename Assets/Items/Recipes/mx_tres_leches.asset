@@ -35,3 +35,28 @@ MonoBehaviour:
   difficulty: 3
   cookingProfile: {fileID: 0}
   customSteps: []
+  obtainSource: 1
+  obtainNote: "\u0E40\u0E0A\u0E1F\u0E40\u0E21\u0E47\u0E01\u0E0B\u0E34\u0E01\u0E31\u0E19
+    \u0E02\u0E2D\u0E07\u0E2B\u0E27\u0E32\u0E19\u0E02\u0E36\u0E49\u0E19\u0E0A\u0E37\u0E48\u0E2D"
+  mailShopLevel: 4
+  mailReputation: 700
+  chef: {fileID: 11400000, guid: cd96477d5695e8349a71dcd12e8bd8d2, type: 2}
+  letterBody: 'My dear,
+
+
+    Rosa here, with my last secret for you.
+
+
+    Tres
+    leches is my celebration cake. Weddings, baptisms, the day my grandson finished
+    university. Three milks soaked into a soft sponge, so every bite is sweet all
+    the way through.
+
+
+    Bake a light sponge with flour and eggs. Poke it all over,
+    then pour in milk, condensed milk and cream until it drinks every drop. Cover
+    with whipped cream and chill.
+
+
+    Your shop is famous now, but I hope you remember
+    why you started. You cook so that strangers feel at home. That is worth celebrating.'

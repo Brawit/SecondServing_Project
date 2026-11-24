@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c3f0043affaeb344b2fe3a5896d7acc, type: 3}
+  m_Name: passout_neighbor
+  m_EditorClassIdentifier: Assembly-CSharp::LetterData
+  letterId: passout_neighbor
+  senderName: A worried neighbor
+  senderSubtitle: 
+  subject: Are you okay?
+  body: 'Hello,
+
+
+    I found you asleep on the path in the middle of the night.
+    You gave me quite a scare! A few of us helped get you to the clinic.
+
+
+    I
+    know running a shop on your own is a lot of work, but please don''t push yourself
+    so hard. Go to bed before the moon gets too high, okay?'
+  signOff: Take care of yourself.
+  attachments: []
+  trigger: 1

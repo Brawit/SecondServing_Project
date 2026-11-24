@@ -42,6 +42,12 @@ public class SaveManager : MonoBehaviour
     [Tooltip("เมนูประจำวัน (คอมโพเนนต์ DailyMenu) เว้นว่างไว้ จะหาในฉากเอง")]
     [SerializeField] private DailyMenu dailyMenu;
 
+    [Tooltip("[2.5c] เลเวลร้าน + ชื่อเสียง (คอมโพเนนต์ ShopProgress บนวัตถุ ShopManager) เว้นว่างไว้ จะหาในฉากเอง")]
+    [SerializeField] private ShopProgress shopProgress;
+
+    [Tooltip("[2.5c] ระบบจดหมายเชฟ (คอมโพเนนต์ MailSystem) เว้นว่างไว้ จะหาในฉากเอง")]
+    [SerializeField] private MailSystem mailSystem;
+
     [Header("Settings")]
     [Tooltip("ชื่อไฟล์เซฟ")]
     [SerializeField] private string fileName = "save.json";
@@ -124,6 +130,22 @@ public class SaveManager : MonoBehaviour
         if (dailyMenu == null)
         {
             Debug.LogWarning("SaveManager: Daily Menu not found. The last menu will not be saved.", this);
+        }
+        if (shopProgress == null)
+        {
+            shopProgress = FindFirstObjectByType<ShopProgress>(FindObjectsInactive.Include);
+        }
+        if (shopProgress == null)
+        {
+            Debug.LogWarning("SaveManager: Shop Progress not found. Shop level and reputation will not be saved.", this);
+        }
+        if (mailSystem == null)
+        {
+            mailSystem = FindFirstObjectByType<MailSystem>(FindObjectsInactive.Include);
+        }
+        if (mailSystem == null)
+        {
+            Debug.LogWarning("SaveManager: Mail System not found. Chef letters will not be saved.", this);
         }
         if (playerHotbar == null)
         {
@@ -263,6 +285,17 @@ public class SaveManager : MonoBehaviour
         if (dailyMenu != null)
         {
             dailyMenu.CaptureMenu(data.menuRecipes, data.menuServings);
+        }
+
+        // [v7] เลเวลร้าน + ชื่อเสียง และจดหมายเชฟ
+        if (shopProgress != null)
+        {
+            data.shopLevel = shopProgress.Level;
+            data.reputation = shopProgress.Reputation;
+        }
+        if (mailSystem != null)
+        {
+            mailSystem.CaptureState(data);
         }
 
         string json = JsonUtility.ToJson(data, true);
@@ -474,6 +507,19 @@ public class SaveManager : MonoBehaviour
         if (data.version >= 5)
         {
             RestoreMenu(data.menuRecipes, data.menuServings);
+        }
+
+        // 8) [v7] เลเวลร้าน + ชื่อเสียง และจดหมายเชฟ (เซฟ v1–v6 = เลเวล 1 ชื่อเสียง 0 ไม่มีจดหมาย ค่าตั้งต้นอยู่แล้ว)
+        if (data.version >= 7)
+        {
+            if (shopProgress != null)
+            {
+                shopProgress.SetAll(data.shopLevel, data.reputation);
+            }
+            if (mailSystem != null)
+            {
+                mailSystem.RestoreState(data);
+            }
         }
 
         int inventoryCount = data.inventory != null ? data.inventory.Count : 0;

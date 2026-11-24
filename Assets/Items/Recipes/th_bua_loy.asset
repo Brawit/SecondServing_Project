@@ -33,3 +33,27 @@ MonoBehaviour:
   difficulty: 2
   cookingProfile: {fileID: 0}
   customSteps: []
+  obtainSource: 1
+  obtainNote: "\u0E40\u0E0A\u0E1F\u0E44\u0E17\u0E22 \u0E02\u0E2D\u0E07\u0E2B\u0E27\u0E32\u0E19\u0E1A\u0E49\u0E32\u0E19\u0E46"
+  mailShopLevel: 2
+  mailReputation: 150
+  chef: {fileID: 11400000, guid: 9027734d34a03bb43947e2332bd51243, type: 2}
+  letterBody: 'Dear owner,
+
+
+    Malai here. Your shop''s reputation is growing!
+    My niece shows me new reviews every week.
+
+
+    Today, something sweet. Bua loy
+    was my mother''s medicine for every sadness. Bad grades, broken toys, a broken
+    heart: she rolled little balls of sticky rice dough and floated them in warm
+    coconut milk.
+
+
+    Mix glutinous rice flour with mashed pumpkin and taro for
+    color. Roll them small. Simmer in coconut milk with sugar and a pinch of salt.
+
+
+    Rolling
+    them is slow work. Use the time to breathe.'

@@ -1,88 +1,248 @@
-﻿#,ชื่อเมนู,Name (EN),Country,Course,Secret,Key 1,Key 2,Key 3,Key 4,สถานะ,Vertical Slice,recipe_id,วัตถุดิบเต็ม (คำอธิบายในสมุดสูตร),หมายเหตุ,Sell Price,Health,Stamina,Mana,Fever,Difficulty,Difficulty Note
-1,ข้าวผัดกะเพรา,Holy Basil Pork Rice,Thailand,Main,FALSE,pork,holy_basil,chili,egg,โอเค,FALSE,th_kaprao_rice,"ข้าวสวย, เนื้อหมูสับ, ใบกะเพรา, กระเทียม, พริก, น้ำปลา, ซีอิ๊วขาว, น้ำมันพืช, ไข่ไก่",,,37,58,0,0,2,ผัดไฟแรง + ทอดไข่ดาว
-2,ผัดไทย,Pad Thai,Thailand,Main,FALSE,noodles,shrimp,tofu,bean_sprout,โอเค,FALSE,th_pad_thai,"เส้นจันท์, กุ้ง, เต้าหู้แข็ง, ไข่ไก่, ถั่วงอก, กุยช่าย, ถั่วลิสง, หัวไชโป๊, น้ำมะขามเปียก, น้ำปลา, น้ำตาลปี๊บ, น้ำมันพืช",,,28,45,0,0,2,ผัดเส้น ปรุงเปรี้ยวหวานเค็มให้ลงตัว
-3,แกงเขียวหวาน,Green Curry,Thailand,Main,FALSE,chicken,coconut,thai_curry_paste,thai_eggplant,โอเค,FALSE,th_green_curry,"เนื้อไก่, กะทิ, พริกแกงเขียวหวาน, มะเขือเปราะ, มะเขือพวง, ใบโหระพา, ใบมะกรูด, น้ำปลา, น้ำตาลปี๊บ",,,27,58,0,15,2,ผัดพริกแกงกับหัวกะทิ แล้วเคี่ยว
-4,ต้มยำกุ้ง,Tom Yum Goong,Thailand,Main,FALSE,shrimp,mushroom,lemongrass,lime,โอเค,FALSE,th_tom_yum,"กุ้ง, เห็ดฟาง, ตะไคร้, ข่า, ใบมะกรูด, พริก, น้ำปลา, น้ำมะนาว, น้ำพริกเผา, นมข้นจืด",ใช้เห็ดที่มีในเกมแล้ว,,35,41,6,13,2,ต้ม ปรุงรสเปรี้ยวเผ็ดให้พอดี
-5,ข้าวมันไก่,Hainanese Chicken Rice,Thailand,Main,FALSE,chicken,rice,ginger,cucumber,โอเค,FALSE,th_chicken_rice,"ข้าวสาร, เนื้อไก่, กระเทียม, ขิง, แตงกวา, เต้าเจี้ยว, ซีอิ๊วดำ, น้ำส้มสายชู, น้ำตาล, ผักชี",,,38,43,0,0,3,ต้มไก่ หุงข้าวมัน ทำน้ำจิ้ม หลายส่วน
-6,ส้มตำ,Som Tam,Thailand,Main,FALSE,green_papaya,tomato,chili,peanut,โอเค,TRUE,th_som_tam,"มะละกอดิบ, มะเขือเทศ, ถั่วฝักยาว, กระเทียม, พริก, มะนาว, น้ำปลา, น้ำตาลปี๊บ, ถั่วลิสง, กุ้งแห้ง",,,39,58,0,11,1,สูตรเริ่มต้น: ตำแล้วปรุง
-7,แกงมัสมั่น,Massaman Curry,Thailand,Main,FALSE,beef,coconut,thai_curry_paste,potato,โอเค,FALSE,th_massaman,"เนื้อวัว, กะทิ, พริกแกงมัสมั่น, มันฝรั่ง, หอมหัวใหญ่, ถั่วลิสง, อบเชย, ลูกกระวาน, น้ำปลา, น้ำตาลปี๊บ, น้ำมะขามเปียก",,,23,37,0,0,3,เคี่ยวเนื้อนาน เครื่องเทศเยอะ
-8,ข้าวซอย,Khao Soi,Thailand,Main,FALSE,noodles,chicken,coconut,thai_curry_paste,โอเค,FALSE,th_khao_soi,"บะหมี่ไข่, เนื้อไก่, กะทิ, พริกแกงข้าวซอย, ผงกะหรี่, หอมแดง, ผักกาดดอง, มะนาว, น้ำปลา, น้ำมันพริก",,,19,55,0,15,3,น้ำแกง + เส้นลวก + เส้นทอดกรอบ
-9,ข้าวเหนียวมะม่วง,Mango Sticky Rice,Thailand,Dessert,FALSE,glutinous_rice,mango,coconut,,โอเค,TRUE,th_mango_sticky_rice,"ข้าวเหนียว, มะม่วงสุก, กะทิ, น้ำตาล, เกลือ, ถั่วทอง",,,15,40,0,0,1,สูตรเริ่มต้น: นึ่งข้าว หั่นมะม่วง ราดกะทิ
-10,ทับทิมกรอบ,Tub Tim Krob,Thailand,Dessert,FALSE,water_chestnut,coconut,,,โอเค,FALSE,th_tub_tim_krob,"แห้ว, แป้งมันสำปะหลัง, กะทิ, น้ำเชื่อม, สีผสมอาหารสีแดง, น้ำแข็ง",,,11,36,0,0,2,หั่นแห้ว คลุกแป้ง ต้มให้กรอบ
-11,บัวลอย,Bua Loy,Thailand,Dessert,FALSE,glutinous_rice,pumpkin,taro,coconut,โอเค,FALSE,th_bua_loy,"แป้งข้าวเหนียว, ฟักทอง, เผือก, กะทิ, น้ำตาล, เกลือ",,,17,36,18,0,2,ปั้นแป้งหลายสี ต้มในกะทิ
-12,ชาไทยเย็น,Thai Iced Tea,Thailand,Drink,FALSE,thai_tea,milk,,,โอเค,FALSE,th_thai_iced_tea,"ชาไทย, นมข้นหวาน, นมข้นจืด, น้ำตาล, น้ำแข็ง",,,5,40,0,0,1,ชงแล้วเทนม
-13,น้ำอัญชันมะนาว,Butterfly Pea Limeade,Thailand,Drink,FALSE,butterfly_pea,lime,,,โอเค,FALSE,th_butterfly_pea_lime,"ดอกอัญชัน, มะนาว, น้ำเชื่อม, น้ำแข็ง",,,8,38,0,0,1,ต้มดอกอัญชัน บีบมะนาว
-14,ราเมง,Ramen,Japan,Main,FALSE,noodles,pork,egg,spring_onion,โอเค,FALSE,jp_ramen,"เส้นราเมง, กระดูกหมู, หมูชาชู, ไข่ไก่, ต้นหอม, สาหร่ายโนริ, หน่อไม้ดอง, ซีอิ๊วญี่ปุ่น, กระเทียม, ขิง",,,21,32,0,0,3,เคี่ยวซุปกระดูกนาน ท็อปปิ้งหลายอย่าง
-15,ซูชิ,Sushi,Japan,Main,FALSE,rice,salmon,tuna,nori,โอเค,FALSE,jp_sushi,"ข้าวญี่ปุ่น, น้ำส้มสายชูข้าว, น้ำตาล, เกลือ, ปลาแซลมอน, ปลาทูน่า, สาหร่ายโนริ, วาซาบิ, โชยุ",,,28,50,0,0,3,ปรุงข้าว แล่ปลา ปั้นให้แม่น
-16,ข้าวแกงกะหรี่ญี่ปุ่น,Japanese Curry Rice,Japan,Main,FALSE,rice,beef,curry_roux,carrot,โอเค,FALSE,jp_curry_rice,"ข้าวญี่ปุ่น, เนื้อวัว, มันฝรั่ง, แครอท, หอมหัวใหญ่, ก้อนแกงกะหรี่ญี่ปุ่น, น้ำมันพืช",,,33,33,8,0,1,ผัดแล้วเคี่ยวกับก้อนแกงสำเร็จ
-17,ทงคัตสึ,Tonkatsu,Japan,Main,FALSE,pork,egg,bread,cabbage,โอเค,FALSE,jp_tonkatsu,"เนื้อหมูสันนอก, แป้งสาลี, ไข่ไก่, เกล็ดขนมปัง, กะหล่ำปลี, ซอสทงคัตสึ, น้ำมันพืช",bread = เกล็ดขนมปัง,,39,35,13,0,2,ชุบแป้ง ไข่ เกล็ดขนมปัง แล้วทอด
-18,เทมปุระ,Tempura,Japan,Main,FALSE,shrimp,pumpkin,sweet_potato,flour,โอเค,FALSE,jp_tempura,"กุ้ง, ฟักทอง, มันหวาน, แป้งเทมปุระ, ไข่ไก่, น้ำเย็น, น้ำมันพืช, ซอสเทนสึยุ",,,27,50,0,0,2,แป้งเย็น ทอดให้กรอบพอดี
-19,ทาโกะยากิ,Takoyaki,Japan,Main,FALSE,octopus,flour,egg,spring_onion,โอเค,FALSE,jp_takoyaki,"แป้งทาโกะยากิ, ปลาหมึกยักษ์, ไข่ไก่, ต้นหอม, ขิงดอง, เท็มปุระกรอบ, ซอสทาโกะยากิ, มายองเนส, ปลาโอแห้ง",,,31,37,0,0,3,พลิกลูกกลมในพิมพ์ ต้องจังหวะดี
-20,โอโคโนมิยากิ,Okonomiyaki,Japan,Main,FALSE,cabbage,flour,egg,pork,โอเค,TRUE,jp_okonomiyaki,"กะหล่ำปลี, แป้งสาลี, ไข่ไก่, หมูสามชั้น, ต้นหอม, ขิงดอง, ซอสโอโคโนมิยากิ, มายองเนส, ปลาโอแห้ง",,,28,50,0,0,1,สูตรเริ่มต้น: ผสม พลิก ราดซอส
-21,ข้าวหน้าเนื้อ (กิวด้ง),Gyudon,Japan,Main,FALSE,rice,beef,pickles,,โอเค,FALSE,jp_gyudon,"ข้าวญี่ปุ่น, เนื้อวัวสไลซ์, หอมหัวใหญ่, โชยุ, มิริน, สาเกปรุงอาหาร, น้ำตาล, ขิงดอง",pickles = ขิงดอง,,39,56,9,0,1,ต้มเนื้อสไลซ์ในซอส ราดข้าว
-22,โมจิ,Mochi,Japan,Dessert,FALSE,glutinous_rice,red_bean_paste,,,โอเค,FALSE,jp_mochi,"แป้งข้าวเหนียวญี่ปุ่น, น้ำตาล, แป้งมันฝรั่ง, ถั่วแดงกวน",,,14,25,9,0,2,นวดแป้งเหนียว ห่อไส้
-23,โดรายากิ,Dorayaki,Japan,Dessert,FALSE,flour,egg,honey,red_bean_paste,โอเค,FALSE,jp_dorayaki,"แป้งสาลี, ไข่ไก่, น้ำตาล, น้ำผึ้ง, ถั่วแดงกวน, ผงฟู",,,16,38,7,0,2,ทอดแป้งให้เนียน ประกบไส้
-24,ไทยากิ,Taiyaki,Japan,Dessert,FALSE,flour,egg,milk,red_bean_paste,โอเค,FALSE,jp_taiyaki,"แป้งสาลี, ไข่ไก่, น้ำตาล, นมสด, ผงฟู, ถั่วแดงกวน",,,25,21,0,0,2,เทแป้งในพิมพ์ ใส่ไส้ พลิก
-25,มัทฉะลาเต้,Matcha Latte,Japan,Drink,FALSE,matcha,milk,,,โอเค,FALSE,jp_matcha_latte,"ผงมัทฉะ, นมสด, น้ำตาล, น้ำแข็ง",,,12,35,7,0,1,ตีมัทฉะ เทนม
-26,รามูเนะ,Ramune,Japan,Drink,FALSE,lemon,seasonal_fruit,,,โอเค,FALSE,jp_ramune,"น้ำโซดา, น้ำตาล, น้ำเชื่อมเลมอน, กลิ่นผลไม้",น้ำโซดาอยู่ในตู้กับข้าว,,12,44,14,0,1,ผสมน้ำเชื่อมกับโซดา
-27,ข้าวผัดหยางโจว,Yangzhou Fried Rice,China,Main,FALSE,rice,shrimp,cured_meat,egg,โอเค,FALSE,cn_yangzhou_fried_rice,"ข้าวสวย, กุ้ง, หมูแฮม, ไข่ไก่, ถั่วลันเตา, แครอท, ต้นหอม, ซีอิ๊วขาว, น้ำมันงา",,,19,46,0,0,2,ผัดไฟแรง ของหลายอย่าง
-28,เกี๊ยวนึ่ง,Steamed Dumplings,China,Main,FALSE,pork,shrimp,cabbage,flour,โอเค,FALSE,cn_steamed_dumplings,"แผ่นเกี๊ยว, หมูสับ, กุ้ง, กะหล่ำปลี, ขิง, ต้นหอม, ซีอิ๊วขาว, น้ำมันงา",แผ่นเกี๊ยวอยู่ในตู้กับข้าว,,19,42,0,0,2,ห่อจีบ แล้วนึ่ง
-29,ซาลาเปา,Baozi,China,Main,FALSE,flour,pork,spring_onion,,โอเค,FALSE,cn_baozi,"แป้งสาลี, ยีสต์, น้ำตาล, หมูสับ, หอมหัวใหญ่, ซีอิ๊วขาว, น้ำมันงา",แป้งและยีสต์อยู่ในตู้กับข้าว,,37,52,0,0,3,หมักแป้ง นวด จีบ นึ่ง
-30,ไก่ผัดกงเป่า,Kung Pao Chicken,China,Main,FALSE,chicken,peanut,chili,,โอเค,TRUE,cn_kung_pao_chicken,"เนื้อไก่, ถั่วลิสง, พริกแห้ง, ต้นหอม, กระเทียม, ขิง, ซีอิ๊วขาว, น้ำส้มสายชู, น้ำตาล, แป้งข้าวโพด",,,33,40,0,15,1,สูตรเริ่มต้น: ผัดไฟแรง
-31,หมูเปรี้ยวหวาน,Sweet and Sour Pork,China,Main,FALSE,pork,bell_pepper,pineapple,,โอเค,FALSE,cn_sweet_sour_pork,"เนื้อหมู, พริกหวาน, สับปะรด, หอมหัวใหญ่, แป้งข้าวโพด, ซอสมะเขือเทศ, น้ำส้มสายชู, น้ำตาล",,,28,51,19,0,2,ชุบทอด แล้วผัดซอส
-32,บะหมี่ตันตัน,Dan Dan Noodles,China,Main,FALSE,noodles,pork,bok_choy,sesame,โอเค,FALSE,cn_dan_dan_noodles,"เส้นบะหมี่, หมูสับ, ผักกวางตุ้ง, ต้นหอม, กระเทียม, ขิง, พริกน้ำมัน, ซีอิ๊วขาว, น้ำส้มสายชูดำ, งาบด",,,32,38,8,10,2,ผัดหมู ทำน้ำมันพริก ลวกเส้น
-33,เป็ดปักกิ่ง,Peking Duck,China,Main,FALSE,duck,cucumber,spring_onion,honey,โอเค,FALSE,cn_peking_duck,"เป็ดทั้งตัว, แป้งสาลี, แตงกวา, ต้นหอม, ซอสฮอยซิน, น้ำผึ้ง, ซีอิ๊วขาว",,,25,47,0,0,3,ย่างเป็ดทั้งตัว ทาน้ำผึ้ง แล่
-34,บัวลอยจีน (ถังหยวน),Tang Yuan,China,Dessert,FALSE,glutinous_rice,sesame,ginger,,โอเค,FALSE,cn_tang_yuan,"แป้งข้าวเหนียว, งาดำ, น้ำตาล, ขิง, น้ำ",,,10,23,0,0,2,ปั้นแป้งห่อไส้งา ต้ม
-35,ทาร์ตไข่,Egg Tart,China,Dessert,FALSE,flour,egg,milk,butter,โอเค,FALSE,cn_egg_tart,"แป้งพาย, ไข่ไก่, นมสด, น้ำตาล, วิปปิงครีม, วานิลลา",,,24,30,0,0,3,แป้งพายหลายชั้น อบให้ไส้เซ็ตพอดี
-36,ขนมไหว้พระจันทร์,Mooncake,China,Dessert,FALSE,flour,red_bean_paste,salted_egg,,โอเค,FALSE,cn_mooncake,"แป้งสาลี, น้ำเชื่อม, น้ำมันพืช, ถั่วแดงกวน, ไข่แดงเค็ม",,,22,20,14,0,3,ห่อไส้กับไข่แดง กดพิมพ์ อบ
-37,นมถั่วเหลือง,Soy Milk,China,Drink,FALSE,soybean,,,,โอเค,FALSE,cn_soy_milk,"ถั่วเหลือง, น้ำตาล, น้ำ",,,7,43,9,0,1,ปั่น กรอง ต้ม
-38,ชาเก๊กฮวย,Chrysanthemum Tea,China,Drink,FALSE,chrysanthemum,,,,โอเค,FALSE,cn_chrysanthemum_tea,"ดอกเก๊กฮวยแห้ง, น้ำตาลกรวด, น้ำ",,,9,29,0,0,1,ต้มชง
-39,พิซซ่ามาร์เกริตา,Pizza Margherita,Italy,Main,FALSE,flour,tomato,cheese,basil,โอเค,FALSE,it_pizza_margherita,"แป้งพิซซ่า, ยีสต์, ซอสมะเขือเทศ, มอสซาเรลลาชีส, ใบโหระพา, น้ำมันมะกอก",แป้งพิซซ่าทำจากแป้งในตู้กับข้าว,,23,31,0,0,2,นวดแป้ง แผ่ อบ
-40,สปาเกตตีคาโบนารา,Spaghetti Carbonara,Italy,Main,FALSE,pasta,egg,cheese,cured_meat,โอเค,FALSE,it_carbonara,"เส้นสปาเกตตี, ไข่ไก่, ชีสพาร์เมซาน, แก้มหมูหมัก, พริกไทยดำ",,,36,42,0,0,2,ผสมไข่กับเส้นร้อน ไม่ให้ไข่สุกเป็นก้อน
-41,ลาซานญ่า,Lasagna,Italy,Main,FALSE,pasta,beef,tomato,cheese,โอเค,FALSE,it_lasagna,"แผ่นลาซานญ่า, เนื้อวัวบด, มะเขือเทศบด, หอมหัวใหญ่, แครอท, ขึ้นฉ่ายฝรั่ง, นมสด, เนย, แป้งสาลี, มอสซาเรลลาชีส, ชีสพาร์เมซาน",,,33,35,0,0,3,ทำซอสสองแบบ เรียงชั้น อบ
-42,ริซอตโต,Risotto,Italy,Main,FALSE,rice,mushroom,butter,cheese,โอเค,FALSE,it_risotto,"ข้าวอาร์โบริโอ, น้ำสต็อกไก่, หอมหัวใหญ่, เนย, ชีสพาร์เมซาน, ไวน์ขาวปรุงอาหาร",สูตรเดิมไม่มีเห็ด เสนอเป็นริซอตโตเห็ดเพื่อใช้ของป่า,,38,45,13,0,3,คนไม่หยุด เติมน้ำสต็อกทีละน้อย
-43,ญ็อกกี,Gnocchi,Italy,Main,FALSE,potato,flour,butter,cheese,โอเค,FALSE,it_gnocchi,"มันฝรั่ง, แป้งสาลี, ไข่ไก่, ชีสพาร์เมซาน, เนย",,,40,31,19,0,2,บดมัน นวดแป้ง ปั้น ต้ม
-44,ราวิโอลี,Ravioli,Italy,Main,FALSE,pasta,cheese,spinach,egg,รอตรวจ,FALSE,it_ravioli,"แป้งสาลี, ไข่ไก่, ริคอตต้าชีส, ผักโขม, ชีสพาร์เมซาน, เนย",ซ้ำกับ #83 เสนอเปลี่ยนเป็นไส้เนื้อซอสมะเขือเทศ ส่วนไส้ริคอตต้าผักโขมให้เป็นของสูตรลับ,,31,45,0,0,3,รีดแป้ง ห่อไส้ทีละชิ้น
-45,บรูสเกตตา,Bruschetta,Italy,Main,FALSE,bread,tomato,basil,,โอเค,TRUE,it_bruschetta,"ขนมปังบาแก็ต, มะเขือเทศ, กระเทียม, ใบโหระพา, น้ำมันมะกอก, เกลือ",,,28,51,20,0,1,สูตรเริ่มต้น: หั่น ปิ้งขนมปัง
-46,ซุปมิเนสโตรเน,Minestrone,Italy,Main,FALSE,beans,tomato,carrot,zucchini,โอเค,FALSE,it_minestrone,"ถั่วขาว, มะเขือเทศ, แครอท, ขึ้นฉ่ายฝรั่ง, หอมหัวใหญ่, บวบ, น้ำสต็อกผัก, พาสต้า, น้ำมันมะกอก",,,32,52,0,0,1,หั่นผัก ต้มรวม
-47,ทีรามิสุ,Tiramisu,Italy,Dessert,FALSE,cheese,coffee,egg,flour,โอเค,FALSE,it_tiramisu,"เลดี้ฟิงเกอร์, มาสคาร์โปนชีส, ไข่ไก่, น้ำตาล, กาแฟเอสเปรสโซ, ผงโกโก้",cheese = มาสคาร์โปน,,11,28,0,0,2,ตีครีม จุ่มกาแฟ เรียงชั้น
-48,พานาคอตตา,Panna Cotta,Italy,Dessert,FALSE,cream,milk,berry,,โอเค,FALSE,it_panna_cotta,"วิปปิงครีม, นมสด, น้ำตาล, เจลาติน, วานิลลา, เบอร์รี",,,24,38,0,0,1,ต้มครีม ใส่เจลาติน แช่เย็น
-49,แคนโนลี,Cannoli,Italy,Dessert,FALSE,flour,cheese,pistachio,,รอตรวจ,FALSE,it_cannoli,"แป้งสาลี, เนย, ไข่ไก่, น้ำตาล, ริคอตต้าชีส, พิสตาชิโอ",ซ้ำกับ #84 เสนอเป็นไส้ช็อกโกแลต ส่วนไส้พิสตาชิโอให้เป็นของสูตรลับ,,23,30,0,0,3,ม้วนแป้งทอด บีบไส้
-50,เอสเปรสโซ,Espresso,Italy,Drink,FALSE,coffee,,,,โอเค,FALSE,it_espresso,"เมล็ดกาแฟ, น้ำ",,,11,31,0,0,1,สกัดกาแฟ
-51,ชิโนตโต,Chinotto,Italy,Drink,FALSE,chinotto,,,,โอเค,FALSE,it_chinotto,"น้ำโซดา, น้ำเชื่อมชิโนตโต, น้ำแข็ง",,,10,27,5,0,1,ผสมน้ำเชื่อมกับโซดา
-52,ชีสเบอร์เกอร์,Cheeseburger,USA,Main,FALSE,bread,beef,cheese,lettuce,โอเค,FALSE,us_cheeseburger,"ขนมปังเบอร์เกอร์, เนื้อวัวบด, เชดดาร์ชีส, ผักกาดหอม, มะเขือเทศ, หอมหัวใหญ่, แตงกวาดอง, ซอสมะเขือเทศ, มัสตาร์ด",,,23,49,0,0,2,ย่างเนื้อ ประกอบหลายชั้น
-53,ฮอตดอก,Hot Dog,USA,Main,FALSE,bread,cured_meat,pickles,,โอเค,FALSE,us_hot_dog,"ขนมปังฮอตดอก, ไส้กรอก, มัสตาร์ด, ซอสมะเขือเทศ, หอมหัวใหญ่, แตงกวาดอง",,,28,43,0,0,1,ย่างไส้กรอก ใส่ขนมปัง
-54,ไก่ทอดสไตล์อเมริกัน,Southern Fried Chicken,USA,Main,FALSE,chicken,flour,cream,egg,โอเค,FALSE,us_fried_chicken,"เนื้อไก่, แป้งสาลี, บัตเตอร์มิลก์, ไข่ไก่, ปาปริก้า, ผงกระเทียม, น้ำมันพืช",cream = บัตเตอร์มิลก์,,40,38,0,0,2,หมัก ชุบ ทอดให้สุกถึงข้างใน
-55,แมคแอนด์ชีส,Mac and Cheese,USA,Main,FALSE,pasta,cheese,milk,butter,โอเค,FALSE,us_mac_and_cheese,"มักกะโรนี, เชดดาร์ชีส, นมสด, เนย, แป้งสาลี, เกล็ดขนมปัง",,,40,43,0,0,2,ทำซอสชีส คลุกเส้น
-56,บาร์บีคิวริบส์,BBQ Ribs,USA,Main,FALSE,pork,,,,โอเค,FALSE,us_bbq_ribs,"ซี่โครงหมู, ซอสบาร์บีคิว, น้ำตาลทรายแดง, ปาปริก้า, กระเทียมผง, พริกไทยดำ",มีวัตถุดิบหลักชิ้นเดียว ซอสบาร์บีคิวอยู่ในตู้กับข้าว อาจเพิ่มเป็นของ Artisan,,28,43,0,0,2,หมัก ย่างนาน ทาซอส
-57,คลัมเชาเดอร์,Clam Chowder,USA,Main,FALSE,clam,potato,milk,cured_meat,โอเค,FALSE,us_clam_chowder,"หอยลาย, มันฝรั่ง, หอมหัวใหญ่, ขึ้นฉ่ายฝรั่ง, เบคอน, นมสด, วิปปิงครีม, เนย, แป้งสาลี",,,36,54,0,0,2,ผัดแป้งกับเนย ต้มหอยกับมันฝรั่ง
-58,แพนเค้ก,Pancakes,USA,Main,FALSE,flour,egg,milk,maple_syrup,โอเค,FALSE,us_pancakes,"แป้งสาลี, ไข่ไก่, นมสด, เนย, ผงฟู, น้ำตาล, เมเปิลไซรัป",,,27,42,15,0,1,ผสมแป้ง ทอด พลิก
-59,แอปเปิลพาย,Apple Pie,USA,Dessert,FALSE,apple,flour,butter,,โอเค,FALSE,us_apple_pie,"แป้งพาย, แอปเปิล, น้ำตาล, เนย, อบเชย, แป้งสาลี",,,14,30,0,0,3,แป้งพาย ไส้ สานหน้า อบ
-60,บราวนี่,Brownie,USA,Dessert,FALSE,chocolate,flour,butter,egg,โอเค,FALSE,us_brownie,"ดาร์กช็อกโกแลต, เนย, ไข่ไก่, น้ำตาล, แป้งสาลี, ผงโกโก้",,,17,36,0,0,1,ผสมแล้วอบ
-61,คุกกี้ช็อกโกแลตชิป,Chocolate Chip Cookie,USA,Dessert,FALSE,chocolate,flour,butter,egg,โอเค,FALSE,us_choc_chip_cookie,"แป้งสาลี, เนย, น้ำตาลทรายแดง, น้ำตาล, ไข่ไก่, ช็อกโกแลตชิป, เบกกิงโซดา",วัตถุดิบหลักซ้ำกับบราวนี่ทั้งชุด อาจเพิ่มหรือเปลี่ยนให้ต่างกัน,,19,28,0,0,1,ผสม ปั้น อบ
-62,เลมอนเนด,Lemonade,USA,Drink,FALSE,lemon,,,,โอเค,TRUE,us_lemonade,"เลมอน, น้ำตาล, น้ำ, น้ำแข็ง",,,8,26,12,0,1,สูตรเริ่มต้น: คั้นแล้วเท
-63,มิลค์เชก,Milkshake,USA,Drink,FALSE,milk,cream,chocolate,,โอเค,FALSE,us_milkshake,"นมสด, ไอศกรีมวานิลลา, น้ำเชื่อมช็อกโกแลต, วิปปิงครีม",,,7,27,0,0,1,ปั่น
-64,ทาโก้,Tacos,Mexico,Main,FALSE,tortilla,beef,tomato,lettuce,โอเค,FALSE,mx_tacos,"แผ่นตอร์ติญาข้าวโพด, เนื้อวัวบด, ผักกาดหอม, มะเขือเทศ, หอมหัวใหญ่, ชีส, มะนาว, ผักชี, พริก",,,32,53,0,0,2,ผัดเนื้อ หั่นผัก ประกอบ
-65,เคซาดิยา,Quesadilla,Mexico,Main,FALSE,tortilla,cheese,chicken,bell_pepper,โอเค,FALSE,mx_quesadilla,"แผ่นตอร์ติญาแป้งสาลี, ชีส, เนื้อไก่, พริกหวาน, หอมหัวใหญ่",,,26,34,0,0,1,ใส่ไส้ ปิ้ง พลิก
-66,เบอร์ริโต,Burrito,Mexico,Main,FALSE,tortilla,rice,beans,beef,โอเค,FALSE,mx_burrito,"แผ่นตอร์ติญาแป้งสาลี, ข้าว, ถั่วดำ, เนื้อวัว, ชีส, ซัลซา, ผักกาดหอม, ครีมเปรี้ยว",,,30,40,0,0,2,ไส้หลายอย่าง ม้วนให้แน่น
-67,เอนชิลาดา,Enchiladas,Mexico,Main,FALSE,tortilla,chicken,cheese,chili,โอเค,FALSE,mx_enchiladas,"แผ่นตอร์ติญาข้าวโพด, เนื้อไก่, ซอสเอนชิลาดา, ชีส, หอมหัวใหญ่, ครีมเปรี้ยว",,,23,31,0,14,2,ม้วน ราดซอส อบ
-68,นาโชส์,Nachos,Mexico,Main,FALSE,tortilla,cheese,beans,avocado,โอเค,FALSE,mx_nachos,"แผ่นตอร์ติญาข้าวโพด, ชีส, ถั่วดำ, มะเขือเทศ, พริกฮาลาปิโน, ซาวร์ครีม, อะโวคาโด",,,25,43,10,0,1,โรยหน้า อบ
-69,ทามาเลส,Tamales,Mexico,Main,FALSE,corn,pork,chili,,โอเค,TRUE,mx_tamales,"แป้งข้าวโพดมาซา, ใบข้าวโพดแห้ง, เนื้อหมู, พริกแห้ง, น้ำสต็อกไก่",,,35,37,0,0,1,สูตรเริ่มต้น: นวดแป้ง ห่อ นึ่ง
-70,โปโซเล,Pozole,Mexico,Main,FALSE,pork,corn,chili,cabbage,โอเค,FALSE,mx_pozole,"เนื้อหมู, ข้าวโพดโฮมินี, พริกแห้ง, กระเทียม, หอมหัวใหญ่, กะหล่ำปลี, มะนาว, ออริกาโน",,,30,33,8,8,2,เคี่ยวหมูกับข้าวโพดนาน
-71,ชูโรส,Churros,Mexico,Dessert,FALSE,flour,egg,butter,,โอเค,FALSE,mx_churros,"แป้งสาลี, น้ำ, เนย, ไข่ไก่, น้ำตาล, อบเชย, น้ำมันพืช",อบเชยอยู่ในตู้กับข้าว,,19,26,0,0,2,บีบแป้งลงทอด คลุกน้ำตาล
-72,เค้กเตรสเลเชส (Tres Leches Cake),Tres Leches Cake,Mexico,Dessert,FALSE,flour,milk,cream,egg,โอเค,FALSE,mx_tres_leches,"แป้งสาลี, ไข่ไก่, น้ำตาล, นมสด, นมข้นหวาน, นมข้นจืด, วิปปิงครีม, วานิลลา",,,21,30,0,0,3,อบเค้ก ราดนมสามแบบ แต่งหน้า
-73,ฟลาน,Flan,Mexico,Dessert,FALSE,egg,milk,,,โอเค,FALSE,mx_flan,"ไข่ไก่, นมข้นหวาน, นมสด, น้ำตาล, วานิลลา",,,10,20,8,0,2,เคี่ยวคาราเมล นึ่งให้เนียน
-74,ออร์ชาตา,Horchata,Mexico,Drink,FALSE,rice,milk,,,โอเค,FALSE,mx_horchata,"ข้าว, นมสด, อบเชย, น้ำตาล, วานิลลา, น้ำแข็ง",,,9,45,19,0,1,แช่ข้าว ปั่น กรอง
-75,อากัวเฟรสกา,Agua Fresca,Mexico,Drink,FALSE,seasonal_fruit,lime,,,โอเค,TRUE,mx_agua_fresca,"ผลไม้สดตามฤดูกาล, น้ำ, น้ำตาล, มะนาว, น้ำแข็ง",,,7,39,0,0,1,สูตรเริ่มต้น: ปั่นผลไม้ เท
-76,ไข่เจียวปู,Crab Omelette,Thailand,Main,TRUE,crab,egg,spring_onion,,โอเค,FALSE,th_crab_omelette,"ไข่ไก่, เนื้อปู, น้ำปลา, ซีอิ๊วขาว, ต้นหอม, น้ำมันพืช",,,50,45,0,22,3,สูตรลับ: ทอดไข่ฟูในน้ำมันท่วม ไฟต้องพอดี
-77,บัวลอยไข่หวาน,Bua Loy with Sweet Egg,Thailand,Dessert,TRUE,glutinous_rice,pumpkin,taro,egg,โอเค,FALSE,th_bua_loy_egg,"แป้งข้าวเหนียว, ฟักทอง, เผือก, ไข่ไก่, กะทิ, น้ำตาล, เกลือ",ต่างจาก #11 แค่ใส่ไข่,,27,31,0,25,2,สูตรลับ: ทำง่ายเหมือนบัวลอย + ไข่ (เน้นเรื่องเล่า)
-78,น้ำใบเตยกะทิสด,Pandan Coconut Drink,Thailand,Drink,TRUE,pandan,coconut,,,โอเค,FALSE,th_pandan_coconut,"ใบเตย, กะทิ, น้ำตาล, เกลือ, น้ำแข็ง",,,18,51,10,26,2,สูตรลับ: คั้นใบเตย กรอง ผสมกะทิ
-79,โอมุไรซ์ (Omurice),Omurice,Japan,Main,TRUE,rice,egg,chicken,mushroom,โอเค,FALSE,jp_omurice,"ข้าวญี่ปุ่น, ไข่ไก่, เนื้อไก่, หอมหัวใหญ่, เห็ดแชมปิญอง, ซอสมะเขือเทศ, เนย",,,48,62,0,35,3,สูตรลับ: ผัดข้าว ห่อไข่ให้สวย
-80,โดรายากิไส้มัทฉะ,Matcha Dorayaki,Japan,Dessert,TRUE,flour,egg,matcha,red_bean_paste,โอเค,FALSE,jp_matcha_dorayaki,"แป้งสาลี, ไข่ไก่, น้ำตาล, น้ำผึ้ง, ผงมัทฉะ, ถั่วขาวกวน, ผงฟู",,,33,31,0,15,2,สูตรลับ: เหมือนโดรายากิ เปลี่ยนไส้
-81,เสี่ยวหลงเปา,Xiao Long Bao,China,Main,TRUE,flour,pork,ginger,spring_onion,โอเค,FALSE,cn_xiao_long_bao,"แป้งสาลี, หมูสับ, หนังหมูเจลาตินหรือน้ำซุปเข้มข้น, ขิง, ต้นหอม, ซีอิ๊วขาว, น้ำมันงา",,,34,61,0,10,3,สูตรลับ: จีบละเอียด มีน้ำซุปข้างใน
-82,สาคูมะม่วงส้มโอ,Mango Pomelo Sago,China,Dessert,TRUE,mango,pomelo,coconut,,โอเค,FALSE,cn_mango_pomelo_sago,"สาคูเม็ดเล็ก, มะม่วงสุก, ส้มโอ, กะทิ, น้ำตาล, นมสด",,,23,33,0,26,2,สูตรลับ: ต้มสาคู แกะส้มโอ ผสม
-85,Chicken and Waffles,Chicken and Waffles,USA,Main,TRUE,chicken,flour,egg,maple_syrup,โอเค,FALSE,us_chicken_waffles,"เนื้อไก่, แป้งสาลี, บัตเตอร์มิลก์, ไข่ไก่, วาฟเฟิล, เมเปิลไซรัป, น้ำมันพืช",,,32,69,13,11,3,สูตรลับ: ทอดไก่ + ทำวาฟเฟิล สองอย่าง
-86,พีแคนพาย,Pecan Pie,USA,Dessert,TRUE,pecan,flour,egg,butter,โอเค,FALSE,us_pecan_pie,"แป้งพาย, พีแคน, ไข่ไก่, น้ำตาลทรายแดง, เนย, น้ำเชื่อมข้าวโพด, วานิลลา",,,25,50,0,31,3,สูตรลับ: แป้งพาย ไส้น้ำตาลต้องเซ็ตพอดี
-87,เบอร์เรียทาโก้ (Birria Tacos),Birria Tacos,Mexico,Main,TRUE,tortilla,beef,chili,cheese,โอเค,FALSE,mx_birria_tacos,"แผ่นตอร์ติญาข้าวโพด, เนื้อวัว, พริกแห้ง, มะเขือเทศ, กระเทียม, หอมหัวใหญ่, อบเชย, ยี่หร่า, น้ำสต็อกเนื้อ, ชีส",,,35,51,0,24,3,สูตรลับ: ตุ๋นเนื้อนาน จุ่มซุปแล้วทอด
-89,Rainbow Garden Parfait,Rainbow Garden Parfait,House Special,Dessert,TRUE,yogurt,seasonal_fruit,honey,cream,โอเค,FALSE,house_rainbow_parfait,"โยเกิร์ต, วิปปิงครีม, ผลไม้สดหลากสี, กราโนลา, น้ำผึ้ง",,,27,30,20,44,3,เมนูประจำร้านท้ายเกม: เรียงชั้นหลายสี
-90,Grandma's Secret Tea,Grandma's Secret Tea,House Special,Drink,TRUE,tea_leaves,apple,honey,lime,โอเค,FALSE,house_grandma_tea,"ชา, แอปเปิล, อบเชย, น้ำผึ้ง, น้ำ, มะนาว",,,18,45,10,35,3,เมนูประจำร้านเรื่องหลัก: ผสมหลายอย่างให้ลงตัว
+﻿#,ชื่อเมนู,Name (EN),Country,Course,Secret,Key 1,Key 2,Key 3,Key 4,สถานะ,Vertical Slice,recipe_id,วัตถุดิบเต็ม (คำอธิบายในสมุดสูตร),หมายเหตุ,Sell Price,Health,Stamina,Mana,Fever,Difficulty,Difficulty Note,Obtain,Obtain Note,Mail Shop Lv,Mail Reputation,Chef,Letter
+1,ข้าวผัดกะเพรา,Holy Basil Pork Rice,Thailand,Main,FALSE,pork,holy_basil,chili,egg,โอเค,FALSE,th_kaprao_rice,"ข้าวสวย, เนื้อหมูสับ, ใบกะเพรา, กระเทียม, พริก, น้ำปลา, ซีอิ๊วขาว, น้ำมันพืช, ไข่ไก่",,,37,58,0,0,2,ผัดไฟแรง + ทอดไข่ดาว,Chef Mail,เชฟไทย ฉบับแรก เมนูจานเดียวยอดนิยม,1,20,chef_th,"Dear young owner,
+
+My niece showed me the reviews of your little restaurant on her phone. A countryside shop serving food from six countries? I had to write.
+
+I'm Malai. I've run a kitchen in Bangkok for thirty years, but I started at my mother's street stall, frying holy basil pork for taxi drivers at two in the morning. They had no time, only hunger, and this dish never let them down.
+
+Hot wok, lots of garlic and chili, and the basil goes in last. A fried egg on top, crispy at the edges. That's the whole secret.
+
+Someone who cooks for strangers deserves a good everyday dish."
+2,ผัดไทย,Pad Thai,Thailand,Main,FALSE,noodles,shrimp,tofu,bean_sprout,โอเค,FALSE,th_pad_thai,"เส้นจันท์, กุ้ง, เต้าหู้แข็ง, ไข่ไก่, ถั่วงอก, กุยช่าย, ถั่วลิสง, หัวไชโป๊, น้ำมะขามเปียก, น้ำปลา, น้ำตาลปี๊บ, น้ำมันพืช",,,28,45,0,0,2,ผัดเส้น ปรุงเปรี้ยวหวานเค็มให้ลงตัว,Chef Mail,เชฟไทย,1,50,chef_th,"Dear owner,
+
+It's Malai again. I hear the basil pork is doing well. Good!
+
+Pad Thai is the dish every visitor asks me for, so you should have it too. When I was young I thought it was too simple to be proud of. Then a tourist cried at my table because it reminded her of her honeymoon. Simple food carries big memories.
+
+Soak the noodles, don't boil them. Shrimp, tofu, egg, then the sauce: tamarind, fish sauce, palm sugar. Bean sprouts at the very end so they stay crisp.
+
+Don't let anyone tell you a small shop can't be a great one."
+3,แกงเขียวหวาน,Green Curry,Thailand,Main,FALSE,chicken,coconut,thai_curry_paste,thai_eggplant,โอเค,FALSE,th_green_curry,"เนื้อไก่, กะทิ, พริกแกงเขียวหวาน, มะเขือเปราะ, มะเขือพวง, ใบโหระพา, ใบมะกรูด, น้ำปลา, น้ำตาลปี๊บ",,,27,58,0,15,2,ผัดพริกแกงกับหัวกะทิ แล้วเคี่ยว,Request Board,ชาวบ้านขอแกงเขียวหวานไปงานบุญ,,,,
+4,ต้มยำกุ้ง,Tom Yum Goong,Thailand,Main,FALSE,shrimp,mushroom,lemongrass,lime,โอเค,FALSE,th_tom_yum,"กุ้ง, เห็ดฟาง, ตะไคร้, ข่า, ใบมะกรูด, พริก, น้ำปลา, น้ำมะนาว, น้ำพริกเผา, นมข้นจืด",ใช้เห็ดที่มีในเกมแล้ว,,35,41,6,13,2,ต้ม ปรุงรสเปรี้ยวเผ็ดให้พอดี,Fishing Bottle,มีกุ้ง เข้ากับทะเล,,,,
+5,ข้าวมันไก่,Hainanese Chicken Rice,Thailand,Main,FALSE,chicken,rice,ginger,cucumber,โอเค,FALSE,th_chicken_rice,"ข้าวสาร, เนื้อไก่, กระเทียม, ขิง, แตงกวา, เต้าเจี้ยว, ซีอิ๊วดำ, น้ำส้มสายชู, น้ำตาล, ผักชี",,,38,43,0,0,3,ต้มไก่ หุงข้าวมัน ทำน้ำจิ้ม หลายส่วน,Shop Book,สมุดสูตรไทยในร้านค้า,,,,
+6,ส้มตำ,Som Tam,Thailand,Main,FALSE,green_papaya,tomato,chili,peanut,โอเค,TRUE,th_som_tam,"มะละกอดิบ, มะเขือเทศ, ถั่วฝักยาว, กระเทียม, พริก, มะนาว, น้ำปลา, น้ำตาลปี๊บ, ถั่วลิสง, กุ้งแห้ง",,,39,58,0,11,1,สูตรเริ่มต้น: ตำแล้วปรุง,Starter,สูตรเริ่มต้น,,,,
+7,แกงมัสมั่น,Massaman Curry,Thailand,Main,FALSE,beef,coconut,thai_curry_paste,potato,โอเค,FALSE,th_massaman,"เนื้อวัว, กะทิ, พริกแกงมัสมั่น, มันฝรั่ง, หอมหัวใหญ่, ถั่วลิสง, อบเชย, ลูกกระวาน, น้ำปลา, น้ำตาลปี๊บ, น้ำมะขามเปียก",,,23,37,0,0,3,เคี่ยวเนื้อนาน เครื่องเทศเยอะ,Boss,อาหารหนัก รางวัลบอสครั้งแรก,,,,
+8,ข้าวซอย,Khao Soi,Thailand,Main,FALSE,noodles,chicken,coconut,thai_curry_paste,โอเค,FALSE,th_khao_soi,"บะหมี่ไข่, เนื้อไก่, กะทิ, พริกแกงข้าวซอย, ผงกะหรี่, หอมแดง, ผักกาดดอง, มะนาว, น้ำปลา, น้ำมันพริก",,,19,55,0,15,3,น้ำแกง + เส้นลวก + เส้นทอดกรอบ,Chef Mail,เชฟไทย สูตรภาคเหนือ,3,300,chef_th,"Dear owner,
+
+Malai again. You have come so far!
+
+Khao soi comes from the north, from Chiang Mai, where I went alone at twenty after my first restaurant failed. I thought my career was over. An old woman at a noodle stall fed me every day and refused my money. ""Pay me when you are a chef,"" she said.
+
+Coconut curry broth, chicken, soft egg noodles with crispy noodles on top, pickled greens and lime on the side.
+
+I went back ten years later to pay her. Failure was not the end of my story. It won't be the end of yours either."
+9,ข้าวเหนียวมะม่วง,Mango Sticky Rice,Thailand,Dessert,FALSE,glutinous_rice,mango,coconut,,โอเค,TRUE,th_mango_sticky_rice,"ข้าวเหนียว, มะม่วงสุก, กะทิ, น้ำตาล, เกลือ, ถั่วทอง",,,15,40,0,0,1,สูตรเริ่มต้น: นึ่งข้าว หั่นมะม่วง ราดกะทิ,Starter,สูตรเริ่มต้น,,,,
+10,ทับทิมกรอบ,Tub Tim Krob,Thailand,Dessert,FALSE,water_chestnut,coconut,,,โอเค,FALSE,th_tub_tim_krob,"แห้ว, แป้งมันสำปะหลัง, กะทิ, น้ำเชื่อม, สีผสมอาหารสีแดง, น้ำแข็ง",,,11,36,0,0,2,หั่นแห้ว คลุกแป้ง ต้มให้กรอบ,Dig Box,กล่องข้าวเก่าของเจ้าของที่ดินคนเก่า,,,,
+11,บัวลอย,Bua Loy,Thailand,Dessert,FALSE,glutinous_rice,pumpkin,taro,coconut,โอเค,FALSE,th_bua_loy,"แป้งข้าวเหนียว, ฟักทอง, เผือก, กะทิ, น้ำตาล, เกลือ",,,17,36,18,0,2,ปั้นแป้งหลายสี ต้มในกะทิ,Chef Mail,เชฟไทย ของหวานบ้านๆ,2,150,chef_th,"Dear owner,
+
+Malai here. Your shop's reputation is growing! My niece shows me new reviews every week.
+
+Today, something sweet. Bua loy was my mother's medicine for every sadness. Bad grades, broken toys, a broken heart: she rolled little balls of sticky rice dough and floated them in warm coconut milk.
+
+Mix glutinous rice flour with mashed pumpkin and taro for color. Roll them small. Simmer in coconut milk with sugar and a pinch of salt.
+
+Rolling them is slow work. Use the time to breathe."
+12,ชาไทยเย็น,Thai Iced Tea,Thailand,Drink,FALSE,thai_tea,milk,,,โอเค,FALSE,th_thai_iced_tea,"ชาไทย, นมข้นหวาน, นมข้นจืด, น้ำตาล, น้ำแข็ง",,,5,40,0,0,1,ชงแล้วเทนม,Shop Book,สมุดสูตรเครื่องดื่ม,,,,
+13,น้ำอัญชันมะนาว,Butterfly Pea Limeade,Thailand,Drink,FALSE,butterfly_pea,lime,,,โอเค,FALSE,th_butterfly_pea_lime,"ดอกอัญชัน, มะนาว, น้ำเชื่อม, น้ำแข็ง",,,8,38,0,0,1,ต้มดอกอัญชัน บีบมะนาว,Monster Pages,เศษหน้าสูตรจากป่า (ดอกไม้),,,,
+14,ราเมง,Ramen,Japan,Main,FALSE,noodles,pork,egg,spring_onion,โอเค,FALSE,jp_ramen,"เส้นราเมง, กระดูกหมู, หมูชาชู, ไข่ไก่, ต้นหอม, สาหร่ายโนริ, หน่อไม้ดอง, ซีอิ๊วญี่ปุ่น, กระเทียม, ขิง",,,21,32,0,0,3,เคี่ยวซุปกระดูกนาน ท็อปปิ้งหลายอย่าง,Chef Mail,เชฟญี่ปุ่น ราเมงกับอาจารย์ที่ไม่ค่อยพูด,2,120,chef_jp,"To the owner,
+
+Kenji again. I hope the gyudon has found its way to tired people.
+
+After I left my office job, I trained for six years in a ramen shop. My master barely spoke. He corrected me by tasting my broth and pouring it away. I hated it. Later I understood: he was not angry. He was teaching me a patience I did not have.
+
+Pork bones simmered for many hours, noodles, a soft egg, spring onion. The broth cannot be rushed.
+
+If working with others ever hurt you, that is all right. A kitchen can be a quiet place to heal."
+15,ซูชิ,Sushi,Japan,Main,FALSE,rice,salmon,tuna,nori,โอเค,FALSE,jp_sushi,"ข้าวญี่ปุ่น, น้ำส้มสายชูข้าว, น้ำตาล, เกลือ, ปลาแซลมอน, ปลาทูน่า, สาหร่ายโนริ, วาซาบิ, โชยุ",,,28,50,0,0,3,ปรุงข้าว แล่ปลา ปั้นให้แม่น,Fishing Bottle,ปลาดิบ เข้ากับทะเล,,,,
+16,ข้าวแกงกะหรี่ญี่ปุ่น,Japanese Curry Rice,Japan,Main,FALSE,rice,beef,curry_roux,carrot,โอเค,FALSE,jp_curry_rice,"ข้าวญี่ปุ่น, เนื้อวัว, มันฝรั่ง, แครอท, หอมหัวใหญ่, ก้อนแกงกะหรี่ญี่ปุ่น, น้ำมันพืช",,,33,33,8,0,1,ผัดแล้วเคี่ยวกับก้อนแกงสำเร็จ,Shop Book,สมุดสูตรญี่ปุ่น,,,,
+17,ทงคัตสึ,Tonkatsu,Japan,Main,FALSE,pork,egg,bread,cabbage,โอเค,FALSE,jp_tonkatsu,"เนื้อหมูสันนอก, แป้งสาลี, ไข่ไก่, เกล็ดขนมปัง, กะหล่ำปลี, ซอสทงคัตสึ, น้ำมันพืช",bread = เกล็ดขนมปัง,,39,35,13,0,2,ชุบแป้ง ไข่ เกล็ดขนมปัง แล้วทอด,Chef Mail,เชฟญี่ปุ่น,2,200,chef_jp,"To the owner,
+
+Kenji. People online say your shop has become a place to rest. I am glad.
+
+Tonkatsu reminds me of my father. He was strict, and we rarely talked. But on exam days he would fry a pork cutlet for me, because ""katsu"" sounds like ""to win."" He never said good luck. The cutlet said it for him.
+
+Pound the pork, then flour, egg, and breadcrumbs. Fry until golden and crisp. Serve with shredded cabbage.
+
+Some people cannot say what they feel. Food can."
+18,เทมปุระ,Tempura,Japan,Main,FALSE,shrimp,pumpkin,sweet_potato,flour,โอเค,FALSE,jp_tempura,"กุ้ง, ฟักทอง, มันหวาน, แป้งเทมปุระ, ไข่ไก่, น้ำเย็น, น้ำมันพืช, ซอสเทนสึยุ",,,27,50,0,0,2,แป้งเย็น ทอดให้กรอบพอดี,Chef Mail,เชฟญี่ปุ่น เทคนิคทอดยาก,3,350,chef_jp,"To the owner,
+
+Kenji. Your shop is known even among cooks here now. Truly.
+
+Tempura is the hardest dish I know. The batter must be cold and barely mixed, lumps and all. The oil must be exactly right. For years mine came out heavy and oily, and I wanted to quit.
+
+The trick is to stop trying so hard. Mix less. Touch less. Trust the heat.
+
+Shrimp, pumpkin, sweet potato, a light flour batter, fried quickly until it crackles.
+
+I think people are the same. They don't need to be perfect. They need to be light enough to breathe."
+19,ทาโกะยากิ,Takoyaki,Japan,Main,FALSE,octopus,flour,egg,spring_onion,โอเค,FALSE,jp_takoyaki,"แป้งทาโกะยากิ, ปลาหมึกยักษ์, ไข่ไก่, ต้นหอม, ขิงดอง, เท็มปุระกรอบ, ซอสทาโกะยากิ, มายองเนส, ปลาโอแห้ง",,,31,37,0,0,3,พลิกลูกกลมในพิมพ์ ต้องจังหวะดี,Food Truck,ฟู้ดทรักญี่ปุ่น กินครบ N ครั้ง,,,,
+20,โอโคโนมิยากิ,Okonomiyaki,Japan,Main,FALSE,cabbage,flour,egg,pork,โอเค,TRUE,jp_okonomiyaki,"กะหล่ำปลี, แป้งสาลี, ไข่ไก่, หมูสามชั้น, ต้นหอม, ขิงดอง, ซอสโอโคโนมิยากิ, มายองเนส, ปลาโอแห้ง",,,28,50,0,0,1,สูตรเริ่มต้น: ผสม พลิก ราดซอส,Starter,สูตรเริ่มต้น,,,,
+21,ข้าวหน้าเนื้อ (กิวด้ง),Gyudon,Japan,Main,FALSE,rice,beef,pickles,,โอเค,FALSE,jp_gyudon,"ข้าวญี่ปุ่น, เนื้อวัวสไลซ์, หอมหัวใหญ่, โชยุ, มิริน, สาเกปรุงอาหาร, น้ำตาล, ขิงดอง",pickles = ขิงดอง,,39,56,9,0,1,ต้มเนื้อสไลซ์ในซอส ราดข้าว,Chef Mail,เชฟญี่ปุ่น ฉบับแรก เมนูง่าย,1,60,chef_jp,"To the owner,
+
+Forgive the sudden letter. I read about your shop on a food forum. Someone wrote that you work alone, quietly, and that the food speaks for you. I understand that very well.
+
+I am Kenji Morita. Before I became a cook, I worked in an office in Osaka. I was not good with people. Every night I ate gyudon alone at a counter, and that bowl was the kindest thing in my day.
+
+Thin beef simmered with onion in soy sauce and a little sweetness, over hot rice, pickled ginger on the side.
+
+Quick, warm, honest. Please make it for someone who is tired."
+22,โมจิ,Mochi,Japan,Dessert,FALSE,glutinous_rice,red_bean_paste,,,โอเค,FALSE,jp_mochi,"แป้งข้าวเหนียวญี่ปุ่น, น้ำตาล, แป้งมันฝรั่ง, ถั่วแดงกวน",,,14,25,9,0,2,นวดแป้งเหนียว ห่อไส้,Dig Box,กล่องข้าวเก่า,,,,
+23,โดรายากิ,Dorayaki,Japan,Dessert,FALSE,flour,egg,honey,red_bean_paste,โอเค,FALSE,jp_dorayaki,"แป้งสาลี, ไข่ไก่, น้ำตาล, น้ำผึ้ง, ถั่วแดงกวน, ผงฟู",,,16,38,7,0,2,ทอดแป้งให้เนียน ประกบไส้,Request Board,คำขอของหวานจากเด็กในเมือง,,,,
+24,ไทยากิ,Taiyaki,Japan,Dessert,FALSE,flour,egg,milk,red_bean_paste,โอเค,FALSE,jp_taiyaki,"แป้งสาลี, ไข่ไก่, น้ำตาล, นมสด, ผงฟู, ถั่วแดงกวน",,,25,21,0,0,2,เทแป้งในพิมพ์ ใส่ไส้ พลิก,Food Truck,ฟู้ดทรักญี่ปุ่น,,,,
+25,มัทฉะลาเต้,Matcha Latte,Japan,Drink,FALSE,matcha,milk,,,โอเค,FALSE,jp_matcha_latte,"ผงมัทฉะ, นมสด, น้ำตาล, น้ำแข็ง",,,12,35,7,0,1,ตีมัทฉะ เทนม,Shop Book,สมุดสูตรเครื่องดื่ม,,,,
+26,รามูเนะ,Ramune,Japan,Drink,FALSE,lemon,seasonal_fruit,,,โอเค,FALSE,jp_ramune,"น้ำโซดา, น้ำตาล, น้ำเชื่อมเลมอน, กลิ่นผลไม้",น้ำโซดาอยู่ในตู้กับข้าว,,12,44,14,0,1,ผสมน้ำเชื่อมกับโซดา,Monster Pages,เศษหน้าสูตรจากถ้ำ,,,,
+27,ข้าวผัดหยางโจว,Yangzhou Fried Rice,China,Main,FALSE,rice,shrimp,cured_meat,egg,โอเค,FALSE,cn_yangzhou_fried_rice,"ข้าวสวย, กุ้ง, หมูแฮม, ไข่ไก่, ถั่วลันเตา, แครอท, ต้นหอม, ซีอิ๊วขาว, น้ำมันงา",,,19,46,0,0,2,ผัดไฟแรง ของหลายอย่าง,Chef Mail,เชฟจีน ฉบับแรก,1,40,chef_cn,"Hello,
+
+A traveler who ate at your shop left a long review online. He said the food tasted like someone cared. That is rare, so I am writing.
+
+My name is Lin Wei. My grandfather ran a teahouse, and the first thing he ever let me cook was fried rice made from yesterday's rice. He said, ""Fresh rice is for the rich. Day-old rice is for the clever.""
+
+Shrimp, a little ham, egg, and rice that has dried out overnight. Keep the fire high and keep your hand moving.
+
+Nothing wasted, everything shared. That is a good way to run a kitchen."
+28,เกี๊ยวนึ่ง,Steamed Dumplings,China,Main,FALSE,pork,shrimp,cabbage,flour,โอเค,FALSE,cn_steamed_dumplings,"แผ่นเกี๊ยว, หมูสับ, กุ้ง, กะหล่ำปลี, ขิง, ต้นหอม, ซีอิ๊วขาว, น้ำมันงา",แผ่นเกี๊ยวอยู่ในตู้กับข้าว,,19,42,0,0,2,ห่อจีบ แล้วนึ่ง,Chef Mail,เชฟจีน งานจีบแป้ง,2,180,chef_cn,"Hello again,
+
+Lin Wei writing. I read that your shop now has regulars. That is when a restaurant truly begins.
+
+In my grandfather's teahouse, the whole family folded dumplings together every morning before dawn. As a boy I was too slow, and my pleats were ugly. My aunt said, ""Ugly dumplings taste the same. Keep folding.""
+
+Pork, shrimp, cabbage, a little ginger, wrapped in thin dough and steamed until the skin turns clear.
+
+You fold alone for now. One day, perhaps, someone will fold beside you."
+29,ซาลาเปา,Baozi,China,Main,FALSE,flour,pork,spring_onion,,โอเค,FALSE,cn_baozi,"แป้งสาลี, ยีสต์, น้ำตาล, หมูสับ, หอมหัวใหญ่, ซีอิ๊วขาว, น้ำมันงา",แป้งและยีสต์อยู่ในตู้กับข้าว,,37,52,0,0,3,หมักแป้ง นวด จีบ นึ่ง,Shop Book,สมุดสูตรจีน,,,,
+30,ไก่ผัดกงเป่า,Kung Pao Chicken,China,Main,FALSE,chicken,peanut,chili,,โอเค,TRUE,cn_kung_pao_chicken,"เนื้อไก่, ถั่วลิสง, พริกแห้ง, ต้นหอม, กระเทียม, ขิง, ซีอิ๊วขาว, น้ำส้มสายชู, น้ำตาล, แป้งข้าวโพด",,,33,40,0,15,1,สูตรเริ่มต้น: ผัดไฟแรง,Starter,สูตรเริ่มต้น,,,,
+31,หมูเปรี้ยวหวาน,Sweet and Sour Pork,China,Main,FALSE,pork,bell_pepper,pineapple,,โอเค,FALSE,cn_sweet_sour_pork,"เนื้อหมู, พริกหวาน, สับปะรด, หอมหัวใหญ่, แป้งข้าวโพด, ซอสมะเขือเทศ, น้ำส้มสายชู, น้ำตาล",,,28,51,19,0,2,ชุบทอด แล้วผัดซอส,Request Board,ชาวบ้านขอเมนูเปรี้ยวหวาน,,,,
+32,บะหมี่ตันตัน,Dan Dan Noodles,China,Main,FALSE,noodles,pork,bok_choy,sesame,โอเค,FALSE,cn_dan_dan_noodles,"เส้นบะหมี่, หมูสับ, ผักกวางตุ้ง, ต้นหอม, กระเทียม, ขิง, พริกน้ำมัน, ซีอิ๊วขาว, น้ำส้มสายชูดำ, งาบด",,,32,38,8,10,2,ผัดหมู ทำน้ำมันพริก ลวกเส้น,Monster Pages,เศษหน้าสูตรจากถ้ำ (เผ็ด),,,,
+33,เป็ดปักกิ่ง,Peking Duck,China,Main,FALSE,duck,cucumber,spring_onion,honey,โอเค,FALSE,cn_peking_duck,"เป็ดทั้งตัว, แป้งสาลี, แตงกวา, ต้นหอม, ซอสฮอยซิน, น้ำผึ้ง, ซีอิ๊วขาว",,,25,47,0,0,3,ย่างเป็ดทั้งตัว ทาน้ำผึ้ง แล่,Boss,จานใหญ่ รางวัลบอสครั้งแรก,,,,
+34,บัวลอยจีน (ถังหยวน),Tang Yuan,China,Dessert,FALSE,glutinous_rice,sesame,ginger,,โอเค,FALSE,cn_tang_yuan,"แป้งข้าวเหนียว, งาดำ, น้ำตาล, ขิง, น้ำ",,,10,23,0,0,2,ปั้นแป้งห่อไส้งา ต้ม,Dig Box,กล่องข้าวเก่า,,,,
+35,ทาร์ตไข่,Egg Tart,China,Dessert,FALSE,flour,egg,milk,butter,โอเค,FALSE,cn_egg_tart,"แป้งพาย, ไข่ไก่, นมสด, น้ำตาล, วิปปิงครีม, วานิลลา",,,24,30,0,0,3,แป้งพายหลายชั้น อบให้ไส้เซ็ตพอดี,Food Truck,ฟู้ดทรักจีน/ฮ่องกง,,,,
+36,ขนมไหว้พระจันทร์,Mooncake,China,Dessert,FALSE,flour,red_bean_paste,salted_egg,,โอเค,FALSE,cn_mooncake,"แป้งสาลี, น้ำเชื่อม, น้ำมันพืช, ถั่วแดงกวน, ไข่แดงเค็ม",,,22,20,14,0,3,ห่อไส้กับไข่แดง กดพิมพ์ อบ,Chef Mail,เชฟจีน ขนมเทศกาล,3,400,chef_cn,"Hello, my friend,
+
+May I call you that now? Lin Wei here.
+
+Mooncakes are for the Mid-Autumn Festival, when families gather under the full moon. For many years I worked abroad and spent the festival alone. Every year, my grandfather mailed me a single mooncake, wrapped so carefully it never broke.
+
+Sweet red bean paste with a salted egg yolk in the center, like the moon, wrapped in thin pastry and pressed in a mold.
+
+Distance does not break a family. Neither does silence. Send something warm to someone you miss."
+37,นมถั่วเหลือง,Soy Milk,China,Drink,FALSE,soybean,,,,โอเค,FALSE,cn_soy_milk,"ถั่วเหลือง, น้ำตาล, น้ำ",,,7,43,9,0,1,ปั่น กรอง ต้ม,Shop Book,สมุดสูตรเครื่องดื่ม,,,,
+38,ชาเก๊กฮวย,Chrysanthemum Tea,China,Drink,FALSE,chrysanthemum,,,,โอเค,FALSE,cn_chrysanthemum_tea,"ดอกเก๊กฮวยแห้ง, น้ำตาลกรวด, น้ำ",,,9,29,0,0,1,ต้มชง,Monster Pages,เศษหน้าสูตรจากป่า (ดอกไม้),,,,
+39,พิซซ่ามาร์เกริตา,Pizza Margherita,Italy,Main,FALSE,flour,tomato,cheese,basil,โอเค,FALSE,it_pizza_margherita,"แป้งพิซซ่า, ยีสต์, ซอสมะเขือเทศ, มอสซาเรลลาชีส, ใบโหระพา, น้ำมันมะกอก",แป้งพิซซ่าทำจากแป้งในตู้กับข้าว,,23,31,0,0,2,นวดแป้ง แผ่ อบ,Chef Mail,เชฟอิตาลี,2,150,chef_it,"Ciao again!
+
+Your carbonara is getting good reviews. Brava! Now we go further.
+
+Margherita was named after a queen, but I learned it from a very loud baker in Naples who shouted at me every day for a whole summer. On my last day he gave me his dough knife and said I was ""not hopeless."" The highest praise of my life.
+
+Flour, water, yeast, and time. Stretch by hand, never a rolling pin. Tomato, mozzarella, fresh basil, a very hot oven.
+
+Sometimes the people who push you hardest believe in you the most."
+40,สปาเกตตีคาโบนารา,Spaghetti Carbonara,Italy,Main,FALSE,pasta,egg,cheese,cured_meat,โอเค,FALSE,it_carbonara,"เส้นสปาเกตตี, ไข่ไก่, ชีสพาร์เมซาน, แก้มหมูหมัก, พริกไทยดำ",,,36,42,0,0,2,ผสมไข่กับเส้นร้อน ไม่ให้ไข่สุกเป็นก้อน,Chef Mail,เชฟอิตาลี ฉบับแรก,1,80,chef_it,"Ciao!
+
+I am Giulia, from a small trattoria in Rome. A customer of yours posted photos online, and I saw bruschetta on your menu. Not bad! But where is the pasta? We must fix this.
+
+Carbonara is the dish my nonna made when there was almost nothing in the house: eggs, cheese, a little cured pork, pasta. No cream! Never cream. Nonna would come back to haunt me.
+
+Mix the eggs and cheese, toss with hot pasta off the heat, and let the warmth turn it into silk.
+
+Little ingredients, big love."
+41,ลาซานญ่า,Lasagna,Italy,Main,FALSE,pasta,beef,tomato,cheese,โอเค,FALSE,it_lasagna,"แผ่นลาซานญ่า, เนื้อวัวบด, มะเขือเทศบด, หอมหัวใหญ่, แครอท, ขึ้นฉ่ายฝรั่ง, นมสด, เนย, แป้งสาลี, มอสซาเรลลาชีส, ชีสพาร์เมซาน",,,33,35,0,0,3,ทำซอสสองแบบ เรียงชั้น อบ,Boss,อาหารหนัก รางวัลบอสครั้งแรก,,,,
+42,ริซอตโต,Risotto,Italy,Main,FALSE,rice,mushroom,butter,cheese,โอเค,FALSE,it_risotto,"ข้าวอาร์โบริโอ, น้ำสต็อกไก่, หอมหัวใหญ่, เนย, ชีสพาร์เมซาน, ไวน์ขาวปรุงอาหาร",สูตรเดิมไม่มีเห็ด เสนอเป็นริซอตโตเห็ดเพื่อใช้ของป่า,,38,45,13,0,3,คนไม่หยุด เติมน้ำสต็อกทีละน้อย,Monster Pages,เศษหน้าสูตรจากป่า (เห็ด),,,,
+43,ญ็อกกี,Gnocchi,Italy,Main,FALSE,potato,flour,butter,cheese,โอเค,FALSE,it_gnocchi,"มันฝรั่ง, แป้งสาลี, ไข่ไก่, ชีสพาร์เมซาน, เนย",,,40,31,19,0,2,บดมัน นวดแป้ง ปั้น ต้ม,Dig Box,กล่องข้าวเก่า (มันฝรั่ง),,,,
+44,ราวิโอลี,Ravioli,Italy,Main,FALSE,pasta,cheese,spinach,egg,รอตรวจ,FALSE,it_ravioli,"แป้งสาลี, ไข่ไก่, ริคอตต้าชีส, ผักโขม, ชีสพาร์เมซาน, เนย",ซ้ำกับ #83 เสนอเปลี่ยนเป็นไส้เนื้อซอสมะเขือเทศ ส่วนไส้ริคอตต้าผักโขมให้เป็นของสูตรลับ,,31,45,0,0,3,รีดแป้ง ห่อไส้ทีละชิ้น,Chef Mail,เชฟอิตาลี งานแป้งพาสต้า,3,320,chef_it,"Ciao!
+
+Giulia here. I hear people now travel just to eat at your shop. Incredible!
+
+Ravioli is the dish I made with my nonna every Christmas. Even at ninety, her hands were faster than mine. I used to rush, and my ravioli burst open in the water. She said, ""Seal it with patience, not pressure.""
+
+Fresh pasta, ricotta and spinach filling, a little egg to seal the edges. Boil gently, finish with butter and cheese.
+
+When I'm stressed in my kitchen, I still hear her: patience, not pressure. Maybe it helps you too."
+45,บรูสเกตตา,Bruschetta,Italy,Main,FALSE,bread,tomato,basil,,โอเค,TRUE,it_bruschetta,"ขนมปังบาแก็ต, มะเขือเทศ, กระเทียม, ใบโหระพา, น้ำมันมะกอก, เกลือ",,,28,51,20,0,1,สูตรเริ่มต้น: หั่น ปิ้งขนมปัง,Starter,สูตรเริ่มต้น,,,,
+46,ซุปมิเนสโตรเน,Minestrone,Italy,Main,FALSE,beans,tomato,carrot,zucchini,โอเค,FALSE,it_minestrone,"ถั่วขาว, มะเขือเทศ, แครอท, ขึ้นฉ่ายฝรั่ง, หอมหัวใหญ่, บวบ, น้ำสต็อกผัก, พาสต้า, น้ำมันมะกอก",,,32,52,0,0,1,หั่นผัก ต้มรวม,Request Board,คำขอซุปผักคนป่วยในเมือง,,,,
+47,ทีรามิสุ,Tiramisu,Italy,Dessert,FALSE,cheese,coffee,egg,flour,โอเค,FALSE,it_tiramisu,"เลดี้ฟิงเกอร์, มาสคาร์โปนชีส, ไข่ไก่, น้ำตาล, กาแฟเอสเปรสโซ, ผงโกโก้",cheese = มาสคาร์โปน,,11,28,0,0,2,ตีครีม จุ่มกาแฟ เรียงชั้น,Chef Mail,เชฟอิตาลี ของหวานขึ้นชื่อ,4,600,chef_it,"Dear friend,
+
+Giulia once more. Your restaurant is famous now! I tell everyone I knew you before.
+
+Tiramisu means ""pick me up."" It is the dessert I ate the night I almost closed my trattoria, when the bills were too much. My cook made one without a word and put it in front of me. We kept going.
+
+Ladyfingers soaked in espresso, layered with mascarpone whipped with egg and sugar, cocoa on top. Let it rest overnight.
+
+Everyone needs someone who picks them up. Now you have five old chefs cheering for you from far away."
+48,พานาคอตตา,Panna Cotta,Italy,Dessert,FALSE,cream,milk,berry,,โอเค,FALSE,it_panna_cotta,"วิปปิงครีม, นมสด, น้ำตาล, เจลาติน, วานิลลา, เบอร์รี",,,24,38,0,0,1,ต้มครีม ใส่เจลาติน แช่เย็น,Food Truck,ฟู้ดทรักอิตาลี,,,,
+49,แคนโนลี,Cannoli,Italy,Dessert,FALSE,flour,cheese,pistachio,,รอตรวจ,FALSE,it_cannoli,"แป้งสาลี, เนย, ไข่ไก่, น้ำตาล, ริคอตต้าชีส, พิสตาชิโอ",ซ้ำกับ #84 เสนอเป็นไส้ช็อกโกแลต ส่วนไส้พิสตาชิโอให้เป็นของสูตรลับ,,23,30,0,0,3,ม้วนแป้งทอด บีบไส้,Dig Box,กล่องข้าวเก่า,,,,
+50,เอสเปรสโซ,Espresso,Italy,Drink,FALSE,coffee,,,,โอเค,FALSE,it_espresso,"เมล็ดกาแฟ, น้ำ",,,11,31,0,0,1,สกัดกาแฟ,Shop Book,สมุดสูตรเครื่องดื่ม,,,,
+51,ชิโนตโต,Chinotto,Italy,Drink,FALSE,chinotto,,,,โอเค,FALSE,it_chinotto,"น้ำโซดา, น้ำเชื่อมชิโนตโต, น้ำแข็ง",,,10,27,5,0,1,ผสมน้ำเชื่อมกับโซดา,Fishing Bottle,ขวดจดหมายจากอิตาลี,,,,
+52,ชีสเบอร์เกอร์,Cheeseburger,USA,Main,FALSE,bread,beef,cheese,lettuce,โอเค,FALSE,us_cheeseburger,"ขนมปังเบอร์เกอร์, เนื้อวัวบด, เชดดาร์ชีส, ผักกาดหอม, มะเขือเทศ, หอมหัวใหญ่, แตงกวาดอง, ซอสมะเขือเทศ, มัสตาร์ด",,,23,49,0,0,2,ย่างเนื้อ ประกอบหลายชั้น,Chef Mail,เชฟอเมริกัน ฉบับแรก,1,60,chef_us,"Hey there!
+
+Name's Dan. I run a diner off Route 9, been flipping burgers for twenty-two years. My daughter found your place online and said, ""Dad, this kid's doing what you did."" So here I am, writing a letter like it's 1985.
+
+Before the diner I drove trucks. Lonely work. The best part of any day was a cheeseburger at some roadside joint where nobody asked me questions.
+
+Smash the beef thin on a hot griddle, cheese on right after the flip, toast the bun. Lettuce, tomato, pickles. Don't overthink it."
+53,ฮอตดอก,Hot Dog,USA,Main,FALSE,bread,cured_meat,pickles,,โอเค,FALSE,us_hot_dog,"ขนมปังฮอตดอก, ไส้กรอก, มัสตาร์ด, ซอสมะเขือเทศ, หอมหัวใหญ่, แตงกวาดอง",,,28,43,0,0,1,ย่างไส้กรอก ใส่ขนมปัง,Food Truck,ฟู้ดทรักอเมริกัน,,,,
+54,ไก่ทอดสไตล์อเมริกัน,Southern Fried Chicken,USA,Main,FALSE,chicken,flour,cream,egg,โอเค,FALSE,us_fried_chicken,"เนื้อไก่, แป้งสาลี, บัตเตอร์มิลก์, ไข่ไก่, ปาปริก้า, ผงกระเทียม, น้ำมันพืช",cream = บัตเตอร์มิลก์,,40,38,0,0,2,หมัก ชุบ ทอดให้สุกถึงข้างใน,Monster Pages,เศษหน้าสูตรจากป่า,,,,
+55,แมคแอนด์ชีส,Mac and Cheese,USA,Main,FALSE,pasta,cheese,milk,butter,โอเค,FALSE,us_mac_and_cheese,"มักกะโรนี, เชดดาร์ชีส, นมสด, เนย, แป้งสาลี, เกล็ดขนมปัง",,,40,43,0,0,2,ทำซอสชีส คลุกเส้น,Request Board,คำขอจากเด็กในเมือง,,,,
+56,บาร์บีคิวริบส์,BBQ Ribs,USA,Main,FALSE,pork,,,,โอเค,FALSE,us_bbq_ribs,"ซี่โครงหมู, ซอสบาร์บีคิว, น้ำตาลทรายแดง, ปาปริก้า, กระเทียมผง, พริกไทยดำ",มีวัตถุดิบหลักชิ้นเดียว ซอสบาร์บีคิวอยู่ในตู้กับข้าว อาจเพิ่มเป็นของ Artisan,,28,43,0,0,2,หมัก ย่างนาน ทาซอส,Boss,ย่างทั้งซี่ รางวัลบอสครั้งแรก,,,,
+57,คลัมเชาเดอร์,Clam Chowder,USA,Main,FALSE,clam,potato,milk,cured_meat,โอเค,FALSE,us_clam_chowder,"หอยลาย, มันฝรั่ง, หอมหัวใหญ่, ขึ้นฉ่ายฝรั่ง, เบคอน, นมสด, วิปปิงครีม, เนย, แป้งสาลี",,,36,54,0,0,2,ผัดแป้งกับเนย ต้มหอยกับมันฝรั่ง,Fishing Bottle,มีหอย เข้ากับทะเล,,,,
+58,แพนเค้ก,Pancakes,USA,Main,FALSE,flour,egg,milk,maple_syrup,โอเค,FALSE,us_pancakes,"แป้งสาลี, ไข่ไก่, นมสด, เนย, ผงฟู, น้ำตาล, เมเปิลไซรัป",,,27,42,15,0,1,ผสมแป้ง ทอด พลิก,Shop Book,สมุดสูตรอาหารเช้า,,,,
+59,แอปเปิลพาย,Apple Pie,USA,Dessert,FALSE,apple,flour,butter,,โอเค,FALSE,us_apple_pie,"แป้งพาย, แอปเปิล, น้ำตาล, เนย, อบเชย, แป้งสาลี",,,14,30,0,0,3,แป้งพาย ไส้ สานหน้า อบ,Chef Mail,เชฟอเมริกัน,2,220,chef_us,"Hey again!
+
+Dan here. Heard your place is getting real busy. Proud of you, kid, and I don't even know you.
+
+This pie is my late wife's. Mary baked it every Sunday for the diner, and folks drove an hour just for a slice. After she passed, I couldn't make it for two years. Then one day a regular asked for ""Mary's pie,"" and I figured she'd want it served, not missed.
+
+Cold butter in the crust, apples with sugar and cinnamon, bake till the juice bubbles.
+
+Some recipes are meant to keep going."
+60,บราวนี่,Brownie,USA,Dessert,FALSE,chocolate,flour,butter,egg,โอเค,FALSE,us_brownie,"ดาร์กช็อกโกแลต, เนย, ไข่ไก่, น้ำตาล, แป้งสาลี, ผงโกโก้",,,17,36,0,0,1,ผสมแล้วอบ,Dig Box,กล่องข้าวเก่า,,,,
+61,คุกกี้ช็อกโกแลตชิป,Chocolate Chip Cookie,USA,Dessert,FALSE,chocolate,flour,butter,egg,โอเค,FALSE,us_choc_chip_cookie,"แป้งสาลี, เนย, น้ำตาลทรายแดง, น้ำตาล, ไข่ไก่, ช็อกโกแลตชิป, เบกกิงโซดา",วัตถุดิบหลักซ้ำกับบราวนี่ทั้งชุด อาจเพิ่มหรือเปลี่ยนให้ต่างกัน,,19,28,0,0,1,ผสม ปั้น อบ,Request Board,คำขอขนมไปงานโรงเรียน,,,,
+62,เลมอนเนด,Lemonade,USA,Drink,FALSE,lemon,,,,โอเค,TRUE,us_lemonade,"เลมอน, น้ำตาล, น้ำ, น้ำแข็ง",,,8,26,12,0,1,สูตรเริ่มต้น: คั้นแล้วเท,Starter,สูตรเริ่มต้น,,,,
+63,มิลค์เชก,Milkshake,USA,Drink,FALSE,milk,cream,chocolate,,โอเค,FALSE,us_milkshake,"นมสด, ไอศกรีมวานิลลา, น้ำเชื่อมช็อกโกแลต, วิปปิงครีม",,,7,27,0,0,1,ปั่น,Food Truck,ฟู้ดทรักอเมริกัน,,,,
+64,ทาโก้,Tacos,Mexico,Main,FALSE,tortilla,beef,tomato,lettuce,โอเค,FALSE,mx_tacos,"แผ่นตอร์ติญาข้าวโพด, เนื้อวัวบด, ผักกาดหอม, มะเขือเทศ, หอมหัวใหญ่, ชีส, มะนาว, ผักชี, พริก",,,32,53,0,0,2,ผัดเนื้อ หั่นผัก ประกอบ,Chef Mail,เชฟเม็กซิกัน ฉบับแรก,1,70,chef_mx,"Hola, amigo,
+
+My grandson reads restaurant reviews from all over the world, and yours made him laugh: ""Tacos in the countryside, made by someone who isn't even Mexican."" Then he said they were good. So now I must help you make them better.
+
+I am Rosa Delgado, a cocinera from Oaxaca. Tacos were the first thing I ever sold, from a basket on my head, when I was twelve.
+
+Warm the tortillas until they puff. Seasoned beef, fresh tomato, crisp lettuce, a squeeze of lime. Two tortillas if the filling is generous.
+
+Food is for sharing. Never forget it."
+65,เคซาดิยา,Quesadilla,Mexico,Main,FALSE,tortilla,cheese,chicken,bell_pepper,โอเค,FALSE,mx_quesadilla,"แผ่นตอร์ติญาแป้งสาลี, ชีส, เนื้อไก่, พริกหวาน, หอมหัวใหญ่",,,26,34,0,0,1,ใส่ไส้ ปิ้ง พลิก,Shop Book,สมุดสูตรเม็กซิกัน,,,,
+66,เบอร์ริโต,Burrito,Mexico,Main,FALSE,tortilla,rice,beans,beef,โอเค,FALSE,mx_burrito,"แผ่นตอร์ติญาแป้งสาลี, ข้าว, ถั่วดำ, เนื้อวัว, ชีส, ซัลซา, ผักกาดหอม, ครีมเปรี้ยว",,,30,40,0,0,2,ไส้หลายอย่าง ม้วนให้แน่น,Food Truck,ฟู้ดทรักเม็กซิกัน,,,,
+67,เอนชิลาดา,Enchiladas,Mexico,Main,FALSE,tortilla,chicken,cheese,chili,โอเค,FALSE,mx_enchiladas,"แผ่นตอร์ติญาข้าวโพด, เนื้อไก่, ซอสเอนชิลาดา, ชีส, หอมหัวใหญ่, ครีมเปรี้ยว",,,23,31,0,14,2,ม้วน ราดซอส อบ,Chef Mail,เชฟเม็กซิกัน,2,250,chef_mx,"Hola again,
+
+Rosa here. My grandson says your little shop has many reviews now. Qué bien!
+
+Enchiladas are what I cook for big family Sundays. Twenty people, three generations, everyone arguing and laughing. When I was young, I wanted quiet. Now that my house is quiet, I miss the noise.
+
+Roll chicken in warm tortillas, cover with red chili sauce and cheese, and bake until it bubbles.
+
+You don't have to love crowds. But leave a little room at your table, just in case."
+68,นาโชส์,Nachos,Mexico,Main,FALSE,tortilla,cheese,beans,avocado,โอเค,FALSE,mx_nachos,"แผ่นตอร์ติญาข้าวโพด, ชีส, ถั่วดำ, มะเขือเทศ, พริกฮาลาปิโน, ซาวร์ครีม, อะโวคาโด",,,25,43,10,0,1,โรยหน้า อบ,Monster Pages,เศษหน้าสูตรจากถ้ำ,,,,
+69,ทามาเลส,Tamales,Mexico,Main,FALSE,corn,pork,chili,,โอเค,TRUE,mx_tamales,"แป้งข้าวโพดมาซา, ใบข้าวโพดแห้ง, เนื้อหมู, พริกแห้ง, น้ำสต็อกไก่",,,35,37,0,0,1,สูตรเริ่มต้น: นวดแป้ง ห่อ นึ่ง,Starter,สูตรเริ่มต้น,,,,
+70,โปโซเล,Pozole,Mexico,Main,FALSE,pork,corn,chili,cabbage,โอเค,FALSE,mx_pozole,"เนื้อหมู, ข้าวโพดโฮมินี, พริกแห้ง, กระเทียม, หอมหัวใหญ่, กะหล่ำปลี, มะนาว, ออริกาโน",,,30,33,8,8,2,เคี่ยวหมูกับข้าวโพดนาน,Boss,ซุปหม้อใหญ่ รางวัลบอสครั้งแรก,,,,
+71,ชูโรส,Churros,Mexico,Dessert,FALSE,flour,egg,butter,,โอเค,FALSE,mx_churros,"แป้งสาลี, น้ำ, เนย, ไข่ไก่, น้ำตาล, อบเชย, น้ำมันพืช",อบเชยอยู่ในตู้กับข้าว,,19,26,0,0,2,บีบแป้งลงทอด คลุกน้ำตาล,Food Truck,ฟู้ดทรักเม็กซิกัน,,,,
+72,เค้กเตรสเลเชส (Tres Leches Cake),Tres Leches Cake,Mexico,Dessert,FALSE,flour,milk,cream,egg,โอเค,FALSE,mx_tres_leches,"แป้งสาลี, ไข่ไก่, น้ำตาล, นมสด, นมข้นหวาน, นมข้นจืด, วิปปิงครีม, วานิลลา",,,21,30,0,0,3,อบเค้ก ราดนมสามแบบ แต่งหน้า,Chef Mail,เชฟเม็กซิกัน ของหวานขึ้นชื่อ,4,700,chef_mx,"My dear,
+
+Rosa here, with my last secret for you.
+
+Tres leches is my celebration cake. Weddings, baptisms, the day my grandson finished university. Three milks soaked into a soft sponge, so every bite is sweet all the way through.
+
+Bake a light sponge with flour and eggs. Poke it all over, then pour in milk, condensed milk and cream until it drinks every drop. Cover with whipped cream and chill.
+
+Your shop is famous now, but I hope you remember why you started. You cook so that strangers feel at home. That is worth celebrating."
+73,ฟลาน,Flan,Mexico,Dessert,FALSE,egg,milk,,,โอเค,FALSE,mx_flan,"ไข่ไก่, นมข้นหวาน, นมสด, น้ำตาล, วานิลลา",,,10,20,8,0,2,เคี่ยวคาราเมล นึ่งให้เนียน,Dig Box,กล่องข้าวเก่า,,,,
+74,ออร์ชาตา,Horchata,Mexico,Drink,FALSE,rice,milk,,,โอเค,FALSE,mx_horchata,"ข้าว, นมสด, อบเชย, น้ำตาล, วานิลลา, น้ำแข็ง",,,9,45,19,0,1,แช่ข้าว ปั่น กรอง,Request Board,คำขอเครื่องดื่มเย็นหน้าร้อน,,,,
+75,อากัวเฟรสกา,Agua Fresca,Mexico,Drink,FALSE,seasonal_fruit,lime,,,โอเค,TRUE,mx_agua_fresca,"ผลไม้สดตามฤดูกาล, น้ำ, น้ำตาล, มะนาว, น้ำแข็ง",,,7,39,0,0,1,สูตรเริ่มต้น: ปั่นผลไม้ เท,Starter,สูตรเริ่มต้น,,,,
+76,ไข่เจียวปู,Crab Omelette,Thailand,Main,TRUE,crab,egg,spring_onion,,โอเค,FALSE,th_crab_omelette,"ไข่ไก่, เนื้อปู, น้ำปลา, ซีอิ๊วขาว, ต้นหอม, น้ำมันพืช",,,50,45,0,22,3,สูตรลับ: ทอดไข่ฟูในน้ำมันท่วม ไฟต้องพอดี,Festival,[สูตรลับ] ชนะแข่งทำอาหารเทศกาลริมทะเล,,,,
+77,บัวลอยไข่หวาน,Bua Loy with Sweet Egg,Thailand,Dessert,TRUE,glutinous_rice,pumpkin,taro,egg,โอเค,FALSE,th_bua_loy_egg,"แป้งข้าวเหนียว, ฟักทอง, เผือก, ไข่ไก่, กะทิ, น้ำตาล, เกลือ",ต่างจาก #11 แค่ใส่ไข่,,27,31,0,25,2,สูตรลับ: ทำง่ายเหมือนบัวลอย + ไข่ (เน้นเรื่องเล่า),Story,[สูตรลับ] side story NPC คิดถึงแม่,,,,
+78,น้ำใบเตยกะทิสด,Pandan Coconut Drink,Thailand,Drink,TRUE,pandan,coconut,,,โอเค,FALSE,th_pandan_coconut,"ใบเตย, กะทิ, น้ำตาล, เกลือ, น้ำแข็ง",,,18,51,10,26,2,สูตรลับ: คั้นใบเตย กรอง ผสมกะทิ,Event,[สูตรลับ] อีเวนต์ลับหน้าร้อน (ยายของเด็กในหมู่บ้าน),,,,
+79,โอมุไรซ์ (Omurice),Omurice,Japan,Main,TRUE,rice,egg,chicken,mushroom,โอเค,FALSE,jp_omurice,"ข้าวญี่ปุ่น, ไข่ไก่, เนื้อไก่, หอมหัวใหญ่, เห็ดแชมปิญอง, ซอสมะเขือเทศ, เนย",,,48,62,0,35,3,สูตรลับ: ผัดข้าว ห่อไข่ให้สวย,Story,[สูตรลับ] side story NPC ชาวญี่ปุ่น,,,,
+80,โดรายากิไส้มัทฉะ,Matcha Dorayaki,Japan,Dessert,TRUE,flour,egg,matcha,red_bean_paste,โอเค,FALSE,jp_matcha_dorayaki,"แป้งสาลี, ไข่ไก่, น้ำตาล, น้ำผึ้ง, ผงมัทฉะ, ถั่วขาวกวน, ผงฟู",,,33,31,0,15,2,สูตรลับ: เหมือนโดรายากิ เปลี่ยนไส้,Festival,[สูตรลับ] ชนะแข่งทำขนม,,,,
+81,เสี่ยวหลงเปา,Xiao Long Bao,China,Main,TRUE,flour,pork,ginger,spring_onion,โอเค,FALSE,cn_xiao_long_bao,"แป้งสาลี, หมูสับ, หนังหมูเจลาตินหรือน้ำซุปเข้มข้น, ขิง, ต้นหอม, ซีอิ๊วขาว, น้ำมันงา",,,34,61,0,10,3,สูตรลับ: จีบละเอียด มีน้ำซุปข้างใน,Festival,[สูตรลับ] ชนะแข่งทำอาหารเทศกาลตรุษจีน,,,,
+82,สาคูมะม่วงส้มโอ,Mango Pomelo Sago,China,Dessert,TRUE,mango,pomelo,coconut,,โอเค,FALSE,cn_mango_pomelo_sago,"สาคูเม็ดเล็ก, มะม่วงสุก, ส้มโอ, กะทิ, น้ำตาล, นมสด",,,23,33,0,26,2,สูตรลับ: ต้มสาคู แกะส้มโอ ผสม,Event,[สูตรลับ] อีเวนต์ลับวันอากาศร้อนจัด,,,,
+85,Chicken and Waffles,Chicken and Waffles,USA,Main,TRUE,chicken,flour,egg,maple_syrup,โอเค,FALSE,us_chicken_waffles,"เนื้อไก่, แป้งสาลี, บัตเตอร์มิลก์, ไข่ไก่, วาฟเฟิล, เมเปิลไซรัป, น้ำมันพืช",,,32,69,13,11,3,สูตรลับ: ทอดไก่ + ทำวาฟเฟิล สองอย่าง,Event,[สูตรลับ] อีเวนต์พ่อค้าเร่,,,,
+86,พีแคนพาย,Pecan Pie,USA,Dessert,TRUE,pecan,flour,egg,butter,โอเค,FALSE,us_pecan_pie,"แป้งพาย, พีแคน, ไข่ไก่, น้ำตาลทรายแดง, เนย, น้ำเชื่อมข้าวโพด, วานิลลา",,,25,50,0,31,3,สูตรลับ: แป้งพาย ไส้น้ำตาลต้องเซ็ตพอดี,Story,[สูตรลับ] side story พ่อค้าเร่,,,,
+87,เบอร์เรียทาโก้ (Birria Tacos),Birria Tacos,Mexico,Main,TRUE,tortilla,beef,chili,cheese,โอเค,FALSE,mx_birria_tacos,"แผ่นตอร์ติญาข้าวโพด, เนื้อวัว, พริกแห้ง, มะเขือเทศ, กระเทียม, หอมหัวใหญ่, อบเชย, ยี่หร่า, น้ำสต็อกเนื้อ, ชีส",,,35,51,0,24,3,สูตรลับ: ตุ๋นเนื้อนาน จุ่มซุปแล้วทอด,Festival,[สูตรลับ] ชนะแข่งทำอาหารเทศกาลเม็กซิกัน,,,,
+89,Rainbow Garden Parfait,Rainbow Garden Parfait,House Special,Dessert,TRUE,yogurt,seasonal_fruit,honey,cream,โอเค,FALSE,house_rainbow_parfait,"โยเกิร์ต, วิปปิงครีม, ผลไม้สดหลากสี, กราโนลา, น้ำผึ้ง",,,27,30,20,44,3,เมนูประจำร้านท้ายเกม: เรียงชั้นหลายสี,Story,[สูตรลับ] เก็บผลไม้ครบทุกสี,,,,
+90,Grandma's Secret Tea,Grandma's Secret Tea,House Special,Drink,TRUE,tea_leaves,apple,honey,lime,โอเค,FALSE,house_grandma_tea,"ชา, แอปเปิล, อบเชย, น้ำผึ้ง, น้ำ, มะนาว",,,18,45,10,35,3,เมนูประจำร้านเรื่องหลัก: ผสมหลายอย่างให้ลงตัว,Story,[สูตรลับ] เรื่องหลัก สูตรคุณยาย,,,,

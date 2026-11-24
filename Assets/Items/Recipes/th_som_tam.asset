@@ -35,3 +35,9 @@ MonoBehaviour:
   difficulty: 1
   cookingProfile: {fileID: 11400000, guid: 0a2e4dcd7e629d74a90c258595960114, type: 2}
   customSteps: []
+  obtainSource: 0
+  obtainNote: "\u0E2A\u0E39\u0E15\u0E23\u0E40\u0E23\u0E34\u0E48\u0E21\u0E15\u0E49\u0E19"
+  mailShopLevel: 0
+  mailReputation: 0
+  chef: {fileID: 0}
+  letterBody: 

@@ -34,3 +34,29 @@ MonoBehaviour:
   difficulty: 2
   cookingProfile: {fileID: 11400000, guid: 293b41c46f21701439a585332125a853, type: 2}
   customSteps: []
+  obtainSource: 1
+  obtainNote: "\u0E40\u0E0A\u0E1F\u0E44\u0E17\u0E22 \u0E09\u0E1A\u0E31\u0E1A\u0E41\u0E23\u0E01
+    \u0E40\u0E21\u0E19\u0E39\u0E08\u0E32\u0E19\u0E40\u0E14\u0E35\u0E22\u0E27\u0E22\u0E2D\u0E14\u0E19\u0E34\u0E22\u0E21"
+  mailShopLevel: 1
+  mailReputation: 20
+  chef: {fileID: 11400000, guid: 9027734d34a03bb43947e2332bd51243, type: 2}
+  letterBody: 'Dear young owner,
+
+
+    My niece showed me the reviews of your little
+    restaurant on her phone. A countryside shop serving food from six countries?
+    I had to write.
+
+
+    I''m Malai. I''ve run a kitchen in Bangkok for thirty years,
+    but I started at my mother''s street stall, frying holy basil pork for taxi drivers
+    at two in the morning. They had no time, only hunger, and this dish never let
+    them down.
+
+
+    Hot wok, lots of garlic and chili, and the basil goes in last.
+    A fried egg on top, crispy at the edges. That''s the whole secret.
+
+
+    Someone
+    who cooks for strangers deserves a good everyday dish.'

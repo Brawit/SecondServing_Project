@@ -34,3 +34,27 @@ MonoBehaviour:
   difficulty: 2
   cookingProfile: {fileID: 0}
   customSteps: []
+  obtainSource: 1
+  obtainNote: "\u0E40\u0E0A\u0E1F\u0E2D\u0E34\u0E15\u0E32\u0E25\u0E35"
+  mailShopLevel: 2
+  mailReputation: 150
+  chef: {fileID: 11400000, guid: 556ecd75ee852ce4a93c60357c4eb4f6, type: 2}
+  letterBody: 'Ciao again!
+
+
+    Your carbonara is getting good reviews. Brava! Now
+    we go further.
+
+
+    Margherita was named after a queen, but I learned it from
+    a very loud baker in Naples who shouted at me every day for a whole summer. On
+    my last day he gave me his dough knife and said I was "not hopeless." The highest
+    praise of my life.
+
+
+    Flour, water, yeast, and time. Stretch by hand, never
+    a rolling pin. Tomato, mozzarella, fresh basil, a very hot oven.
+
+
+    Sometimes
+    the people who push you hardest believe in you the most.'

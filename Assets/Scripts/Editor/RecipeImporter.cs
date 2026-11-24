@@ -14,6 +14,8 @@ using UnityEngine;
 // - อ่านค่าที่ฟื้นเมื่อกิน (Health / Stamina / Mana / Fever) ใส่ให้วัตถุดิบและจานอาหาร
 // - หาคอลัมน์จากชื่อหัวคอลัมน์ ไม่ใช่ลำดับ (ย้ายคอลัมน์ได้ แต่ห้ามเปลี่ยนชื่อหัว)
 // - [2.5b] อ่านความยาก (Difficulty 1–3) ช่องว่าง = 0 (คิดเอง) / ไม่มีคอลัมน์ทั้งคอลัมน์ = เตือน แล้วไม่แตะค่าเดิม
+// - [2.5c] อ่านเชฟจาก Chefs.csv (สร้าง ChefData ใน Assets/Chefs ไม่ทับ portrait) และทางได้สูตร/จดหมายเชฟ
+//   (Obtain, Obtain Note, Mail Shop Lv, Mail Reputation, Chef, Letter) ไม่มีคอลัมน์ = เตือน แล้วไม่แตะค่าเดิม
 public static class RecipeImporter
 {
     // ---------- ตำแหน่งไฟล์ ----------
@@ -24,6 +26,8 @@ public static class RecipeImporter
     private const string DishFolder = "Assets/Items/Dishes";
     private const string RecipeFolder = "Assets/Recipes";
     private const string RecipeDatabasePath = "Assets/Recipes/RecipeDatabase.asset";
+    private const string ChefsCsvPath = "Assets/Data/Chefs.csv";
+    private const string ChefFolder = "Assets/Chefs";
 
     // ---------- ชื่อหัวคอลัมน์ (ใส่ได้หลายชื่อ เผื่อเปลี่ยนชื่อในอนาคต) ----------
 
@@ -48,6 +52,20 @@ public static class RecipeImporter
     private static readonly string[] ColDemo = { "vertical slice", "in_demo", "demo" };
     private static readonly string[] ColKeys = { "key 1", "key 2", "key 3", "key 4" };
     private static readonly string[] ColDifficulty = { "difficulty" };
+
+    // [2.5c] ทางได้สูตร + จดหมายเชฟ (ชีต Recipes)
+    private static readonly string[] ColObtain = { "obtain" };
+    private static readonly string[] ColObtainNote = { "obtain note", "obtain_note" };
+    private static readonly string[] ColMailLevel = { "mail shop lv", "mail shop level", "mail_shop_lv" };
+    private static readonly string[] ColMailReputation = { "mail reputation", "mail_reputation" };
+    private static readonly string[] ColChef = { "chef", "chef_id" };
+    private static readonly string[] ColLetter = { "letter" };
+
+    // [2.5c] ชีต Chefs
+    private static readonly string[] ColChefId = { "chef_id", "chefid" };
+    private static readonly string[] ColChefName = { "name", "name (en)" };
+    private static readonly string[] ColSignOff = { "sign-off", "sign off", "signoff" };
+    private static readonly string[] ColBio = { "bio" };
     // คอลัมน์ที่ชื่อยาว ใช้หาจากคำขึ้นต้น
     private const string ColFullIngredientsPrefix = "วัตถุดิบเต็ม";
 
@@ -74,8 +92,11 @@ public static class RecipeImporter
             EditorUtility.DisplayProgressBar("Import Recipes", "Importing ingredients...", 0.2f);
             Dictionary<string, ItemData> items = ImportIngredients(report);
 
+            EditorUtility.DisplayProgressBar("Import Recipes", "Importing chefs...", 0.4f);
+            Dictionary<string, ChefData> chefs = ImportChefs(report);
+
             EditorUtility.DisplayProgressBar("Import Recipes", "Importing recipes...", 0.6f);
-            ImportRecipes(items, report);
+            ImportRecipes(items, chefs, report);
 
             EditorUtility.DisplayProgressBar("Import Recipes", "Refreshing databases...", 0.9f);
             RefreshDatabases(report);
@@ -203,7 +224,116 @@ public static class RecipeImporter
 
     // ---------- สูตรอาหาร ----------
 
-    private static void ImportRecipes(Dictionary<string, ItemData> items, ImportReport report)
+    // ---------- [2.5c] เชฟ ----------
+
+    // สร้าง/อัปเดต ChefData ตาม chef_id (ไม่แตะ portrait) ไม่มีไฟล์ Chefs.csv = เตือน แล้วใช้ของที่มีในโปรเจกต์
+    private static Dictionary<string, ChefData> ImportChefs(ImportReport report)
+    {
+        Dictionary<string, ChefData> chefs = LoadExistingChefs();
+
+        if (!File.Exists(ChefsCsvPath))
+        {
+            report.Warn($"{ChefsCsvPath} not found. Existing chefs were kept. Export the Chefs sheet as CSV.");
+            return chefs;
+        }
+
+        List<List<string>> rows = ReadCsv(ChefsCsvPath);
+        if (rows.Count == 0)
+        {
+            report.Warn("Chefs.csv is empty.");
+            return chefs;
+        }
+
+        CsvHeader header = new CsvHeader(rows[0]);
+        int colId = header.Require(ColChefId, "chef_id", ChefsCsvPath);
+        int colName = header.Find(ColChefName);
+        int colCountry = header.Find(ColCountry);
+        int colSignOff = header.Find(ColSignOff);
+        int colBio = header.Find(ColBio);
+
+        EnsureFolder(ChefFolder);
+
+        for (int r = 1; r < rows.Count; r++)
+        {
+            List<string> row = rows[r];
+            string id = Cell(row, colId);
+            if (string.IsNullOrEmpty(id))
+            {
+                continue;
+            }
+
+            if (!chefs.TryGetValue(id, out ChefData chef))
+            {
+                chef = ScriptableObject.CreateInstance<ChefData>();
+                chef.chefId = id;
+                AssetDatabase.CreateAsset(chef, AssetDatabase.GenerateUniqueAssetPath($"{ChefFolder}/{id}.asset"));
+                chefs.Add(id, chef);
+                report.ChefsCreated++;
+            }
+            else
+            {
+                report.ChefsUpdated++;
+            }
+
+            string displayName = Cell(row, colName);
+            if (!string.IsNullOrEmpty(displayName))
+            {
+                chef.displayName = displayName;
+            }
+
+            string countryText = Cell(row, colCountry);
+            if (TryParseEnum(countryText, out Cuisine cuisine))
+            {
+                chef.cuisine = cuisine;
+            }
+            else if (!string.IsNullOrEmpty(countryText))
+            {
+                report.Warn($"Chefs.csv row {r + 1} ({id}): Unknown country '{countryText}'. Value kept.");
+            }
+
+            if (colSignOff >= 0) chef.signOff = CleanMultiline(Cell(row, colSignOff));
+            if (colBio >= 0) chef.bio = CleanMultiline(Cell(row, colBio));
+
+            EditorUtility.SetDirty(chef);
+        }
+
+        return chefs;
+    }
+
+    private static Dictionary<string, ChefData> LoadExistingChefs()
+    {
+        Dictionary<string, ChefData> result = new Dictionary<string, ChefData>();
+
+        foreach (string guid in AssetDatabase.FindAssets("t:ChefData"))
+        {
+            ChefData chef = AssetDatabase.LoadAssetAtPath<ChefData>(AssetDatabase.GUIDToAssetPath(guid));
+            if (chef == null || string.IsNullOrWhiteSpace(chef.chefId))
+            {
+                continue;
+            }
+
+            if (!result.ContainsKey(chef.chefId))
+            {
+                result.Add(chef.chefId, chef);
+            }
+            else
+            {
+                Debug.LogWarning($"RecipeImporter: Duplicate chefId '{chef.chefId}' in project ({chef.name}). Using the first one.", chef);
+            }
+        }
+
+        return result;
+    }
+
+    // ข้อความหลายบรรทัดจาก CSV: ตัด \r ออก ให้เหลือ \n อย่างเดียว
+    private static string CleanMultiline(string text)
+    {
+        return string.IsNullOrEmpty(text) ? string.Empty : text.Replace("\r", "");
+    }
+
+    // ---------- สูตร ----------
+
+    private static void ImportRecipes(Dictionary<string, ItemData> items, Dictionary<string, ChefData> chefs, ImportReport report)
     {
         Dictionary<string, RecipeData> recipes = LoadExistingRecipes();
 
@@ -231,6 +361,18 @@ public static class RecipeImporter
         if (colDifficulty < 0)
         {
             report.Warn("Recipes.csv has no 'Difficulty' column. Existing difficulty values were kept (blank = auto by starter/normal/secret). Export the CSV again from the sheet.");
+        }
+
+        // [2.5c] ทางได้สูตร + จดหมายเชฟ: ไม่มีคอลัมน์ = CSV เก่า เตือนแล้วคงค่าเดิม
+        int colObtain = header.Find(ColObtain);
+        int colObtainNote = header.Find(ColObtainNote);
+        int colMailLevel = header.Find(ColMailLevel);
+        int colMailReputation = header.Find(ColMailReputation);
+        int colChef = header.Find(ColChef);
+        int colLetter = header.Find(ColLetter);
+        if (colObtain < 0 || colMailLevel < 0 || colMailReputation < 0 || colChef < 0 || colLetter < 0)
+        {
+            report.Warn("Recipes.csv is missing some of 'Obtain', 'Mail Shop Lv', 'Mail Reputation', 'Chef', 'Letter'. Missing columns were skipped and existing values kept. Export the CSV again from the sheet.");
         }
 
         int[] colKeys = new int[ColKeys.Length];
@@ -316,6 +458,51 @@ public static class RecipeImporter
                     difficulty = 0;
                 }
                 recipe.difficulty = difficulty;
+            }
+
+            // [2.5c] ทางได้สูตร
+            if (colObtain >= 0)
+            {
+                string obtainText = Cell(row, colObtain);
+                if (RecipeSourceUtil.TryParse(obtainText, out RecipeSource source))
+                {
+                    recipe.obtainSource = source;
+                }
+                else
+                {
+                    recipe.obtainSource = RecipeSource.Starter;
+                    if (!recipe.inDemo)
+                    {
+                        report.Warn($"Recipes.csv row {r + 1} ({id}): Obtain '{obtainText}' is empty or unknown. Using Starter.");
+                    }
+                }
+            }
+            if (colObtainNote >= 0) recipe.obtainNote = Cell(row, colObtainNote);
+            if (colMailLevel >= 0) recipe.mailShopLevel = ParseInt(Cell(row, colMailLevel));
+            if (colMailReputation >= 0) recipe.mailReputation = ParseInt(Cell(row, colMailReputation));
+            if (colLetter >= 0) recipe.letterBody = CleanMultiline(Cell(row, colLetter));
+
+            if (colChef >= 0)
+            {
+                string chefId = Cell(row, colChef);
+                if (string.IsNullOrEmpty(chefId))
+                {
+                    recipe.chef = null;
+                }
+                else if (chefs.TryGetValue(chefId, out ChefData chef))
+                {
+                    recipe.chef = chef;
+                }
+                else
+                {
+                    recipe.chef = null;
+                    report.Warn($"Recipes.csv row {r + 1} ({id}): Unknown chef '{chefId}'. Add it to the Chefs sheet.");
+                }
+            }
+
+            if (recipe.obtainSource == RecipeSource.ChefMail && !recipe.IsChefMail)
+            {
+                report.Warn($"Recipes.csv row {r + 1} ({id}): Chef Mail recipe needs both 'Chef' and 'Letter'. No letter will be sent.");
             }
 
             // วัตถุดิบหลัก
@@ -756,6 +943,8 @@ public static class RecipeImporter
         public int ItemsUpdated;
         public int RecipesCreated;
         public int RecipesUpdated;
+        public int ChefsCreated;
+        public int ChefsUpdated;
         public int DishesCreated;
         public int DishesUpdated;
         public int ItemDatabaseCount;
@@ -774,6 +963,7 @@ public static class RecipeImporter
             sb.AppendLine($"Items: {ItemsCreated} created, {ItemsUpdated} updated (ItemDatabase: {ItemDatabaseCount}).");
             sb.AppendLine($"Recipes: {RecipesCreated} created, {RecipesUpdated} updated (RecipeDatabase: {RecipeDatabaseCount}).");
             sb.AppendLine($"Dishes: {DishesCreated} created, {DishesUpdated} updated.");
+            sb.AppendLine($"Chefs: {ChefsCreated} created, {ChefsUpdated} updated.");
             sb.Append(warnings.Count == 0 ? "No warnings." : $"{warnings.Count} warning(s). See Console.");
             return sb.ToString();
         }

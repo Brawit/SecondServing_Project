@@ -34,3 +34,27 @@ MonoBehaviour:
   difficulty: 2
   cookingProfile: {fileID: 0}
   customSteps: []
+  obtainSource: 1
+  obtainNote: "\u0E40\u0E0A\u0E1F\u0E0D\u0E35\u0E48\u0E1B\u0E38\u0E48\u0E19"
+  mailShopLevel: 2
+  mailReputation: 200
+  chef: {fileID: 11400000, guid: 0a29b0691cda5cc409134a7d16c56213, type: 2}
+  letterBody: 'To the owner,
+
+
+    Kenji. People online say your shop has become
+    a place to rest. I am glad.
+
+
+    Tonkatsu reminds me of my father. He was strict,
+    and we rarely talked. But on exam days he would fry a pork cutlet for me, because
+    "katsu" sounds like "to win." He never said good luck. The cutlet said it for
+    him.
+
+
+    Pound the pork, then flour, egg, and breadcrumbs. Fry until golden
+    and crisp. Serve with shredded cabbage.
+
+
+    Some people cannot say what they
+    feel. Food can.'

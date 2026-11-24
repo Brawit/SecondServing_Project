@@ -33,3 +33,10 @@ MonoBehaviour:
   difficulty: 2
   cookingProfile: {fileID: 0}
   customSteps: []
+  obtainSource: 5
+  obtainNote: "\u0E01\u0E25\u0E48\u0E2D\u0E07\u0E02\u0E49\u0E32\u0E27\u0E40\u0E01\u0E48\u0E32
+    (\u0E21\u0E31\u0E19\u0E1D\u0E23\u0E31\u0E48\u0E07)"
+  mailShopLevel: 0
+  mailReputation: 0
+  chef: {fileID: 0}
+  letterBody: 

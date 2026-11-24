@@ -35,3 +35,27 @@ MonoBehaviour:
   difficulty: 3
   cookingProfile: {fileID: 0}
   customSteps: []
+  obtainSource: 1
+  obtainNote: "\u0E40\u0E0A\u0E1F\u0E0D\u0E35\u0E48\u0E1B\u0E38\u0E48\u0E19 \u0E23\u0E32\u0E40\u0E21\u0E07\u0E01\u0E31\u0E1A\u0E2D\u0E32\u0E08\u0E32\u0E23\u0E22\u0E4C\u0E17\u0E35\u0E48\u0E44\u0E21\u0E48\u0E04\u0E48\u0E2D\u0E22\u0E1E\u0E39\u0E14"
+  mailShopLevel: 2
+  mailReputation: 120
+  chef: {fileID: 11400000, guid: 0a29b0691cda5cc409134a7d16c56213, type: 2}
+  letterBody: 'To the owner,
+
+
+    Kenji again. I hope the gyudon has found its way
+    to tired people.
+
+
+    After I left my office job, I trained for six years in
+    a ramen shop. My master barely spoke. He corrected me by tasting my broth and
+    pouring it away. I hated it. Later I understood: he was not angry. He was teaching
+    me a patience I did not have.
+
+
+    Pork bones simmered for many hours, noodles,
+    a soft egg, spring onion. The broth cannot be rushed.
+
+
+    If working with others
+    ever hurt you, that is all right. A kitchen can be a quiet place to heal.'

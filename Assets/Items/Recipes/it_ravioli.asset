@@ -33,3 +33,27 @@ MonoBehaviour:
   difficulty: 3
   cookingProfile: {fileID: 0}
   customSteps: []
+  obtainSource: 1
+  obtainNote: "\u0E40\u0E0A\u0E1F\u0E2D\u0E34\u0E15\u0E32\u0E25\u0E35 \u0E07\u0E32\u0E19\u0E41\u0E1B\u0E49\u0E07\u0E1E\u0E32\u0E2A\u0E15\u0E49\u0E32"
+  mailShopLevel: 3
+  mailReputation: 320
+  chef: {fileID: 11400000, guid: 556ecd75ee852ce4a93c60357c4eb4f6, type: 2}
+  letterBody: 'Ciao!
+
+
+    Giulia here. I hear people now travel just to eat at your
+    shop. Incredible!
+
+
+    Ravioli is the dish I made with my nonna every Christmas.
+    Even at ninety, her hands were faster than mine. I used to rush, and my ravioli
+    burst open in the water. She said, "Seal it with patience, not pressure."
+
+
+    Fresh
+    pasta, ricotta and spinach filling, a little egg to seal the edges. Boil gently,
+    finish with butter and cheese.
+
+
+    When I''m stressed in my kitchen, I still
+    hear her: patience, not pressure. Maybe it helps you too.'

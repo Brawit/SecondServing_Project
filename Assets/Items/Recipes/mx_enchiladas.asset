@@ -34,3 +34,14 @@ MonoBehaviour:
   difficulty: 2
   cookingProfile: {fileID: 0}
   customSteps: []
+  obtainSource: 1
+  obtainNote: "\u0E40\u0E0A\u0E1F\u0E40\u0E21\u0E47\u0E01\u0E0B\u0E34\u0E01\u0E31\u0E19"
+  mailShopLevel: 2
+  mailReputation: 250
+  chef: {fileID: 11400000, guid: cd96477d5695e8349a71dcd12e8bd8d2, type: 2}
+  letterBody: "Hola again,\n\nRosa here. My grandson says your little shop has many
+    reviews now. Qu\xE9 bien!\n\nEnchiladas are what I cook for big family Sundays.
+    Twenty people, three generations, everyone arguing and laughing. When I was young,
+    I wanted quiet. Now that my house is quiet, I miss the noise.\n\nRoll chicken
+    in warm tortillas, cover with red chili sauce and cheese, and bake until it bubbles.\n\nYou
+    don't have to love crowds. But leave a little room at your table, just in case."

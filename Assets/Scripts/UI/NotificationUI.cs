@@ -68,6 +68,9 @@ public class NotificationUI : MonoBehaviour
     }
 
     // แสดงข้อความ (duration <= 0 คือใช้ค่าเริ่มต้น) ถ้ามีข้อความเดิมอยู่จะถูกแทนที่
+    // [2.5c] เฟรมที่แสดงข้อความล่าสุด (ใช้ต่อข้อความที่มาพร้อมกัน)
+    private int lastShowFrame = -1;
+
     public void Show(string message, float duration = -1f)
     {
         if (string.IsNullOrEmpty(message))
@@ -75,12 +78,17 @@ public class NotificationUI : MonoBehaviour
             return;
         }
 
+        // [2.5c] หลายข้อความในเฟรมเดียวกัน (เช่น ตอนเช้า: จดหมาย + เมนูนิยม) = ต่อกันคนละบรรทัด ไม่ทับกัน
+        bool sameFrame = Time.frameCount == lastShowFrame && messageText != null && !string.IsNullOrEmpty(messageText.text);
+        lastShowFrame = Time.frameCount;
+
         if (messageText != null)
         {
-            messageText.text = message;
+            messageText.text = sameFrame ? messageText.text + "\n" + message : message;
         }
 
-        hideTimer = duration > 0f ? duration : defaultDuration;
+        float newTimer = duration > 0f ? duration : defaultDuration;
+        hideTimer = sameFrame ? Mathf.Max(hideTimer, newTimer) : newTimer;
         SetVisible(true);
     }
 

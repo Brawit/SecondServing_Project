@@ -70,3 +70,9 @@ MonoBehaviour:
     length: 3
     timePerKey: 0
     timeLimit: 0
+  obtainSource: 0
+  obtainNote: "\u0E2A\u0E39\u0E15\u0E23\u0E40\u0E23\u0E34\u0E48\u0E21\u0E15\u0E49\u0E19"
+  mailShopLevel: 0
+  mailReputation: 0
+  chef: {fileID: 0}
+  letterBody: 

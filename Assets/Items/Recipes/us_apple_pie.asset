@@ -32,3 +32,27 @@ MonoBehaviour:
   difficulty: 3
   cookingProfile: {fileID: 0}
   customSteps: []
+  obtainSource: 1
+  obtainNote: "\u0E40\u0E0A\u0E1F\u0E2D\u0E40\u0E21\u0E23\u0E34\u0E01\u0E31\u0E19"
+  mailShopLevel: 2
+  mailReputation: 220
+  chef: {fileID: 11400000, guid: d4ca161307a19ab499b5d49387c6380d, type: 2}
+  letterBody: 'Hey again!
+
+
+    Dan here. Heard your place is getting real busy.
+    Proud of you, kid, and I don''t even know you.
+
+
+    This pie is my late wife''s.
+    Mary baked it every Sunday for the diner, and folks drove an hour just for a
+    slice. After she passed, I couldn''t make it for two years. Then one day a regular
+    asked for "Mary''s pie," and I figured she''d want it served, not missed.
+
+
+    Cold
+    butter in the crust, apples with sugar and cinnamon, bake till the juice bubbles.
+
+
+    Some
+    recipes are meant to keep going.'

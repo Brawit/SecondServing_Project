@@ -35,3 +35,25 @@ MonoBehaviour:
   difficulty: 2
   cookingProfile: {fileID: 0}
   customSteps: []
+  obtainSource: 1
+  obtainNote: "\u0E40\u0E0A\u0E1F\u0E2D\u0E40\u0E21\u0E23\u0E34\u0E01\u0E31\u0E19
+    \u0E09\u0E1A\u0E31\u0E1A\u0E41\u0E23\u0E01"
+  mailShopLevel: 1
+  mailReputation: 60
+  chef: {fileID: 11400000, guid: d4ca161307a19ab499b5d49387c6380d, type: 2}
+  letterBody: 'Hey there!
+
+
+    Name''s Dan. I run a diner off Route 9, been flipping
+    burgers for twenty-two years. My daughter found your place online and said, "Dad,
+    this kid''s doing what you did." So here I am, writing a letter like it''s 1985.
+
+
+    Before
+    the diner I drove trucks. Lonely work. The best part of any day was a cheeseburger
+    at some roadside joint where nobody asked me questions.
+
+
+    Smash the beef
+    thin on a hot griddle, cheese on right after the flip, toast the bun. Lettuce,
+    tomato, pickles. Don''t overthink it.'

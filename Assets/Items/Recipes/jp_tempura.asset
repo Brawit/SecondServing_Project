@@ -34,3 +34,30 @@ MonoBehaviour:
   difficulty: 2
   cookingProfile: {fileID: 0}
   customSteps: []
+  obtainSource: 1
+  obtainNote: "\u0E40\u0E0A\u0E1F\u0E0D\u0E35\u0E48\u0E1B\u0E38\u0E48\u0E19 \u0E40\u0E17\u0E04\u0E19\u0E34\u0E04\u0E17\u0E2D\u0E14\u0E22\u0E32\u0E01"
+  mailShopLevel: 3
+  mailReputation: 350
+  chef: {fileID: 11400000, guid: 0a29b0691cda5cc409134a7d16c56213, type: 2}
+  letterBody: 'To the owner,
+
+
+    Kenji. Your shop is known even among cooks here
+    now. Truly.
+
+
+    Tempura is the hardest dish I know. The batter must be cold
+    and barely mixed, lumps and all. The oil must be exactly right. For years mine
+    came out heavy and oily, and I wanted to quit.
+
+
+    The trick is to stop trying
+    so hard. Mix less. Touch less. Trust the heat.
+
+
+    Shrimp, pumpkin, sweet potato,
+    a light flour batter, fried quickly until it crackles.
+
+
+    I think people are
+    the same. They don''t need to be perfect. They need to be light enough to breathe.'

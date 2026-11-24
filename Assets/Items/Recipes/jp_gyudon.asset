@@ -35,3 +35,29 @@ MonoBehaviour:
   difficulty: 1
   cookingProfile: {fileID: 0}
   customSteps: []
+  obtainSource: 1
+  obtainNote: "\u0E40\u0E0A\u0E1F\u0E0D\u0E35\u0E48\u0E1B\u0E38\u0E48\u0E19 \u0E09\u0E1A\u0E31\u0E1A\u0E41\u0E23\u0E01
+    \u0E40\u0E21\u0E19\u0E39\u0E07\u0E48\u0E32\u0E22"
+  mailShopLevel: 1
+  mailReputation: 60
+  chef: {fileID: 11400000, guid: 0a29b0691cda5cc409134a7d16c56213, type: 2}
+  letterBody: 'To the owner,
+
+
+    Forgive the sudden letter. I read about your shop
+    on a food forum. Someone wrote that you work alone, quietly, and that the food
+    speaks for you. I understand that very well.
+
+
+    I am Kenji Morita. Before
+    I became a cook, I worked in an office in Osaka. I was not good with people.
+    Every night I ate gyudon alone at a counter, and that bowl was the kindest thing
+    in my day.
+
+
+    Thin beef simmered with onion in soy sauce and a little sweetness,
+    over hot rice, pickled ginger on the side.
+
+
+    Quick, warm, honest. Please
+    make it for someone who is tired.'

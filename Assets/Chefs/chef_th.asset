@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b2ce0e95f914fe4a866626eb7878609, type: 3}
+  m_Name: chef_th
+  m_EditorClassIdentifier: Assembly-CSharp::ChefData
+  chefId: chef_th
+  displayName: Malai Srisuk
+  cuisine: 0
+  signOff: 'Cook with your heart,
+
+    Malai'
+  portrait: {fileID: 0}
+  bio: Runs a restaurant in Bangkok; started at her mother's street stall. Her first
+    restaurant failed; she rebuilt in Chiang Mai. Warm, motherly.

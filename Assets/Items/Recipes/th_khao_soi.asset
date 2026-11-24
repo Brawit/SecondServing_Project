@@ -35,3 +35,28 @@ MonoBehaviour:
   difficulty: 3
   cookingProfile: {fileID: 0}
   customSteps: []
+  obtainSource: 1
+  obtainNote: "\u0E40\u0E0A\u0E1F\u0E44\u0E17\u0E22 \u0E2A\u0E39\u0E15\u0E23\u0E20\u0E32\u0E04\u0E40\u0E2B\u0E19\u0E37\u0E2D"
+  mailShopLevel: 3
+  mailReputation: 300
+  chef: {fileID: 11400000, guid: 9027734d34a03bb43947e2332bd51243, type: 2}
+  letterBody: 'Dear owner,
+
+
+    Malai again. You have come so far!
+
+
+    Khao soi
+    comes from the north, from Chiang Mai, where I went alone at twenty after my
+    first restaurant failed. I thought my career was over. An old woman at a noodle
+    stall fed me every day and refused my money. "Pay me when you are a chef," she
+    said.
+
+
+    Coconut curry broth, chicken, soft egg noodles with crispy noodles
+    on top, pickled greens and lime on the side.
+
+
+    I went back ten years later
+    to pay her. Failure was not the end of my story. It won''t be the end of yours
+    either.'

@@ -388,6 +388,12 @@ public class InventoryUI : MonoBehaviour
             return false;
         }
 
+        // [2.5c] ระหว่างเปิดหน้าต่างจดหมาย
+        if (MailUI.IsAnyOpen)
+        {
+            return false;
+        }
+
         return true;
     }
 

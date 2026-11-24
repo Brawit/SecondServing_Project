@@ -35,3 +35,29 @@ MonoBehaviour:
   difficulty: 2
   cookingProfile: {fileID: 0}
   customSteps: []
+  obtainSource: 1
+  obtainNote: "\u0E40\u0E0A\u0E1F\u0E40\u0E21\u0E47\u0E01\u0E0B\u0E34\u0E01\u0E31\u0E19
+    \u0E09\u0E1A\u0E31\u0E1A\u0E41\u0E23\u0E01"
+  mailShopLevel: 1
+  mailReputation: 70
+  chef: {fileID: 11400000, guid: cd96477d5695e8349a71dcd12e8bd8d2, type: 2}
+  letterBody: 'Hola, amigo,
+
+
+    My grandson reads restaurant reviews from all over
+    the world, and yours made him laugh: "Tacos in the countryside, made by someone
+    who isn''t even Mexican." Then he said they were good. So now I must help you
+    make them better.
+
+
+    I am Rosa Delgado, a cocinera from Oaxaca. Tacos were
+    the first thing I ever sold, from a basket on my head, when I was twelve.
+
+
+    Warm
+    the tortillas until they puff. Seasoned beef, fresh tomato, crisp lettuce, a
+    squeeze of lime. Two tortillas if the filling is generous.
+
+
+    Food is for
+    sharing. Never forget it.'

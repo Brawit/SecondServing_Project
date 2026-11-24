@@ -34,3 +34,27 @@ MonoBehaviour:
   difficulty: 2
   cookingProfile: {fileID: 0}
   customSteps: []
+  obtainSource: 1
+  obtainNote: "\u0E40\u0E0A\u0E1F\u0E08\u0E35\u0E19 \u0E07\u0E32\u0E19\u0E08\u0E35\u0E1A\u0E41\u0E1B\u0E49\u0E07"
+  mailShopLevel: 2
+  mailReputation: 180
+  chef: {fileID: 11400000, guid: 3edf825c44ba8994197fd4cca4373a22, type: 2}
+  letterBody: 'Hello again,
+
+
+    Lin Wei writing. I read that your shop now has
+    regulars. That is when a restaurant truly begins.
+
+
+    In my grandfather''s
+    teahouse, the whole family folded dumplings together every morning before dawn.
+    As a boy I was too slow, and my pleats were ugly. My aunt said, "Ugly dumplings
+    taste the same. Keep folding."
+
+
+    Pork, shrimp, cabbage, a little ginger,
+    wrapped in thin dough and steamed until the skin turns clear.
+
+
+    You fold
+    alone for now. One day, perhaps, someone will fold beside you.'
