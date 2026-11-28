@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c14e69943c50aa441ab4cd930afdd6c8, type: 3}
+  m_Name: Guacamole
+  m_EditorClassIdentifier: Assembly-CSharp::ItemData
+  itemId: mx_guacamole
+  itemName: Guacamole
+  nameTh: "\u0E01\u0E31\u0E27\u0E01\u0E32\u0E42\u0E21\u0E40\u0E25\u0E48"
+  icon: {fileID: 0}
+  description: 
+  itemType: 1
+  category: 0
+  source: 0
+  originType: 0
+  seasons: -1
+  inStore: 0
+  earlyGame: 0
+  equipType: 0
+  sellPrice: 360
+  restoreHealth: 32
+  restoreStamina: 81
+  restoreMana: 29
+  restoreFever: 0

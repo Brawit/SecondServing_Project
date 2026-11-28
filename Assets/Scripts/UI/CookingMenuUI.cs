@@ -7,6 +7,8 @@ using UnityEngine.UI;
 // [2.5] หน้าต่างทำอาหารนอกเวลาร้าน: เปิดเมื่อกด E ที่เตาตอนร้านไม่ได้เปิด
 // - แสดงสูตรที่รู้และวัตถุดิบในกระเป๋าพอทำ คลิก = ปิดหน้าต่างแล้วเริ่มมินิเกม (จานเข้ากระเป๋าพร้อมคุณภาพ)
 // - Esc หรือปุ่ม Cancel = ปิด
+// - [v2] สูตรที่มีช่องหมวด: เลือกวัตถุดิบด้วยลูกศรในแถว / ค่าเริ่มต้น = ตัวที่เลือกล่าสุด (RecipeBook) ถ้ายังพอ ไม่งั้นตัวที่มีมากสุด
+//   กดทำแล้วจำตัวนั้นเป็น "ตัวล่าสุด" ของสูตร (เซฟด้วย) / เปลี่ยนลูกศรเฉยๆ ไม่ปิดหน้าต่าง = จำไว้แค่ตอนหน้าต่างเปิดอยู่
 // ระหว่างเปิดหน้าต่าง: เดินไม่ได้ เปิดกระเป๋าไม่ได้ ใช้ Hotbar ไม่ได้ / นาฬิกาเดินปกติ (ไม่หยุด)
 // หมายเหตุ: วางสคริปต์นี้บนวัตถุที่เปิดอยู่ตลอด (ไม่ใช่ตัวหน้าต่างที่ถูกซ่อน)
 // สร้างและผูกอัตโนมัติได้จาก Tools > Second Serving > Build Cooking System
@@ -50,6 +52,9 @@ public class CookingMenuUI : MonoBehaviour
     private readonly List<CookingRecipeItemUI> items = new List<CookingRecipeItemUI>();
     private readonly List<RecipeData> buffer = new List<RecipeData>();
     private bool isDirty = true;
+
+    // [v2] ตัวที่ผู้เล่นเลื่อนเลือกไว้ระหว่างหน้าต่างเปิดอยู่ (ล้างทุกครั้งที่เปิดใหม่)
+    private readonly Dictionary<RecipeData, ItemData> pendingChoices = new Dictionary<RecipeData, ItemData>();
 
     private void Awake()
     {
@@ -168,6 +173,7 @@ public class CookingMenuUI : MonoBehaviour
         }
 
         IsOpen = true;
+        pendingChoices.Clear();
         SetWindowVisible(true);
         Refresh();
 
@@ -239,8 +245,7 @@ public class CookingMenuUI : MonoBehaviour
             if (used)
             {
                 RecipeData recipe = buffer[i];
-                int inBag = inventory != null ? inventory.GetCount(recipe.dishItem) : 0;
-                items[i].Show(recipe, RecipeDatabase.GetMaxServings(recipe, inventory), inBag);
+                items[i].Show(recipe, RecipeDatabase.GetMaxServings(recipe, inventory), CountDishesInBag(recipe), inventory, ChoiceFor(recipe));
             }
         }
 
@@ -248,6 +253,47 @@ public class CookingMenuUI : MonoBehaviour
         {
             emptyText.gameObject.SetActive(buffer.Count == 0);
             emptyText.text = emptyMessage;
+        }
+    }
+
+    // [v2] จานของสูตรนี้ที่ทำไว้แล้วในกระเป๋า (จานแม่ + จานแบบทุกตัว)
+    private int CountDishesInBag(RecipeData recipe)
+    {
+        if (inventory == null)
+        {
+            return 0;
+        }
+
+        int total = 0;
+        foreach (ItemData dish in DishVariantRegistry.DishItemsIn(recipe, inventory))
+        {
+            total += inventory.GetCount(dish);
+        }
+        return total;
+    }
+
+    // [v2] วัตถุดิบที่จะเลือกไว้ในแถว: ตัวที่เลื่อนไว้ตอนนี้ → ตัวล่าสุดของสูตร → ตัวที่มีมากสุด (ไม่มีช่องหมวด = null)
+    private ItemData ChoiceFor(RecipeData recipe)
+    {
+        if (recipe == null || !recipe.HasCategorySlot || inventory == null)
+        {
+            return null;
+        }
+
+        if (pendingChoices.TryGetValue(recipe, out ItemData pending) && RecipeRequirements.HasAll(recipe, inventory, pending))
+        {
+            return pending;
+        }
+
+        ItemData last = recipeBook != null ? recipeBook.GetLastChoice(recipe) : null;
+        return RecipeRequirements.DefaultChoice(recipe, inventory, last);
+    }
+
+    private void HandleChoiceChanged(RecipeData recipe, ItemData choice)
+    {
+        if (recipe != null && choice != null)
+        {
+            pendingChoices[recipe] = choice;
         }
     }
 
@@ -263,13 +309,15 @@ public class CookingMenuUI : MonoBehaviour
             CookingRecipeItemUI item = Instantiate(itemTemplate, listContainer);
             item.name = $"CookItem_{items.Count + 1}";
             item.gameObject.SetActive(true);
-            item.OnClicked += HandleItemClicked;
+            item.OnCookClicked += HandleItemClicked;
+            item.OnChoiceChanged += HandleChoiceChanged;
             items.Add(item);
         }
     }
 
     // คลิกสูตร: ปิดหน้าต่าง (ปล่อยการเดิน) แล้วเริ่มมินิเกม (CookingSession ล็อกการเดินเอง)
-    private void HandleItemClicked(RecipeData recipe)
+    // [v2] choice = วัตถุดิบที่เลือกในแถว (สูตรไม่มีช่องหมวด = null) เริ่มทำได้ = จำเป็นตัวล่าสุดของสูตร
+    private void HandleItemClicked(RecipeData recipe, ItemData choice)
     {
         if (recipe == null)
         {
@@ -284,6 +332,10 @@ public class CookingMenuUI : MonoBehaviour
             return;
         }
 
-        CookingSession.Instance.StartCooking(recipe, CookingSession.CookMode.Free);
+        bool started = CookingSession.Instance.StartCooking(recipe, CookingSession.CookMode.Free, choice);
+        if (started && recipeBook != null && recipe.HasCategorySlot && CookingSession.Instance.CurrentChoice != null)
+        {
+            recipeBook.SetLastChoice(recipe, CookingSession.Instance.CurrentChoice);
+        }
     }
 }

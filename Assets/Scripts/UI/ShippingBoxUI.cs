@@ -146,7 +146,8 @@ public class ShippingBoxUI : MonoBehaviour
         SalesLedger ledger = SalesLedger.Instance;
         if (ledger == null || !ledger.PutInBox(item, amount, quality)) return false;
 
-        string name = Inventory.TracksQuality(item) ? $"{item.itemName} ({DishQualityUtil.Label(quality)})" : item.itemName;
+        // [v2] ชื่อจานรวมแบบอยู่แล้ว เช่น "Sushi (Salmon) · Perfect"
+        string name = Inventory.TracksQuality(item) ? $"{item.itemName} · {DishQualityUtil.Label(quality)}" : item.itemName;
         NotificationUI.Post(string.Format(shippedFormat, name, amount));
         return true;
     }

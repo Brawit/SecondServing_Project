@@ -6,6 +6,7 @@ using UnityEngine.InputSystem;
 // - ระหว่างทำ: ผู้เล่นเดินไม่ได้ (ยืนที่เตา) / เวลาร้านและความอดทนลูกค้าเดินต่อ / นาฬิกาไม่หยุด
 // - Esc = ยกเลิก ไม่เสียวัตถุดิบ / ทำพลาดยังได้จาน OK
 // - วัตถุดิบหักตอนทำเสร็จ
+// - [v2] สูตรที่มีช่องหมวด ได้จานแบบตามวัตถุดิบที่ใส่ เช่น "Sushi (Salmon)" (DishVariantRegistry)
 //   - ตอนเปิดร้าน (InShop) = จานอยู่ในมือ (CarriedDish) / ร้านปิดไประหว่างทำ = เข้ากระเป๋า
 //   - นอกเวลาร้าน (Free) = เข้ากระเป๋าพร้อมคุณภาพ
 // - ไม่มีหน้าต่างผลลัพธ์: แถบกระพริบสีตามผลแต่ละขั้น ~0.5 วิ แล้วไปต่อ/ปิดเอง
@@ -68,6 +69,9 @@ public class CookingSession : MonoBehaviour
 
     public bool IsCooking => phase != Phase.Idle;
     public RecipeData CurrentRecipe { get; private set; }
+
+    // [v2] วัตถุดิบที่ใส่ช่องหมวดของจานที่กำลังทำ (null = สูตรไม่มีช่องหมวด)
+    public ItemData CurrentChoice { get; private set; }
     public CookingSettings Settings => settings;
 
     private CookMode mode;
@@ -130,12 +134,19 @@ public class CookingSession : MonoBehaviour
     // ---------- เริ่ม ----------
 
     // เริ่มทำสูตรนี้ คืนค่า false ถ้าทำไม่ได้ (แจ้งเตือนให้แล้ว)
-    public bool StartCooking(RecipeData recipe, CookMode cookMode)
+    // [v2] choice = วัตถุดิบที่ใส่ช่องหมวด (null = ใช้ตัวตั้งต้น: ตัวที่เลือกล่าสุด หรือตัวที่มีมากสุด)
+    public bool StartCooking(RecipeData recipe, CookMode cookMode, ItemData choice = null)
     {
         if (IsCooking || recipe == null || recipe.dishItem == null || inventory == null)
         {
             return false;
         }
+
+        if (recipe.HasCategorySlot && !recipe.CategorySlot.Accepts(choice))
+        {
+            choice = RecipeRequirements.DefaultChoice(recipe, inventory, null);
+        }
+        CurrentChoice = recipe.HasCategorySlot ? choice : null;
 
         if (!HasIngredients(recipe))
         {
@@ -143,10 +154,11 @@ public class CookingSession : MonoBehaviour
             return false;
         }
 
-        // นอกเวลาร้านจานเข้ากระเป๋า ต้องมีที่ว่าง
-        if (cookMode == CookMode.Free && inventory.GetSpaceFor(recipe.dishItem) <= 0)
+        // นอกเวลาร้านจานเข้ากระเป๋า ต้องมีที่ว่าง ([v2] นับตามจานแบบที่จะได้)
+        ItemData expectedDish = DishVariantRegistry.GetOrCreate(recipe, CurrentChoice);
+        if (cookMode == CookMode.Free && inventory.GetSpaceFor(expectedDish) <= 0)
         {
-            NotificationUI.Post(string.Format(bagFullFormat, recipe.recipeName));
+            NotificationUI.Post(string.Format(bagFullFormat, expectedDish != null ? expectedDish.itemName : recipe.recipeName));
             return false;
         }
 
@@ -168,7 +180,8 @@ public class CookingSession : MonoBehaviour
         lockedMovement = playerController != null && playerController.CanMove;
         if (lockedMovement) playerController.SetCanMove(false);
 
-        Debug.Log($"CookingSession: Cooking {recipe.recipeName} ({mode}, {steps.Count} steps, difficulty {recipe.Difficulty}).");
+        string choiceText = CurrentChoice != null ? $", with {CurrentChoice.itemName}" : "";
+        Debug.Log($"CookingSession: Cooking {recipe.recipeName} ({mode}, {steps.Count} steps, difficulty {recipe.Difficulty}{choiceText}).");
 
         if (skipMinigames || view == null || settings == null)
         {
@@ -302,19 +315,31 @@ public class CookingSession : MonoBehaviour
             return;
         }
 
-        // ตรวจอีกครั้งก่อนหัก (กันของหายระหว่างทำ)
+        // ตรวจอีกครั้งก่อนหัก (กันของหายระหว่างทำ) [v2] ตัวที่เลือกหมด = ลองตัวอื่นในหมวด
+        if (!HasIngredients(recipe) && recipe.HasCategorySlot)
+        {
+            CurrentChoice = RecipeRequirements.DefaultChoice(recipe, inventory, null);
+        }
         if (!HasIngredients(recipe))
         {
             NotificationUI.Post(string.Format(missingFormat, recipe.recipeName));
             return;
         }
 
+        // [v2] จานที่ได้: สูตรมีช่องหมวด = จานแบบตามวัตถุดิบที่ใส่ / ไม่มี = จานแม่
+        ItemData dish = DishVariantRegistry.GetOrCreate(recipe, CurrentChoice);
+        if (dish == null)
+        {
+            Debug.LogWarning($"CookingSession: {recipe.recipeName} has no dish item.");
+            return;
+        }
+
         ShopManager shop = ShopManager.Instance;
         bool toHand = mode == CookMode.InShop && shop != null && shop.IsServing && CarriedDish.Instance != null && !CarriedDish.Instance.HasDish;
 
-        if (!toHand && inventory.GetSpaceFor(recipe.dishItem) <= 0)
+        if (!toHand && inventory.GetSpaceFor(dish) <= 0)
         {
-            NotificationUI.Post(string.Format(bagFullFormat, recipe.recipeName));
+            NotificationUI.Post(string.Format(bagFullFormat, dish.itemName));
             return;
         }
 
@@ -322,15 +347,16 @@ public class CookingSession : MonoBehaviour
 
         if (toHand)
         {
-            CarriedDish.Instance.Hold(recipe, quality);
+            CarriedDish.Instance.Hold(dish, quality);
         }
         else
         {
-            inventory.AddItem(recipe.dishItem, 1, quality);
-            NotificationUI.Post(string.Format(cookedFormat, recipe.recipeName, DishQualityUtil.Label(quality)));
+            inventory.AddItem(dish, 1, quality);
+            NotificationUI.Post(string.Format(cookedFormat, dish.itemName, DishQualityUtil.Label(quality)));
         }
 
-        Debug.Log($"CookingSession: Finished {recipe.recipeName} -> {DishQualityUtil.Label(quality)} ({(toHand ? "hand" : "bag")}).");
+        string destination = toHand ? "hand" : "bag";
+        Debug.Log($"CookingSession: Finished {dish.itemName} ({dish.itemId}) -> {DishQualityUtil.Label(quality)} ({destination}).");
     }
 
     public void Cancel()
@@ -364,19 +390,12 @@ public class CookingSession : MonoBehaviour
 
     private bool HasIngredients(RecipeData recipe)
     {
-        foreach (KeyValuePair<ItemData, int> pair in recipe.GetRequiredCounts())
-        {
-            if (inventory.GetCount(pair.Key) < pair.Value)
-            {
-                return false;
-            }
-        }
-        return true;
+        return RecipeRequirements.HasAll(recipe, inventory, CurrentChoice);
     }
 
     private void ConsumeIngredients(RecipeData recipe)
     {
-        foreach (KeyValuePair<ItemData, int> pair in recipe.GetRequiredCounts())
+        foreach (KeyValuePair<ItemData, int> pair in RecipeRequirements.Resolve(recipe, CurrentChoice))
         {
             inventory.RemoveItem(pair.Key, pair.Value);
         }

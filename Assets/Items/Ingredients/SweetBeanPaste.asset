@@ -13,16 +13,20 @@ MonoBehaviour:
   m_Name: SweetBeanPaste
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   itemId: red_bean_paste
-  itemName: Sweet Bean Paste
-  nameTh: "\u0E16\u0E31\u0E48\u0E27\u0E01\u0E27\u0E19"
+  itemName: Red Bean Paste
+  nameTh: "\u0E16\u0E31\u0E48\u0E27\u0E41\u0E14\u0E07\u0E01\u0E27\u0E19"
   icon: {fileID: 0}
   description: 
   itemType: 0
-  category: 14
-  source: 3
+  category: 23
+  source: 8
+  originType: 8
+  seasons: 15
+  inStore: 1
+  earlyGame: 0
   equipType: 0
-  sellPrice: 35
-  restoreHealth: 14
-  restoreStamina: 28
+  sellPrice: 70
+  restoreHealth: 7
+  restoreStamina: 23
   restoreMana: 0
   restoreFever: 0

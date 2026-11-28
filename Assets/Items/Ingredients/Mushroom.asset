@@ -18,11 +18,15 @@ MonoBehaviour:
   icon: {fileID: 0}
   description: A wild forest mushroom.
   itemType: 0
-  category: 2
+  category: 17
   source: 0
+  originType: 1
+  seasons: 4
+  inStore: 1
+  earlyGame: 1
   equipType: 0
-  sellPrice: 15
-  restoreHealth: 0
-  restoreStamina: 0
+  sellPrice: 40
+  restoreHealth: 6
+  restoreStamina: 18
   restoreMana: 0
   restoreFever: 0

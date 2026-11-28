@@ -13,16 +13,20 @@ MonoBehaviour:
   m_Name: SouthernFriedChicken
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   itemId: us_fried_chicken
-  itemName: Southern Fried Chicken
-  nameTh: "\u0E44\u0E01\u0E48\u0E17\u0E2D\u0E14\u0E2A\u0E44\u0E15\u0E25\u0E4C\u0E2D\u0E40\u0E21\u0E23\u0E34\u0E01\u0E31\u0E19"
+  itemName: Fried Chicken
+  nameTh: "\u0E44\u0E01\u0E48\u0E17\u0E2D\u0E14"
   icon: {fileID: 0}
   description: 
   itemType: 1
   category: 0
   source: 0
+  originType: 0
+  seasons: -1
+  inStore: 0
+  earlyGame: 0
   equipType: 0
-  sellPrice: 160
-  restoreHealth: 40
-  restoreStamina: 38
-  restoreMana: 0
+  sellPrice: 370
+  restoreHealth: 32
+  restoreStamina: 102
+  restoreMana: 14
   restoreFever: 0

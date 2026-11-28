@@ -12,7 +12,8 @@ public struct BoxEntry
 }
 
 // [2.6b] สมุดบัญชีการขายของผู้เล่น (singleton วางบนวัตถุ SalesLedger ในฉาก)
-// - ราคาขาย = 100% ของ ItemData.sellPrice / จานคูณตามคุณภาพ (OK 1.0 / Good 1.1 / Perfect 1.25) ปัดลงต่อชิ้น
+// - ราคาขาย = 100% ของ ItemData.sellPrice / [v2] จานคูณตามตาราง ดาว × คุณภาพ ใน CookingSettings (DishPricing.SalePrice) ปัดลงต่อชิ้น
+//   จานแบบ (เช่น Sushi (Salmon)) ใช้ราคาของแบบนั้นเอง
 // - ขายตรง (ร้านของชำ) = หักของ + ได้เงินทันที
 // - กล่องขายข้ามคืน = ย้ายของออกจากกระเป๋าทันที เอาคืนได้จนกว่าจะนอน / ขายจริงตอนจบวัน (DayEndManager เรียก SettleDay)
 // - ชื่อเสียงจากการขายจาน: จานที่ขายวันนี้ (ร้าน + กล่องรวมกัน) ทุก 5 จาน = +2 สูงสุด +10 ต่อวัน ไม่สะสมข้ามวัน / วัตถุดิบไม่นับ
@@ -31,7 +32,7 @@ public class SalesLedger : MonoBehaviour
     [SerializeField] private Inventory inventory;
 
     [Header("Prices")]
-    [Tooltip("ตัวคูณราคาขายจานตามคุณภาพ เรียงตาม enum DishQuality: OK, Good, Perfect")]
+    [Tooltip("[เลิกใช้แล้ว v2] ราคาจานใช้ตาราง ดาว × คุณภาพ ใน CookingSettings > Economy (v2) แทน ช่องนี้เก็บไว้ให้ฉากเดิมเปิดได้")]
     [SerializeField] private float[] qualityMultipliers = { 1f, 1.1f, 1.25f };
 
     [Header("Reputation From Sales")]
@@ -168,6 +169,8 @@ public class SalesLedger : MonoBehaviour
         return item != null && item.sellPrice > 0;
     }
 
+    // [เลิกใช้แล้ว v2] ตัวคูณคุณภาพแบบเดิม (ไม่คิดดาว) ใช้ DishPricing.SalePrice / PriceMultiplier แทน
+    [Obsolete("Use DishPricing.SalePrice(item, quality) or DishPricing.PriceMultiplier(stars, quality)")]
     public static float QualityMultiplier(DishQuality quality)
     {
         float[] source = Instance != null && Instance.qualityMultipliers != null && Instance.qualityMultipliers.Length == DishQualityUtil.Count
@@ -177,12 +180,11 @@ public class SalesLedger : MonoBehaviour
         return Mathf.Max(0f, source[index]);
     }
 
-    // ราคาขายต่อชิ้น (จาน = คูณคุณภาพแล้วปัดลง / อย่างอื่น = ราคาเต็ม)
+    // ราคาขายต่อชิ้น (จาน = ราคาจาน × ตัวคูณ ดาว × คุณภาพ ปัดลง / อย่างอื่น = ราคาเต็ม)
     public static int UnitSellPrice(ItemData item, DishQuality quality)
     {
         if (!CanSell(item)) return 0;
-        if (!Inventory.TracksQuality(item)) return item.sellPrice;
-        return Mathf.FloorToInt(item.sellPrice * QualityMultiplier(quality) + 0.0001f);
+        return DishPricing.SalePrice(item, quality);
     }
 
     // ชื่อเสียงจากจำนวนจานที่ขายในวันเดียว

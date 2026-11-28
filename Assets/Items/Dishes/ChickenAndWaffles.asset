@@ -14,15 +14,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   itemId: us_chicken_waffles
   itemName: Chicken and Waffles
-  nameTh: Chicken and Waffles
+  nameTh: "\u0E44\u0E01\u0E48\u0E17\u0E2D\u0E14\u0E01\u0E31\u0E1A\u0E27\u0E32\u0E1F\u0E40\u0E1F\u0E34\u0E25"
   icon: {fileID: 0}
   description: 
   itemType: 1
   category: 0
   source: 0
+  originType: 0
+  seasons: -1
+  inStore: 0
+  earlyGame: 0
   equipType: 0
-  sellPrice: 220
-  restoreHealth: 32
-  restoreStamina: 69
-  restoreMana: 25
-  restoreFever: 11
+  sellPrice: 1235
+  restoreHealth: 57
+  restoreStamina: 176
+  restoreMana: 17
+  restoreFever: 20

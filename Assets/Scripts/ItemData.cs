@@ -20,7 +20,19 @@ public enum ItemCategory
     DrinkBase,
     Paste,
     Fermented,
-    SeaProduct
+    SeaProduct,
+    // [v2] หมวดจากชีต Ingredients v2
+    Mushroom,
+    Fish,
+    Shellfish,
+    Egg,
+    Legume,
+    Spice,
+    Processed,
+    Import,
+    Seaweed,
+    Cheese,      // ชีสที่ใช้ในช่อง any_cheese ได้ (ชีส ชีสนมแพะ มอซซาเรลลา)
+    AgedCheese   // ชีสบ่มแข็ง เช่น พาร์เมซาน (ไม่อยู่ในช่อง any_cheese)
 }
 
 // ประเภทหลักของไอเทม ใช้แบ่งแท็บในกระเป๋า
@@ -58,7 +70,29 @@ public enum ItemSource
     Sea,     // ชายฝั่ง/ทะเล
     Market,  // ซื้อที่ตลาด
     Artisan, // ของเฉพาะทาง ของหมัก ของประจำชาติ
-    Pantry   // ตู้กับข้าว มีไม่จำกัด
+    Pantry,  // ตู้กับข้าว มีไม่จำกัด
+    // [v2] แหล่งจากชีต Ingredients v2
+    Garden,    // ปลูกในสวน
+    Ranch,     // เลี้ยงสัตว์
+    Hunt,      // ล่า/มอนสเตอร์
+    Processed, // แปรรูป
+    Import     // ของนำเข้า
+}
+
+// [v2] ประเภทของไอเทมแบบ Stardew (คอลัมน์ Type ในชีต)
+// หมายเหตุ: เพิ่มค่าใหม่ต่อท้ายเท่านั้น ห้ามสลับลำดับ
+public enum ItemOriginType
+{
+    Unknown,
+    Forage,
+    FruitTree,
+    Crop,
+    Fish,
+    CrabPotBeach,
+    AnimalProduct,
+    MonsterLoot,
+    Artisan,
+    Import
 }
 
 // สร้างไฟล์ข้อมูลวัตถุดิบได้จากเมนู Assets > Create > Cozy > Item Data
@@ -89,6 +123,19 @@ public class ItemData : ScriptableObject
     [Tooltip("ได้วัตถุดิบนี้มาจากไหน")]
     public ItemSource source = ItemSource.Forage;
 
+    [Header("World (v2)")]
+    [Tooltip("ประเภทแบบ Stardew (คอลัมน์ Type)")]
+    public ItemOriginType originType = ItemOriginType.Unknown;
+
+    [Tooltip("ฤดูที่หาได้ (คอลัมน์ Season) ตอนนี้เก็บไว้เฉยๆ ระบบฤดูมาเฟส 3")]
+    public Season seasons = Season.All;
+
+    [Tooltip("ร้านของชำขายของชิ้นนี้ (คอลัมน์ In Store)")]
+    public bool inStore = false;
+
+    [Tooltip("หาได้ตั้งแต่ต้นเกม (คอลัมน์ Early)")]
+    public bool earlyGame = false;
+
     [Header("Equip")]
     [Tooltip("สวมใส่ที่ช่องประเภทไหน (None = สวมใส่ไม่ได้)\nแนะนำ: รองเท้าและของแฟชัน ใช้ Item Type = Equipment / แหวนและสร้อย ใช้ Item Type = Accessory")]
     public EquipType equipType = EquipType.None;
@@ -118,6 +165,16 @@ public class ItemData : ScriptableObject
 
     // สวมใส่ได้หรือไม่
     public bool IsEquippable => equipType != EquipType.None;
+
+    // ---------- [v2] จานแยกแบบ (สร้างตอนรันเกมโดย DishVariantRegistry ไม่ถูกเซฟลงไฟล์) ----------
+
+    // สูตรแม่ของจานแบบนี้ (null = ไม่ใช่จานแบบ)
+    [System.NonSerialized] public RecipeData variantRecipe;
+
+    // วัตถุดิบที่ใช้ในช่องหมวด เช่น ปลาแซลมอนของ "Sushi (Salmon)"
+    [System.NonSerialized] public ItemData variantIngredient;
+
+    public bool IsVariant => variantRecipe != null;
 
 #if UNITY_EDITOR
     // ถ้ายังไม่มีรหัส ให้ตั้งจากชื่อไฟล์เป็นตัวพิมพ์เล็ก เช่น "Mushroom" -> "mushroom"

@@ -14,15 +14,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   itemId: beans
   itemName: Beans
-  nameTh: "\u0E16\u0E31\u0E48\u0E27 (\u0E14\u0E33/\u0E02\u0E32\u0E27)"
+  nameTh: "\u0E16\u0E31\u0E48\u0E27 (\u0E14\u0E33/\u0E41\u0E14\u0E07)"
   icon: {fileID: 0}
   description: 
   itemType: 0
-  category: 2
-  source: 2
+  category: 21
+  source: 5
+  originType: 3
+  seasons: 4
+  inStore: 1
+  earlyGame: 0
   equipType: 0
-  sellPrice: 12
-  restoreHealth: 0
-  restoreStamina: 0
+  sellPrice: 25
+  restoreHealth: 4
+  restoreStamina: 12
   restoreMana: 0
   restoreFever: 0

@@ -13,24 +13,28 @@ MonoBehaviour:
   m_Name: it_risotto
   m_EditorClassIdentifier: Assembly-CSharp::RecipeData
   recipeId: it_risotto
-  recipeName: Risotto
-  nameTh: "\u0E23\u0E34\u0E0B\u0E2D\u0E15\u0E42\u0E15"
+  recipeName: Mushroom Risotto
+  nameTh: "\u0E23\u0E34\u0E0B\u0E2D\u0E15\u0E42\u0E15\u0E40\u0E2B\u0E47\u0E14"
   icon: {fileID: 0}
   cuisine: 3
   course: 0
   isSecret: 0
   inDemo: 0
   dishItem: {fileID: 11400000, guid: 075a2d28e9734784b8ebbdc0ac2dd7d2, type: 2}
-  ingredients:
-  - {fileID: 11400000, guid: c586b1e0d2bb8464799139217f0d0f3a, type: 2}
-  - {fileID: 11400000, guid: 2db10c1ee7d62054eae50fced28855ca, type: 2}
-  - {fileID: 11400000, guid: 14ab336b5d1d8d64e85d5c23953bbe12, type: 2}
-  - {fileID: 11400000, guid: 8753b40049e26ab41b0913307d3ad62e, type: 2}
-  fullIngredientsText: "\u0E02\u0E49\u0E32\u0E27\u0E2D\u0E32\u0E23\u0E4C\u0E42\u0E1A\u0E23\u0E34\u0E42\u0E2D,
-    \u0E19\u0E49\u0E33\u0E2A\u0E15\u0E47\u0E2D\u0E01\u0E44\u0E01\u0E48, \u0E2B\u0E2D\u0E21\u0E2B\u0E31\u0E27\u0E43\u0E2B\u0E0D\u0E48,
-    \u0E40\u0E19\u0E22, \u0E0A\u0E35\u0E2A\u0E1E\u0E32\u0E23\u0E4C\u0E40\u0E21\u0E0B\u0E32\u0E19,
-    \u0E44\u0E27\u0E19\u0E4C\u0E02\u0E32\u0E27\u0E1B\u0E23\u0E38\u0E07\u0E2D\u0E32\u0E2B\u0E32\u0E23"
-  sellPrice: 210
+  slots:
+  - item: {fileID: 11400000, guid: c586b1e0d2bb8464799139217f0d0f3a, type: 2}
+    anyOfCategory: 0
+    category: 0
+  - item: {fileID: 11400000, guid: 2db10c1ee7d62054eae50fced28855ca, type: 2}
+    anyOfCategory: 0
+    category: 0
+  - item: {fileID: 11400000, guid: d4d3ebc3cfd5b61488f149d4c39b5bd9, type: 2}
+    anyOfCategory: 0
+    category: 0
+  ingredients: []
+  fullIngredientsText: 
+  sellPrice: 830
+  baseRecipe: {fileID: 0}
   difficulty: 3
   cookingProfile: {fileID: 0}
   customSteps: []

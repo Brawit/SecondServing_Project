@@ -1,84 +1,112 @@
-﻿item_id,ชื่อไทย,Name (EN),Category,Source,ใช้ในกี่สูตร,รวมมาจาก (ชื่อในสูตรจริง),Sell Price,Health,Stamina,Mana,Fever
-holy_basil,ใบกะเพรา,Holy Basil,Herb,Forage,1,,8,0,0,0,0
-basil,ใบโหระพา,Basil,Herb,Forage,2,,8,16,26,4,0
-chili,พริก,Chili,Vegetable,Forage,7,"พริก, พริกแห้ง, พริกฮาลาปิโน",6,0,0,0,0
-lemongrass,ตะไคร้,Lemongrass,Herb,Forage,1,,8,0,0,0,0
-mushroom,เห็ด,Mushroom,Vegetable,Forage,3,"เห็ดฟาง, เห็ดแชมปิญอง (มีในเกมแล้ว)",15,0,0,0,0
-spring_onion,ต้นหอม,Spring Onion,Herb,Forage,6,,6,10,30,3,0
-ginger,ขิง,Ginger,Herb,Forage,3,,8,0,0,0,0
-pandan,ใบเตย,Pandan Leaf,Herb,Forage,1,,10,0,0,0,0
-butterfly_pea,ดอกอัญชัน,Butterfly Pea Flower,Flower,Forage,1,,18,0,0,0,0
-chrysanthemum,ดอกเก๊กฮวย,Chrysanthemum,Flower,Forage,1,ดอกเก๊กฮวยแห้ง,18,0,0,0,0
-tea_leaves,ใบชา,Tea Leaves,Herb,Forage,1,ชา,15,0,0,0,0
-tomato,มะเขือเทศ,Tomato,Vegetable,Forage,6,,10,6,20,10,0
-carrot,แครอท,Carrot,Vegetable,Forage,2,,10,6,34,6,0
-potato,มันฝรั่ง,Potato,Vegetable,Forage,3,,8,0,0,0,0
-sweet_potato,มันหวาน,Sweet Potato,Vegetable,Forage,1,,10,0,0,0,0
-cabbage,กะหล่ำปลี,Cabbage,Vegetable,Forage,4,,8,0,0,0,0
-cucumber,แตงกวา,Cucumber,Vegetable,Forage,2,,8,16,18,0,0
-green_papaya,มะละกอดิบ,Green Papaya,Vegetable,Forage,1,,12,0,0,0,0
-thai_eggplant,มะเขือเปราะ,Thai Eggplant,Vegetable,Forage,1,"มะเขือเปราะ, มะเขือพวง",10,0,0,0,0
-bean_sprout,ถั่วงอก,Bean Sprout,Vegetable,Forage,1,,6,0,0,0,0
-pumpkin,ฟักทอง,Pumpkin,Vegetable,Forage,3,,12,0,0,0,0
-taro,เผือก,Taro,Vegetable,Forage,2,,12,0,0,0,0
-spinach,ผักโขม,Spinach,Vegetable,Forage,1,,8,0,0,0,0
-lettuce,ผักกาดหอม,Lettuce,Vegetable,Forage,2,,8,6,26,0,0
-bok_choy,ผักกวางตุ้ง,Bok Choy,Vegetable,Forage,1,,8,0,0,0,0
-bell_pepper,พริกหวาน,Bell Pepper,Vegetable,Forage,2,,12,10,10,0,0
-zucchini,บวบ,Zucchini,Vegetable,Forage,1,,10,0,0,0,0
-corn,ข้าวโพด,Corn,Vegetable,Forage,2,"ข้าวโพดโฮมินี, ใบข้าวโพดแห้ง",12,4,30,0,0
-avocado,อะโวคาโด,Avocado,Fruit,Forage,1,,22,14,18,3,0
-water_chestnut,แห้ว,Water Chestnut,Vegetable,Forage,1,,14,12,18,10,0
-coconut,มะพร้าว,Coconut,Fruit,Forage,8,กะทิ,15,8,18,4,0
-mango,มะม่วง,Mango,Fruit,Forage,2,มะม่วงสุก,18,16,8,5,0
-lime,มะนาว,Lime,Fruit,Forage,4,"มะนาว, น้ำมะนาว",10,12,8,4,0
-lemon,เลมอน,Lemon,Fruit,Forage,2,"เลมอน, น้ำเชื่อมเลมอน",10,12,34,5,0
-apple,แอปเปิล,Apple,Fruit,Forage,2,,15,16,20,4,0
-pineapple,สับปะรด,Pineapple,Fruit,Forage,1,,18,12,8,4,0
-pomelo,ส้มโอ,Pomelo,Fruit,Forage,1,,18,16,8,5,0
-berry,เบอร์รี,Berry,Fruit,Forage,1,,20,4,14,6,0
-seasonal_fruit,ผลไม้ตามฤดูกาล,Seasonal Fruit,Fruit,Forage,3,"ผลไม้สดตามฤดูกาล, ผลไม้สดหลากสี, กลิ่นผลไม้",15,4,12,5,0
-peanut,ถั่วลิสง,Peanut,Nut,Forage,2,,12,12,16,0,0
-pistachio,พิสตาชิโอ,Pistachio,Nut,Market,1,,35,14,12,10,0
-pecan,พีแคน,Pecan,Nut,Market,1,,35,16,16,10,0
-sesame,งา,Sesame,Nut,Market,2,"งาดำ, งาบด",15,0,0,0,0
-beans,ถั่ว (ดำ/ขาว),Beans,Vegetable,Market,3,"ถั่วดำ, ถั่วขาว",12,0,0,0,0
-soybean,ถั่วเหลือง,Soybean,Vegetable,Market,1,,10,0,0,0,0
-shrimp,กุ้ง,Shrimp,Seafood,Market,5,,40,0,0,0,0
-crab,ปู,Crab,Seafood,Sea,1,เนื้อปู,60,0,0,0,0
-octopus,ปลาหมึก,Octopus,Seafood,Sea,1,ปลาหมึกยักษ์,55,0,0,0,0
-salmon,ปลาแซลมอน,Salmon,Seafood,Sea,1,,65,0,0,0,0
-tuna,ปลาทูน่า,Tuna,Seafood,Sea,1,,65,0,0,0,0
-clam,หอย,Clam,Seafood,Sea,1,หอยลาย,40,0,0,0,0
-pork,เนื้อหมู,Pork,Meat,Market,12,"หมูสับ, เนื้อหมู, สันนอก, สามชั้น, ซี่โครงหมู, กระดูกหมู, หมูชาชู",35,0,0,0,0
-chicken,เนื้อไก่,Chicken,Meat,Market,9,,30,0,0,0,0
-beef,เนื้อวัว,Beef,Meat,Market,8,"เนื้อวัว, เนื้อวัวบด, เนื้อวัวสไลซ์",45,0,0,0,0
-duck,เป็ด,Duck,Meat,Market,1,,50,0,0,0,0
-egg,ไข่ไก่,Egg,Animal Product,Market,25,,8,0,0,0,0
-rice,ข้าว,Rice,Grain,Market,9,"ข้าวสวย, ข้าวสาร, ข้าวญี่ปุ่น, ข้าวอาร์โบริโอ",10,0,0,0,0
-glutinous_rice,ข้าวเหนียว,Glutinous Rice,Grain,Market,5,"ข้าวเหนียว, แป้งข้าวเหนียว, แป้งข้าวเหนียวญี่ปุ่น",12,0,0,0,0
-noodles,เส้นก๋วยเตี๋ยว/บะหมี่,Noodles,Grain,Market,4,"เส้นจันท์, บะหมี่ไข่, เส้นราเมง, เส้นบะหมี่",15,0,0,0,0
-pasta,พาสต้า,Pasta,Grain,Market,4,"สปาเกตตี, มักกะโรนี, แผ่นลาซานญ่า, พาสต้า",18,0,0,0,0
-bread,ขนมปัง,Bread,Grain,Market,4,"ขนมปังเบอร์เกอร์/ฮอตดอก/บาแก็ต, เกล็ดขนมปัง",15,4,12,0,0
-milk,นม,Milk,Dairy,Artisan,12,"นมสด, นมข้นหวาน, นมข้นจืด",30,4,8,0,0
-cheese,ชีส,Cheese,Dairy,Artisan,14,"ชีส, เชดดาร์, มอสซาเรลลา, พาร์เมซาน, ริคอตต้า, มาสคาร์โปน",55,14,14,0,0
-butter,เนย,Butter,Dairy,Artisan,9,,40,0,0,0,0
-cream,ครีม,Cream,Dairy,Artisan,5,"วิปปิงครีม, ครีมเปรี้ยว, ซาวร์ครีม, บัตเตอร์มิลก์",40,0,0,0,0
-yogurt,โยเกิร์ต,Yogurt,Dairy,Artisan,1,,35,10,8,0,0
-honey,น้ำผึ้ง,Honey,Sweetener,Artisan,4,,45,2,12,6,0
-maple_syrup,เมเปิลไซรัป,Maple Syrup,Sweetener,Artisan,2,,55,2,18,6,0
-chocolate,ช็อกโกแลต,Chocolate,Sweet,Artisan,3,"ดาร์กช็อกโกแลต, ช็อกโกแลตชิป, ผงโกโก้, น้ำเชื่อมช็อกโกแลต",50,2,22,0,0
-coffee,กาแฟ,Coffee,Drink Base,Artisan,2,"เมล็ดกาแฟ, กาแฟเอสเปรสโซ",45,0,0,0,0
-matcha,มัทฉะ,Matcha,Drink Base,Artisan,2,ผงมัทฉะ,55,0,0,0,0
-thai_tea,ชาไทย,Thai Tea Leaves,Drink Base,Artisan,1,,35,0,0,0,0
-thai_curry_paste,พริกแกงไทย,Thai Curry Paste,Paste,Artisan,3,"พริกแกงเขียวหวาน, พริกแกงมัสมั่น, พริกแกงข้าวซอย",40,0,0,0,0
-curry_roux,ก้อนแกงกะหรี่ญี่ปุ่น,Japanese Curry Roux,Paste,Artisan,1,,40,0,0,0,0
-red_bean_paste,ถั่วกวน,Sweet Bean Paste,Paste,Artisan,5,"ถั่วแดงกวน, ถั่วขาวกวน",35,14,28,0,0
-tofu,เต้าหู้,Tofu,Fermented,Artisan,1,,25,14,24,0,0
-pickles,ผักดอง,Pickles,Fermented,Artisan,2,"ขิงดอง, ผักกาดดอง, หน่อไม้ดอง, แตงกวาดอง",25,12,18,0,0
-nori,สาหร่ายโนริ,Nori,Sea Product,Artisan,1,,35,2,10,0,0
-cured_meat,เนื้อหมัก (เบคอน/แฮม/ไส้กรอก),Cured Meat,Meat,Artisan,4,"หมูแฮม, เบคอน, ไส้กรอก, แก้มหมูหมัก",55,4,10,0,0
-salted_egg,ไข่เค็ม,Salted Egg,Fermented,Artisan,1,ไข่แดงเค็ม,30,16,36,0,0
-tortilla,แผ่นตอร์ติญา,Tortilla,Grain,Artisan,6,"ตอร์ติญาข้าวโพด/แป้งสาลี, แป้งมาซา",25,12,12,0,0
-chinotto,น้ำเชื่อมชิโนตโต,Chinotto Syrup,Drink Base,Artisan,1,,50,0,0,0,0
-flour,แป้งสาลี,Flour,Grain,Market,24,"แป้งสาลี, แป้งเทมปุระ, แป้งทาโกะยากิ, แป้งพิซซ่า, แป้งพาย, แผ่นเกี๊ยว, เลดี้ฟิงเกอร์, วาฟเฟิล",10,0,0,0,0
+﻿item_id,ชื่อไทย,Name (EN),Category,Source,In Store,Early,Sell Price,Health,Stamina,Mana,Fever,Type,Season
+mushroom,เห็ด,Mushroom,Mushroom,Forage,Y,Y,40,6,18,0,0,Forage,Fall
+basil,ใบโหระพา,Basil,Herb,Forage,Y,Y,20,6,16,12,0,Forage,Summer
+lemongrass,ตะไคร้,Lemongrass,Herb,Forage,Y,Y,20,0,0,0,0,Forage,All
+pandan,ใบเตย,Pandan Leaf,Herb,Forage,N,Y,25,0,0,0,0,Forage,All
+ginger,ขิง,Ginger,Herb,Forage,Y,Y,30,8,24,0,0,Forage,Fall
+bamboo_shoot,หน่อไม้,Bamboo Shoot,Vegetable,Forage,Y,Y,35,-12,8,0,0,Forage,Spring
+berry,เบอร์รีป่า,Wild Berry,Fruit,Forage,Y,Y,25,7,14,13,0,Forage,Summer
+mango,มะม่วง,Mango,Fruit,Forage,Y,Y,60,14,36,36,0,Fruit Tree,Summer
+coconut,มะพร้าว,Coconut,Fruit,Forage,Y,Y,60,16,39,37,0,Fruit Tree,All
+lime,มะนาว,Lime,Fruit,Forage,Y,Y,25,5,16,8,0,Fruit Tree,All
+lemon,เลมอน,Lemon,Fruit,Forage,Y,Y,30,7,18,10,0,Fruit Tree,Winter
+pomelo,ส้มโอ,Pomelo,Fruit,Forage,Y,Y,70,18,40,40,0,Fruit Tree,Fall
+chili,พริก,Chili,Spice,Garden,Y,Y,30,-2,20,25,0,Crop,Summer
+rice,ข้าวสาร,Rice,Grain,Garden,Y,N,20,0,0,0,0,Crop,Spring
+glutinous_rice,ข้าวเหนียว,Glutinous Rice,Grain,Garden,Y,N,25,0,0,0,0,Crop,Spring
+wheat,ข้าวสาลี,Wheat,Grain,Garden,N,N,15,0,0,0,0,Crop,"Summer, Fall"
+corn,ข้าวโพด,Corn,Vegetable,Garden,Y,Y,50,10,17,0,0,Crop,"Summer, Fall"
+tomato,มะเขือเทศ,Tomato,Vegetable,Garden,Y,Y,60,7,12,16,0,Crop,Summer
+cabbage,กะหล่ำปลี,Cabbage,Vegetable,Garden,Y,Y,70,11,15,0,0,Crop,Spring
+cucumber,แตงกวา,Cucumber,Vegetable,Garden,Y,N,40,5,11,7,0,Crop,Summer
+carrot,แครอท,Carrot,Vegetable,Garden,Y,N,35,7,14,9,0,Crop,Spring
+potato,มันฝรั่ง,Potato,Vegetable,Garden,Y,Y,80,8,16,0,0,Crop,Spring
+sweet_potato,มันหวาน,Sweet Potato,Vegetable,Garden,Y,N,70,14,22,10,0,Crop,Fall
+pumpkin,ฟักทอง,Pumpkin,Vegetable,Garden,Y,N,150,18,27,8,0,Crop,Fall
+green_papaya,มะละกอดิบ,Green Papaya,Vegetable,Garden,Y,Y,50,6,3,6,0,Fruit Tree,All
+bok_choy,ผักกวางตุ้ง,Bok Choy,Vegetable,Garden,Y,N,60,4,8,4,0,Crop,Fall
+bell_pepper,พริกหวาน,Bell Pepper,Vegetable,Garden,Y,N,60,3,12,12,0,Crop,Summer
+avocado,อะโวคาโด,Avocado,Fruit,Garden,Y,N,100,10,18,16,0,Fruit Tree,Spring
+pineapple,สับปะรด,Pineapple,Fruit,Garden,Y,N,100,12,27,21,0,Crop,Summer
+watermelon,แตงโม,Watermelon,Fruit,Garden,Y,N,120,18,40,28,0,Crop,Summer
+apple,แอปเปิล,Apple,Fruit,Garden,Y,N,60,10,18,5,0,Fruit Tree,Fall
+soybean,ถั่วเหลือง,Soybean,Legume,Garden,Y,N,20,4,9,0,0,Crop,Summer
+beans,ถั่ว (ดำ/แดง),Beans,Legume,Garden,Y,N,25,4,12,0,0,Crop,Fall
+peanut,ถั่วลิสง,Peanut,Nut,Garden,Y,Y,35,4,10,0,0,Crop,"Summer, Fall"
+mackerel,ปลาทู,Mackerel,Fish,Sea,Y,Y,50,8,17,5,0,Fish,"Fall, Winter"
+tilapia,ปลานิล,Tilapia,Fish,Sea,Y,Y,40,10,20,12,0,Fish,All
+salmon,ปลาแซลมอน,Salmon,Fish,Sea,Y,N,100,23,43,36,0,Fish,Fall
+tuna,ปลาทูน่า,Tuna,Fish,Sea,Y,N,120,17,37,27,0,Fish,"Summer, Winter"
+shrimp,กุ้ง,Shrimp,Shellfish,Sea,Y,Y,80,8,12,0,0,Crab Pot / Beach,All
+crab,ปู,Crab,Shellfish,Sea,N,N,150,12,17,0,0,Crab Pot / Beach,"Fall, Winter"
+clam,หอย,Clam,Shellfish,Sea,Y,Y,50,5,11,0,0,Crab Pot / Beach,All
+squid,ปลาหมึก,Squid,Shellfish,Sea,Y,N,90,11,19,0,0,Crab Pot / Beach,Winter
+seaweed,สาหร่ายทะเล,Seaweed,Seaweed,Sea,Y,Y,25,7,13,8,0,Crab Pot / Beach,All
+egg,ไข่ไก่,Egg,Egg,Ranch,Y,Y,40,5,10,0,0,Animal Product,All
+milk,นม,Milk,Dairy,Ranch,Y,N,100,8,24,12,0,Animal Product,All
+honey,น้ำผึ้ง,Honey,Sweetener,Ranch,Y,N,100,10,27,18,0,Animal Product,"Spring, Summer, Fall"
+chicken,เนื้อไก่,Chicken,Meat,Hunt,Y,N,90,10,28,12,0,Monster Loot,All
+pork,เนื้อหมู,Pork,Meat,Hunt,Y,N,100,18,33,16,0,Monster Loot,All
+beef,เนื้อวัว,Beef,Meat,Hunt,Y,N,150,20,37,18,0,Monster Loot,All
+flour,แป้งสาลี,Flour,Processed,Processed,Y,N,40,0,0,0,0,Artisan,All
+bread,ขนมปัง,Bread,Processed,Processed,Y,N,60,8,23,0,0,Artisan,All
+noodles,เส้นก๋วยเตี๋ยว/บะหมี่,Noodles,Processed,Processed,Y,N,50,0,0,0,0,Artisan,All
+pasta,พาสต้า,Pasta,Processed,Processed,Y,N,50,0,0,0,0,Artisan,All
+tortilla,แผ่นตอร์ติญา,Tortilla,Processed,Processed,Y,N,40,6,13,0,0,Artisan,All
+tofu,เต้าหู้,Tofu,Processed,Processed,Y,N,50,6,17,0,0,Artisan,All
+cheese,ชีส,Cheese,Cheese,Processed,Y,N,180,8,23,0,0,Artisan,All
+butter,เนย,Butter,Dairy,Processed,Y,N,120,0,0,0,0,Artisan,All
+yogurt,โยเกิร์ต,Yogurt,Dairy,Processed,Y,N,120,7,13,8,0,Artisan,All
+curry_paste,พริกแกง,Curry Paste,Processed,Processed,Y,N,80,0,0,0,0,Artisan,All
+red_bean_paste,ถั่วแดงกวน,Red Bean Paste,Processed,Processed,Y,N,70,7,23,0,0,Artisan,All
+matcha,มัทฉะ,Matcha,Import,Import,N,N,200,0,0,0,0,Import,All
+coffee,กาแฟ,Coffee,Import,Import,N,N,150,0,0,0,0,Import,All
+chocolate,ช็อกโกแลต,Chocolate,Import,Import,N,N,180,12,29,20,0,Import,All
+maple_syrup,เมเปิลไซรัป,Maple Syrup,Import,Import,N,N,200,0,0,0,0,Import,All
+pecan,พีแคน,Pecan,Import,Import,N,N,250,0,0,0,0,Import,All
+fiddlehead,ผักกูด,Fiddlehead Fern,Vegetable,Forage,N,Y,40,6,14,6,0,Forage,Spring
+morning_glory,ผักบุ้ง,Morning Glory,Vegetable,Forage,Y,Y,20,4,10,4,0,Forage,Summer
+taro,เผือก,Taro,Vegetable,Forage,Y,Y,45,8,20,0,0,Forage,Winter
+mulberry,หม่อน,Mulberry,Fruit,Forage,N,Y,30,6,12,12,0,Forage,Summer
+chestnut,เกาลัด,Chestnut,Nut,Forage,Y,Y,50,8,20,0,0,Forage,Fall
+shiitake,เห็ดหอม,Shiitake,Mushroom,Forage,Y,Y,60,8,20,0,0,Forage,"Fall, Winter"
+morel,เห็ดมอเรล,Morel,Mushroom,Forage,N,Y,150,10,25,10,0,Forage,Spring
+truffle,เห็ดทรัฟเฟิล,Truffle,Mushroom,Forage,N,N,400,10,30,20,0,Forage,Winter
+banana,กล้วย,Banana,Fruit,Garden,Y,N,40,10,25,10,0,Fruit Tree,Summer
+orange,ส้ม,Orange,Fruit,Garden,Y,N,50,8,20,15,0,Fruit Tree,Winter
+cherry,เชอร์รี,Cherry,Fruit,Garden,Y,N,80,6,15,18,0,Fruit Tree,Spring
+peach,พีช,Peach,Fruit,Garden,Y,N,90,10,22,18,0,Fruit Tree,Summer
+pear,สาลี่,Pear,Fruit,Garden,Y,N,70,8,20,12,0,Fruit Tree,Fall
+durian,ทุเรียน,Durian,Fruit,Garden,N,N,250,20,45,30,0,Fruit Tree,Summer
+sardine,ปลาซาร์ดีน,Sardine,Fish,Sea,Y,Y,30,6,12,4,0,Fish,"Spring, Fall"
+anchovy,ปลาไส้ตัน,Anchovy,Fish,Sea,Y,Y,25,5,10,4,0,Fish,"Spring, Fall"
+trout,ปลาเทราต์,Trout,Fish,Sea,Y,N,70,14,28,15,0,Fish,Spring
+sea_bass,ปลากะพง,Sea Bass,Fish,Sea,Y,Y,80,15,30,18,0,Fish,Summer
+eel,ปลาไหล,Eel,Fish,Sea,N,N,110,18,35,25,0,Fish,Summer
+catfish,ปลาดุก,Catfish,Fish,Sea,Y,Y,45,10,20,8,0,Fish,Fall
+cod,ปลาค็อด,Cod,Fish,Sea,Y,N,90,15,30,20,0,Fish,Winter
+red_snapper,ปลากะพงแดง,Red Snapper,Fish,Sea,Y,N,100,16,32,22,0,Fish,Winter
+mussel,หอยแมลงภู่,Mussel,Shellfish,Sea,Y,Y,40,5,11,0,0,Crab Pot / Beach,Spring
+oyster,หอยนางรม,Oyster,Shellfish,Sea,Y,Y,70,6,12,10,0,Crab Pot / Beach,Winter
+octopus,ปลาหมึกยักษ์,Octopus,Shellfish,Sea,N,N,130,12,22,10,0,Crab Pot / Beach,Summer
+lobster,กุ้งมังกร,Lobster,Shellfish,Sea,N,N,220,15,25,10,0,Crab Pot / Beach,Fall
+sea_urchin,หอยเม่น,Sea Urchin,Shellfish,Sea,N,N,160,8,15,25,0,Crab Pot / Beach,Winter
+duck_egg,ไข่เป็ด,Duck Egg,Egg,Ranch,Y,N,60,6,14,0,0,Animal Product,All
+quail_egg,ไข่นกกระทา,Quail Egg,Egg,Ranch,Y,N,30,3,8,0,0,Animal Product,All
+goat_milk,นมแพะ,Goat Milk,Dairy,Ranch,N,N,150,10,28,15,0,Animal Product,All
+buffalo_milk,นมควาย,Buffalo Milk,Dairy,Ranch,N,N,180,12,30,15,0,Animal Product,All
+duck,เนื้อเป็ด,Duck,Meat,Hunt,Y,N,120,16,32,14,0,Monster Loot,All
+lamb,เนื้อแกะ,Lamb,Meat,Hunt,Y,N,160,20,36,16,0,Monster Loot,All
+boar,เนื้อหมูป่า,Wild Boar,Meat,Hunt,N,N,140,22,38,18,0,Monster Loot,All
+venison,เนื้อกวาง,Venison,Meat,Hunt,N,N,180,20,40,20,0,Monster Loot,"Fall, Winter"
+slime_jelly,วุ้นสไลม์,Slime Jelly,Sweetener,Hunt,N,N,60,4,15,30,0,Monster Loot,All
+vanilla,วานิลลา,Vanilla,Import,Import,N,N,220,0,0,0,0,Import,All
+saffron,หญ้าฝรั่น,Saffron,Import,Import,N,N,300,0,0,0,0,Import,All
+wasabi,วาซาบิ,Wasabi,Import,Import,N,N,180,0,0,0,0,Import,All
+parmesan,ชีสพาร์เมซาน,Parmesan,Aged Cheese,Import,N,N,260,10,25,0,0,Import,All
+dates,อินทผลัม,Dates,Fruit,Import,N,N,150,10,30,15,0,Import,All
+tea_leaves,ใบชา,Tea Leaves,Herb,Garden,N,N,40,0,0,0,0,Crop,Spring
+cacao_pod,ผลโกโก้,Cacao Pod,Nut,Garden,N,N,80,0,0,0,0,Fruit Tree,Summer
+holy_basil,ใบกะเพรา,Holy Basil,Herb,Forage,Y,Y,20,6,16,12,0,Forage,All
+goat_cheese,ชีสนมแพะ,Goat Cheese,Cheese,Processed,N,N,270,12,30,10,0,Artisan,All
+buffalo_mozzarella,มอซซาเรลลานมควาย,Buffalo Mozzarella,Cheese,Processed,N,N,325,14,32,10,0,Artisan,All

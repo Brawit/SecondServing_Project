@@ -21,21 +21,27 @@ MonoBehaviour:
   isSecret: 0
   inDemo: 0
   dishItem: {fileID: 11400000, guid: bc74413d839fbaf4bb83d3ffe94b71ef, type: 2}
-  ingredients:
-  - {fileID: 11400000, guid: 11aaab9cfc2a68b439dd993f7cff4f84, type: 2}
-  - {fileID: 11400000, guid: 5fcf718d896f9b14493b3891b3e9993d, type: 2}
-  - {fileID: 11400000, guid: 14ab336b5d1d8d64e85d5c23953bbe12, type: 2}
-  fullIngredientsText: "\u0E41\u0E1B\u0E49\u0E07\u0E1E\u0E32\u0E22, \u0E41\u0E2D\u0E1B\u0E40\u0E1B\u0E34\u0E25,
-    \u0E19\u0E49\u0E33\u0E15\u0E32\u0E25, \u0E40\u0E19\u0E22, \u0E2D\u0E1A\u0E40\u0E0A\u0E22,
-    \u0E41\u0E1B\u0E49\u0E07\u0E2A\u0E32\u0E25\u0E35"
-  sellPrice: 120
+  slots:
+  - item: {fileID: 11400000, guid: 11aaab9cfc2a68b439dd993f7cff4f84, type: 2}
+    anyOfCategory: 0
+    category: 0
+  - item: {fileID: 11400000, guid: 5fcf718d896f9b14493b3891b3e9993d, type: 2}
+    anyOfCategory: 0
+    category: 0
+  - item: {fileID: 11400000, guid: 14ab336b5d1d8d64e85d5c23953bbe12, type: 2}
+    anyOfCategory: 0
+    category: 0
+  ingredients: []
+  fullIngredientsText: 
+  sellPrice: 580
+  baseRecipe: {fileID: 0}
   difficulty: 3
   cookingProfile: {fileID: 0}
   customSteps: []
   obtainSource: 1
   obtainNote: "\u0E40\u0E0A\u0E1F\u0E2D\u0E40\u0E21\u0E23\u0E34\u0E01\u0E31\u0E19"
   mailShopLevel: 2
-  mailReputation: 1110
+  mailReputation: 1000
   chef: {fileID: 11400000, guid: d4ca161307a19ab499b5d49387c6380d, type: 2}
   letterBody: 'Hey again!
 

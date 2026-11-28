@@ -14,15 +14,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   itemId: house_rainbow_parfait
   itemName: Rainbow Garden Parfait
-  nameTh: Rainbow Garden Parfait
+  nameTh: "\u0E1E\u0E32\u0E23\u0E4C\u0E40\u0E1F\u0E15\u0E4C\u0E2A\u0E27\u0E19\u0E2A\u0E32\u0E22\u0E23\u0E38\u0E49\u0E07"
   icon: {fileID: 0}
   description: 
   itemType: 1
   category: 0
   source: 0
+  originType: 0
+  seasons: -1
+  inStore: 0
+  earlyGame: 0
   equipType: 0
-  sellPrice: 275
-  restoreHealth: 27
-  restoreStamina: 30
-  restoreMana: 40
-  restoreFever: 44
+  sellPrice: 1515
+  restoreHealth: 79
+  restoreStamina: 202
+  restoreMana: 103
+  restoreFever: 20

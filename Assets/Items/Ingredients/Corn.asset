@@ -19,10 +19,14 @@ MonoBehaviour:
   description: A corn form something fantasy
   itemType: 0
   category: 2
-  source: 0
+  source: 5
+  originType: 3
+  seasons: 6
+  inStore: 1
+  earlyGame: 1
   equipType: 0
-  sellPrice: 12
-  restoreHealth: 4
-  restoreStamina: 30
+  sellPrice: 50
+  restoreHealth: 10
+  restoreStamina: 17
   restoreMana: 0
   restoreFever: 0

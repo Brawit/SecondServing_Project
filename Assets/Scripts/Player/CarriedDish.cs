@@ -7,6 +7,7 @@ using UnityEngine.InputSystem;
 // - ทำเสร็จที่เตาตอนเปิดร้าน = จานอยู่ในมือ แสดงชื่อเหนือหัว เช่น "Som Tam (Good)"
 // - กด E ที่ลูกค้าที่สั่งจานนี้ = เสิร์ฟจานในมือ (Customer เรียก TakeForServe)
 // - กด Q = เก็บเข้ากระเป๋า (คุณภาพเดิม) / ร้านปิดตอนยังถือ = เข้ากระเป๋าเอง
+// - [v2] ถือเป็นไอเทมจาน (จานแม่ หรือจานแบบ เช่น "Sushi (Salmon)") ไม่ใช่สูตร → เก็บเข้ากระเป๋าได้แบบที่ถูกต้อง
 // วางบน Player (ตัวช่วย Build Cooking System ใส่ให้) ข้อความเหนือหัวสร้างเองถ้าไม่ได้ผูก
 public class CarriedDish : MonoBehaviour
 {
@@ -36,10 +37,13 @@ public class CarriedDish : MonoBehaviour
     [Tooltip("ร้านปิดแล้วกระเป๋าเต็ม จานหายไป ({0} = ชื่อจาน)")]
     [SerializeField] private string droppedFormat = "Bag is full. {0} was dropped.";
 
-    // จานที่ถืออยู่ (null = มือว่าง)
-    public RecipeData Recipe { get; private set; }
+    // จานที่ถืออยู่ (null = มือว่าง) [v2] เป็นไอเทมจาน
+    public ItemData Item { get; private set; }
     public DishQuality Quality { get; private set; } = DishQuality.Good;
-    public bool HasDish => Recipe != null;
+    public bool HasDish => Item != null;
+
+    // สูตรแม่ของจานในมือ (null = มือว่าง)
+    public RecipeData Recipe => DishVariantRegistry.RecipeOf(Item);
 
     // ส่งสัญญาณเมื่อถือ/วางจาน
     public event Action OnChanged;
@@ -119,31 +123,32 @@ public class CarriedDish : MonoBehaviour
 
     // ---------- ถือ / ปล่อย ----------
 
-    // ถือจาน คืนค่า false ถ้าถืออยู่แล้ว
-    public bool Hold(RecipeData recipe, DishQuality quality)
+    // ถือจาน คืนค่า false ถ้าถืออยู่แล้ว [v2] dish = ไอเทมจาน (จานแม่ หรือจานแบบ)
+    public bool Hold(ItemData dish, DishQuality quality)
     {
-        if (recipe == null || HasDish)
+        if (dish == null || HasDish)
         {
             return false;
         }
 
-        Recipe = recipe;
+        Item = dish;
         Quality = quality;
-        Debug.Log($"CarriedDish: Holding {recipe.recipeName} ({DishQualityUtil.Label(quality)}).");
+        Debug.Log($"CarriedDish: Holding {dish.itemName} ({DishQualityUtil.Label(quality)}).");
         Changed();
         return true;
     }
 
+    // ถือจานของสูตรนี้อยู่ไหม (แบบไหนก็ได้)
     public bool IsHolding(RecipeData recipe)
     {
-        return recipe != null && Recipe == recipe;
+        return recipe != null && HasDish && Recipe == recipe;
     }
 
     // เอาจานออกจากมือเพื่อเสิร์ฟ (Customer เรียกหลังเสิร์ฟสำเร็จ)
     public void Clear()
     {
         if (!HasDish) return;
-        Recipe = null;
+        Item = null;
         Changed();
     }
 
@@ -155,27 +160,27 @@ public class CarriedDish : MonoBehaviour
             return false;
         }
 
-        RecipeData recipe = Recipe;
-        bool added = inventory != null && recipe.dishItem != null && inventory.AddItem(recipe.dishItem, 1, Quality);
+        ItemData dish = Item;
+        bool added = inventory != null && inventory.AddItem(dish, 1, Quality);
 
         if (!added && !force)
         {
-            NotificationUI.Post(string.Format(bagFullFormat, recipe.recipeName));
+            NotificationUI.Post(string.Format(bagFullFormat, dish.itemName));
             return false;
         }
 
         if (!added)
         {
-            Debug.LogWarning($"CarriedDish: Could not stash {recipe.recipeName} (bag full or no dish item). Dropped.");
-            NotificationUI.Post(string.Format(droppedFormat, recipe.recipeName));
+            Debug.LogWarning($"CarriedDish: Could not stash {dish.itemName} (bag full). Dropped.");
+            NotificationUI.Post(string.Format(droppedFormat, dish.itemName));
         }
         else if (!force)
         {
-            NotificationUI.Post(string.Format(stashedFormat, recipe.recipeName));
+            NotificationUI.Post(string.Format(stashedFormat, dish.itemName));
         }
 
-        Debug.Log($"CarriedDish: Stashed {recipe.recipeName} ({DishQualityUtil.Label(Quality)}) into the bag: {added}.");
-        Recipe = null;
+        Debug.Log($"CarriedDish: Stashed {dish.itemName} ({dish.itemId}, {DishQualityUtil.Label(Quality)}) into the bag: {added}.");
+        Item = null;
         Changed();
         return added;
     }
@@ -232,7 +237,7 @@ public class CarriedDish : MonoBehaviour
         headText.gameObject.SetActive(HasDish);
         if (HasDish)
         {
-            headText.text = string.Format(headFormat, Recipe.recipeName, DishQualityUtil.ColoredLabel(Quality));
+            headText.text = string.Format(headFormat, Item.itemName, DishQualityUtil.ColoredLabel(Quality));
         }
     }
 }

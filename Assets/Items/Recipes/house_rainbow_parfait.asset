@@ -14,23 +14,31 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::RecipeData
   recipeId: house_rainbow_parfait
   recipeName: Rainbow Garden Parfait
-  nameTh: Rainbow Garden Parfait
+  nameTh: "\u0E1E\u0E32\u0E23\u0E4C\u0E40\u0E1F\u0E15\u0E4C\u0E2A\u0E27\u0E19\u0E2A\u0E32\u0E22\u0E23\u0E38\u0E49\u0E07"
   icon: {fileID: 0}
   cuisine: 6
   course: 1
   isSecret: 1
   inDemo: 0
   dishItem: {fileID: 11400000, guid: 65f666ffbf7e0bd4e8a6c6741e75c526, type: 2}
-  ingredients:
-  - {fileID: 11400000, guid: 8130eeffa7d8658438fa1162db615247, type: 2}
-  - {fileID: 11400000, guid: ca1cd1b77ef27b34fbd2e1261ff98492, type: 2}
-  - {fileID: 11400000, guid: 0496d1580eb958943a674e54dee23063, type: 2}
-  - {fileID: 11400000, guid: 9c822f12eace4b844801c6ed9d4bbd5d, type: 2}
-  fullIngredientsText: "\u0E42\u0E22\u0E40\u0E01\u0E34\u0E23\u0E4C\u0E15, \u0E27\u0E34\u0E1B\u0E1B\u0E34\u0E07\u0E04\u0E23\u0E35\u0E21,
-    \u0E1C\u0E25\u0E44\u0E21\u0E49\u0E2A\u0E14\u0E2B\u0E25\u0E32\u0E01\u0E2A\u0E35,
-    \u0E01\u0E23\u0E32\u0E42\u0E19\u0E25\u0E32, \u0E19\u0E49\u0E33\u0E1C\u0E36\u0E49\u0E07"
-  sellPrice: 275
-  difficulty: 3
+  slots:
+  - item: {fileID: 11400000, guid: 8130eeffa7d8658438fa1162db615247, type: 2}
+    anyOfCategory: 0
+    category: 0
+  - item: {fileID: 0}
+    anyOfCategory: 1
+    category: 3
+  - item: {fileID: 11400000, guid: 0496d1580eb958943a674e54dee23063, type: 2}
+    anyOfCategory: 0
+    category: 0
+  - item: {fileID: 11400000, guid: ab6add1d6c29d304d9ec6671edb9e24f, type: 2}
+    anyOfCategory: 0
+    category: 0
+  ingredients: []
+  fullIngredientsText: 
+  sellPrice: 1515
+  baseRecipe: {fileID: 0}
+  difficulty: 2
   cookingProfile: {fileID: 0}
   customSteps: []
   obtainSource: 9

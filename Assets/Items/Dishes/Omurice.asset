@@ -14,15 +14,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   itemId: jp_omurice
   itemName: Omurice
-  nameTh: "\u0E42\u0E2D\u0E21\u0E38\u0E44\u0E23\u0E0B\u0E4C (Omurice)"
+  nameTh: "\u0E42\u0E2D\u0E21\u0E38\u0E44\u0E23\u0E0B\u0E4C"
   icon: {fileID: 0}
   description: 
   itemType: 1
   category: 0
   source: 0
+  originType: 0
+  seasons: -1
+  inStore: 0
+  earlyGame: 0
   equipType: 0
-  sellPrice: 145
-  restoreHealth: 48
-  restoreStamina: 62
-  restoreMana: 30
-  restoreFever: 35
+  sellPrice: 670
+  restoreHealth: 59
+  restoreStamina: 173
+  restoreMana: 17
+  restoreFever: 20

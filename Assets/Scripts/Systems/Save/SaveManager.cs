@@ -288,10 +288,17 @@ public class SaveManager : MonoBehaviour
         }
         data.knownRecipes = CaptureKnownRecipes();
 
+        // [v9] วัตถุดิบที่เลือกล่าสุดของสูตรที่มีช่องหมวด
+        if (playerRecipeBook != null)
+        {
+            playerRecipeBook.CaptureChoices(data.lastChoiceRecipeIds, data.lastChoiceItemIds);
+        }
+
         // [v3] ช่อง Hotbar, FEVER และค่าสูงสุดที่เพิ่มถาวร
         if (playerHotbar != null)
         {
             data.hotbarItems = playerHotbar.CaptureSlotIds();
+            data.hotbarQualities = playerHotbar.CaptureSlotQualities();
         }
         if (playerStats != null)
         {
@@ -522,11 +529,25 @@ public class SaveManager : MonoBehaviour
             Debug.Log($"SaveManager: Save version {data.version} has no discovered items or recipes. Using defaults.");
         }
 
+        // 4.5) [v9] วัตถุดิบที่เลือกล่าสุด (เซฟ v1–v8 = ยังไม่เคยเลือก → ใช้ตัวที่มีมากสุด)
+        if (playerRecipeBook != null)
+        {
+            if (data.version >= 9)
+            {
+                playerRecipeBook.RestoreChoices(data.lastChoiceRecipeIds, data.lastChoiceItemIds);
+            }
+            else
+            {
+                playerRecipeBook.RestoreChoices(null, null);
+            }
+        }
+
         // 5) [v3] ช่อง Hotbar, FEVER และค่าสูงสุดที่เพิ่มถาวร
         // เซฟ v1/v2 ไม่มีข้อมูลนี้: Hotbar ว่าง, FEVER 0, โบนัส 0 (ค่าตั้งต้นของเกมอยู่แล้ว ไม่ต้องทำอะไร)
         if (data.version >= 3)
         {
-            RestoreHotbar(data.hotbarItems);
+            // [v9] คุณภาพของช่อง (เซฟ v8 ลงมา = ไม่มี → ไม่ระบุ)
+            RestoreHotbar(data.hotbarItems, data.version >= 9 ? data.hotbarQualities : null);
             RestorePlayerStats(data);
         }
         else
@@ -685,8 +706,8 @@ public class SaveManager : MonoBehaviour
         playerRecipeBook.SetKnown(result);
     }
 
-    // แปลงรายการรหัสกลับเป็นช่อง Hotbar (ช่องว่างหรือรหัสที่หาไม่เจอ = ช่องว่าง)
-    private void RestoreHotbar(List<string> itemIds)
+    // แปลงรายการรหัสกลับเป็นช่อง Hotbar (ช่องว่างหรือรหัสที่หาไม่เจอ = ช่องว่าง) / [v9] qualities null = ไม่ระบุทุกช่อง
+    private void RestoreHotbar(List<string> itemIds, List<int> qualities)
     {
         if (playerHotbar == null || itemDatabase == null || itemIds == null)
         {
@@ -713,7 +734,7 @@ public class SaveManager : MonoBehaviour
             result.Add(item);
         }
 
-        playerHotbar.SetAllSlots(result);
+        playerHotbar.SetAllSlots(result, qualities);
     }
 
     // แปลงรายการรหัสกลับเป็นของที่สวมอยู่ (ช่องว่างหรือรหัสที่หาไม่เจอ = ช่องว่าง)

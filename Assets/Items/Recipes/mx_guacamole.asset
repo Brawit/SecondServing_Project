@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56897c6864cfda9489a79f1ac3a363d1, type: 3}
+  m_Name: mx_guacamole
+  m_EditorClassIdentifier: Assembly-CSharp::RecipeData
+  recipeId: mx_guacamole
+  recipeName: Guacamole
+  nameTh: "\u0E01\u0E31\u0E27\u0E01\u0E32\u0E42\u0E21\u0E40\u0E25\u0E48"
+  icon: {fileID: 0}
+  cuisine: 5
+  course: 0
+  isSecret: 0
+  inDemo: 0
+  dishItem: {fileID: 11400000, guid: e01eb1fd0ab5a8d4c8e0ec44ebb6a5d9, type: 2}
+  slots:
+  - item: {fileID: 11400000, guid: deec1976ebef8054095c78cf4220d9c4, type: 2}
+    anyOfCategory: 0
+    category: 0
+  - item: {fileID: 11400000, guid: 308ae2a319dd0cc42b2e3794adce0d5d, type: 2}
+    anyOfCategory: 0
+    category: 0
+  ingredients: []
+  fullIngredientsText: 
+  sellPrice: 360
+  baseRecipe: {fileID: 0}
+  difficulty: 1
+  cookingProfile: {fileID: 0}
+  customSteps: []
+  obtainSource: 5
+  obtainNote: 
+  mailShopLevel: 0
+  mailReputation: 0
+  chef: {fileID: 0}
+  letterBody: 

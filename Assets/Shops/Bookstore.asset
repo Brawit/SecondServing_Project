@@ -26,12 +26,12 @@ MonoBehaviour:
     priceOverride: 0
   - kind: 2
     item: {fileID: 0}
-    recipe: {fileID: 11400000, guid: 2de81e4c518747041b323db765a975b4, type: 2}
+    recipe: {fileID: 11400000, guid: 48bf2d801e549b44bb2e0953eda0f614, type: 2}
     bagLevel: 2
     priceOverride: 0
   - kind: 2
     item: {fileID: 0}
-    recipe: {fileID: 11400000, guid: 6642941910da57f4eb62f83899554c80, type: 2}
+    recipe: {fileID: 11400000, guid: c1796d0dd506eff42b08ecb9cd382fd1, type: 2}
     bagLevel: 2
     priceOverride: 0
   - kind: 2
@@ -41,7 +41,17 @@ MonoBehaviour:
     priceOverride: 0
   - kind: 2
     item: {fileID: 0}
-    recipe: {fileID: 11400000, guid: a27759aa0b5b9b74ca11a7a8f2b7a7cc, type: 2}
+    recipe: {fileID: 11400000, guid: 73e17a9252448c14aa09c2e28674e191, type: 2}
+    bagLevel: 2
+    priceOverride: 0
+  - kind: 2
+    item: {fileID: 0}
+    recipe: {fileID: 11400000, guid: 2de81e4c518747041b323db765a975b4, type: 2}
+    bagLevel: 2
+    priceOverride: 0
+  - kind: 2
+    item: {fileID: 0}
+    recipe: {fileID: 11400000, guid: a2a8e92d6797a694cbc3834cf98f25a0, type: 2}
     bagLevel: 2
     priceOverride: 0
   - kind: 2
@@ -52,11 +62,6 @@ MonoBehaviour:
   - kind: 2
     item: {fileID: 0}
     recipe: {fileID: 11400000, guid: 8068f21083a84844a96a981dcd83f379, type: 2}
-    bagLevel: 2
-    priceOverride: 0
-  - kind: 2
-    item: {fileID: 0}
-    recipe: {fileID: 11400000, guid: 2c8377a54ea85df408d637ea9ecb6603, type: 2}
     bagLevel: 2
     priceOverride: 0
   - kind: 2

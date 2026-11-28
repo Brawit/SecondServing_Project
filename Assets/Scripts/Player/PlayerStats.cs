@@ -351,7 +351,8 @@ public class PlayerStats : MonoBehaviour
 
     // กินของ 1 ชิ้นจากกระเป๋า: เช็กว่ากินได้ หักออกจากกระเป๋า แล้วเพิ่มค่าสถานะ
     // คืนค่า true ถ้ากินสำเร็จ
-    public bool TryEat(ItemData item, Inventory inventory)
+    // [v2] จาน: quality = คุณภาพที่จะกิน (null = ต่ำสุดที่มีก่อน เก็บจานดีไว้) ค่า H/S/M × ตัวคูณคุณภาพ (DishPricing.EatValues)
+    public bool TryEat(ItemData item, Inventory inventory, DishQuality? quality = null)
     {
         if (item == null || inventory == null)
         {
@@ -365,20 +366,44 @@ public class PlayerStats : MonoBehaviour
             return false;
         }
 
-        if (!inventory.RemoveItem(item, 1))
+        // คุณภาพที่จะกิน (เฉพาะจาน): ระบุมา = ต้องมีคุณภาพนั้น / ไม่ระบุ = ต่ำสุดที่มี
+        DishQuality? eatQuality = null;
+        if (Inventory.TracksQuality(item))
+        {
+            if (quality.HasValue)
+            {
+                eatQuality = quality.Value;
+            }
+            else
+            {
+                for (int q = 0; q < DishQualityUtil.Count; q++)
+                {
+                    if (inventory.GetCount(item, (DishQuality)q) > 0)
+                    {
+                        eatQuality = (DishQuality)q;
+                        break;
+                    }
+                }
+            }
+        }
+
+        bool removed = eatQuality.HasValue ? inventory.RemoveItem(item, 1, eatQuality.Value) : inventory.RemoveItem(item, 1);
+        if (!removed)
         {
             Debug.Log($"PlayerStats: No {item.itemName} left to eat.");
             return false;
         }
 
-        float h = Restore(StatType.Health, item.restoreHealth);
-        float s = Restore(StatType.Stamina, item.restoreStamina);
-        float m = Restore(StatType.Mana, item.restoreMana);
-        float f = Restore(StatType.Fever, item.restoreFever);
+        DishPricing.EatValues(item, eatQuality, out int health, out int stamina, out int mana, out int fever);
+        float h = Restore(StatType.Health, health);
+        float s = Restore(StatType.Stamina, stamina);
+        float m = Restore(StatType.Mana, mana);
+        float f = Restore(StatType.Fever, fever);
 
         string gains = BuildGainText(h, s, m, f);
-        NotificationUI.Post(string.Format(ateMessageFormat, item.itemName, gains));
-        Debug.Log($"PlayerStats: Ate {item.itemName}. {gains}");
+        string qualityText = eatQuality.HasValue ? $" ({DishQualityUtil.Label(eatQuality.Value)})" : "";
+        NotificationUI.Post(string.Format(ateMessageFormat, item.itemName + qualityText, gains));
+        Debug.Log($"PlayerStats: Ate {item.itemName}{qualityText}. Values H{health} S{stamina} M{mana} F{fever}. {gains}");
         return true;
     }
 

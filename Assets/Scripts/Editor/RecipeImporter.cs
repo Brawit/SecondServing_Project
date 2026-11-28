@@ -50,7 +50,17 @@ public static class RecipeImporter
     private static readonly string[] ColCourse = { "course" };
     private static readonly string[] ColSecret = { "secret", "is_secret" };
     private static readonly string[] ColDemo = { "vertical slice", "in_demo", "demo" };
-    private static readonly string[] ColKeys = { "key 1", "key 2", "key 3", "key 4" };
+    private static readonly string[] ColKeys = { "key 1", "key 2", "key 3", "key 4", "key 5" };
+
+    // [v2] คอลัมน์ใหม่ (ชีต Ingredients v2 / Recipes v2)
+    private static readonly string[] ColInStore = { "in store", "in_store" };
+    private static readonly string[] ColEarly = { "early", "early game" };
+    private static readonly string[] ColType = { "type" };
+    private static readonly string[] ColSeason = { "season", "seasons" };
+    private static readonly string[] ColBaseRecipe = { "base recipe", "base_recipe" };
+
+    // [v2] Key ที่ขึ้นต้นด้วยคำนี้ = ช่องหมวด เช่น any_fish
+    private const string AnyPrefix = "any_";
     private static readonly string[] ColDifficulty = { "difficulty" };
 
     // [2.5c] ทางได้สูตร + จดหมายเชฟ (ชีต Recipes)
@@ -101,6 +111,9 @@ public static class RecipeImporter
             EditorUtility.DisplayProgressBar("Import Recipes", "Refreshing databases...", 0.9f);
             RefreshDatabases(report);
 
+            // [v2] รายงานของเก่าที่ไม่มีใน CSV แล้ว (ไม่ลบ)
+            ReportObsolete(report);
+
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
         }
@@ -141,6 +154,12 @@ public static class RecipeImporter
         int colSource = header.Find(ColSource);
         int colPrice = header.Find(ColSellPrice);
         FoodColumns foodCols = FoodColumns.Find(header);
+
+        // [v2] ไม่มีคอลัมน์ = CSV เก่า คงค่าเดิม
+        int colInStore = header.Find(ColInStore);
+        int colEarly = header.Find(ColEarly);
+        int colType = header.Find(ColType);
+        int colSeason = header.Find(ColSeason);
 
         EnsureFolder(NewItemFolder);
         HashSet<string> seenIds = new HashSet<string>();
@@ -216,6 +235,39 @@ public static class RecipeImporter
             item.sellPrice = ParseInt(Cell(row, colPrice));
             foodCols.ApplyTo(item, row);
 
+            // [v2] ร้าน / ต้นเกม / ประเภท / ฤดู
+            if (colInStore >= 0) item.inStore = ParseBool(Cell(row, colInStore));
+            if (colEarly >= 0) item.earlyGame = ParseBool(Cell(row, colEarly));
+            if (colType >= 0)
+            {
+                string typeText = Cell(row, colType);
+                if (TryParseEnum(typeText, out ItemOriginType originType))
+                {
+                    item.originType = originType;
+                }
+                else if (!string.IsNullOrEmpty(typeText))
+                {
+                    report.Warn($"Ingredients.csv row {r + 1} ({id}): Unknown type '{typeText}'. Value kept.");
+                }
+            }
+            if (colSeason >= 0)
+            {
+                string seasonText = Cell(row, colSeason);
+                if (SeasonUtil.TryParse(seasonText, out Season seasons))
+                {
+                    item.seasons = seasons;
+                }
+                else
+                {
+                    item.seasons = Season.All;
+                    if (!string.IsNullOrEmpty(seasonText))
+                    {
+                        report.Warn($"Ingredients.csv row {r + 1} ({id}): Unknown season '{seasonText}'. Using All.");
+                    }
+                }
+            }
+
+            report.CsvItemIds.Add(id);
             EditorUtility.SetDirty(item);
         }
 
@@ -375,6 +427,9 @@ public static class RecipeImporter
             report.Warn("Recipes.csv is missing some of 'Obtain', 'Mail Shop Lv', 'Mail Reputation', 'Chef', 'Letter'. Missing columns were skipped and existing values kept. Export the CSV again from the sheet.");
         }
 
+        int colBaseRecipe = header.Find(ColBaseRecipe);
+        Dictionary<RecipeData, string> pendingBase = new Dictionary<RecipeData, string>();
+
         int[] colKeys = new int[ColKeys.Length];
         for (int k = 0; k < ColKeys.Length; k++)
         {
@@ -505,8 +560,10 @@ public static class RecipeImporter
                 report.Warn($"Recipes.csv row {r + 1} ({id}): Chef Mail recipe needs both 'Chef' and 'Letter'. No letter will be sent.");
             }
 
-            // วัตถุดิบหลัก
+            // [v2] ช่องวัตถุดิบ: item_id = ช่องตายตัว / any_xxx = ช่องหมวด
+            recipe.slots.Clear();
             recipe.ingredients.Clear();
+            int categorySlots = 0;
             foreach (int col in colKeys)
             {
                 string itemId = Cell(row, col);
@@ -515,9 +572,24 @@ public static class RecipeImporter
                     continue;
                 }
 
+                if (itemId.StartsWith(AnyPrefix, StringComparison.OrdinalIgnoreCase))
+                {
+                    string categoryText = itemId.Substring(AnyPrefix.Length);
+                    if (TryParseEnum(categoryText, out ItemCategory anyCategory))
+                    {
+                        recipe.slots.Add(RecipeSlot.AnyOf(anyCategory));
+                        categorySlots++;
+                    }
+                    else
+                    {
+                        report.Warn($"Recipes.csv row {r + 1} ({id}): Unknown category slot '{itemId}'. Skipped.");
+                    }
+                    continue;
+                }
+
                 if (items.TryGetValue(itemId, out ItemData item))
                 {
-                    recipe.ingredients.Add(item);
+                    recipe.slots.Add(RecipeSlot.Fixed(item));
                 }
                 else
                 {
@@ -525,10 +597,24 @@ public static class RecipeImporter
                 }
             }
 
-            if (recipe.ingredients.Count == 0)
+            if (recipe.slots.Count == 0)
             {
                 report.Warn($"Recipes.csv row {r + 1} ({id}): Recipe has no ingredients.");
             }
+            if (categorySlots > 1)
+            {
+                report.Warn($"Recipes.csv row {r + 1} ({id}): Has {categorySlots} category slots (any_). Only 1 is supported; the first one will be used.");
+            }
+
+            // [v2] เมนูต้นทาง ★4 (ตั้งหลังสร้างสูตรครบ เพราะอาจชี้ไปสูตรที่อยู่แถวหลัง)
+            if (colBaseRecipe >= 0)
+            {
+                recipe.baseRecipe = null;
+                string baseId = Cell(row, colBaseRecipe);
+                if (!string.IsNullOrEmpty(baseId)) pendingBase[recipe] = baseId;
+            }
+
+            report.CsvRecipeIds.Add(id);
 
             // ไอเทมจานอาหารของสูตรนี้
             recipe.dishItem = CreateOrUpdateDish(recipe, items, report);
@@ -541,6 +627,127 @@ public static class RecipeImporter
 
             EditorUtility.SetDirty(recipe);
         }
+
+        // [v2] รอบสอง: ผูกเมนูต้นทาง
+        foreach (KeyValuePair<RecipeData, string> pair in pendingBase)
+        {
+            if (recipes.TryGetValue(pair.Value, out RecipeData baseRecipe))
+            {
+                pair.Key.baseRecipe = baseRecipe;
+                EditorUtility.SetDirty(pair.Key);
+            }
+            else
+            {
+                report.Warn($"Recipes.csv ({pair.Key.recipeId}): Base Recipe '{pair.Value}' not found.");
+            }
+        }
+    }
+
+    // ---------- [v2] ของเก่า ----------
+
+    // วัตถุดิบ/สูตร/จาน ในโปรเจกต์ที่ไม่มีใน CSV แล้ว → พิมพ์รายชื่อ (ไม่ลบ ใช้เมนู Move Obsolete Data To Trash ถ้าต้องการ)
+    private static void ReportObsolete(ImportReport report)
+    {
+        List<string> lines = new List<string>();
+        foreach (string path in FindObsoleteAssetPaths(report.CsvItemIds, report.CsvRecipeIds))
+        {
+            lines.Add(path);
+        }
+
+        report.ObsoleteCount = lines.Count;
+        if (lines.Count > 0)
+        {
+            Debug.LogWarning($"RecipeImporter: {lines.Count} asset(s) are not in the CSV anymore (not deleted). " +
+                             "Use Tools > Second Serving > Move Obsolete Recipe Data To Trash to remove them.\n" + string.Join("\n", lines));
+        }
+    }
+
+    // ไฟล์ ItemData (วัตถุดิบ/จาน) และ RecipeData ที่ไม่มีใน CSV (ไม่นับของสวมใส่/เครื่องมือ)
+    private static List<string> FindObsoleteAssetPaths(HashSet<string> csvItemIds, HashSet<string> csvRecipeIds)
+    {
+        List<string> result = new List<string>();
+
+        foreach (string guid in AssetDatabase.FindAssets("t:ItemData"))
+        {
+            string path = AssetDatabase.GUIDToAssetPath(guid);
+            ItemData item = AssetDatabase.LoadAssetAtPath<ItemData>(path);
+            if (item == null || string.IsNullOrWhiteSpace(item.itemId)) continue;
+
+            bool isOldIngredient = item.itemType == ItemType.Ingredient && !csvItemIds.Contains(item.itemId);
+            bool isOldDish = item.itemType == ItemType.Dish && !csvRecipeIds.Contains(item.itemId);
+            if (isOldIngredient || isOldDish) result.Add(path);
+        }
+
+        foreach (string guid in AssetDatabase.FindAssets("t:RecipeData"))
+        {
+            string path = AssetDatabase.GUIDToAssetPath(guid);
+            RecipeData recipe = AssetDatabase.LoadAssetAtPath<RecipeData>(path);
+            if (recipe != null && !csvRecipeIds.Contains(recipe.recipeId)) result.Add(path);
+        }
+
+        return result;
+    }
+
+    // [v2] ย้ายของเก่าไปถังขยะของระบบ (กู้คืนได้) แล้ว refresh ฐานข้อมูล
+    [MenuItem("Tools/Second Serving/Move Obsolete Recipe Data To Trash")]
+    public static void MoveObsoleteToTrash()
+    {
+        HashSet<string> itemIds = ReadCsvIds(IngredientsCsvPath, ColItemId);
+        HashSet<string> recipeIds = ReadCsvIds(RecipesCsvPath, ColRecipeId);
+        if (itemIds.Count == 0 || recipeIds.Count == 0)
+        {
+            EditorUtility.DisplayDialog("Obsolete Recipe Data", "Could not read Ingredients.csv / Recipes.csv.", "OK");
+            return;
+        }
+
+        List<string> paths = FindObsoleteAssetPaths(itemIds, recipeIds);
+        if (paths.Count == 0)
+        {
+            EditorUtility.DisplayDialog("Obsolete Recipe Data", "Nothing to remove. Everything matches the CSV.", "OK");
+            return;
+        }
+
+        string preview = string.Join("\n", paths.GetRange(0, Mathf.Min(15, paths.Count)));
+        if (paths.Count > 15) preview += $"\n... and {paths.Count - 15} more (see Console)";
+        Debug.Log("RecipeImporter: Obsolete assets:\n" + string.Join("\n", paths));
+
+        if (!EditorUtility.DisplayDialog("Obsolete Recipe Data",
+                $"Move {paths.Count} asset(s) that are not in the CSV to the system trash?\n" +
+                "Old saves that contain these items will skip them when loading.\n\n" + preview,
+                "Move To Trash", "Cancel"))
+        {
+            return;
+        }
+
+        List<string> failed = new List<string>();
+        AssetDatabase.MoveAssetsToTrash(paths.ToArray(), failed);
+        ImportReport report = new ImportReport();
+        RefreshDatabases(report);
+        AssetDatabase.SaveAssets();
+
+        string message = $"Moved {paths.Count - failed.Count} asset(s) to trash." + (failed.Count > 0 ? $" {failed.Count} failed (see Console)." : "");
+        foreach (string path in failed) Debug.LogWarning($"RecipeImporter: Could not move {path} to trash.");
+        Debug.Log($"RecipeImporter: {message}");
+        EditorUtility.DisplayDialog("Obsolete Recipe Data", message, "OK");
+    }
+
+    private static HashSet<string> ReadCsvIds(string path, string[] idColumn)
+    {
+        HashSet<string> result = new HashSet<string>();
+        if (!File.Exists(path)) return result;
+
+        List<List<string>> rows = ReadCsv(path);
+        if (rows.Count == 0) return result;
+
+        int col = new CsvHeader(rows[0]).Find(idColumn);
+        if (col < 0) return result;
+
+        for (int r = 1; r < rows.Count; r++)
+        {
+            string id = Cell(rows[r], col);
+            if (!string.IsNullOrEmpty(id)) result.Add(id);
+        }
+        return result;
     }
 
     // สร้าง/อัปเดตไอเทมจานอาหารของสูตร (itemId = recipeId) ไม่แตะ icon และ description
@@ -726,7 +933,7 @@ public static class RecipeImporter
             return false;
         }
 
-        string compact = text.Replace(" ", "").Replace("_", "").Replace("-", "");
+        string compact = text.Replace(" ", "").Replace("_", "").Replace("-", "").Replace("/", "");
         return Enum.TryParse(compact, true, out value) && Enum.IsDefined(typeof(T), value);
     }
 
@@ -949,6 +1156,10 @@ public static class RecipeImporter
         public int DishesUpdated;
         public int ItemDatabaseCount;
         public int RecipeDatabaseCount;
+        public int ObsoleteCount;
+        // [v2] รหัสที่อยู่ใน CSV (ใช้หาของเก่า)
+        public readonly HashSet<string> CsvItemIds = new HashSet<string>();
+        public readonly HashSet<string> CsvRecipeIds = new HashSet<string>();
         private readonly List<string> warnings = new List<string>();
 
         public void Warn(string message)
@@ -964,6 +1175,7 @@ public static class RecipeImporter
             sb.AppendLine($"Recipes: {RecipesCreated} created, {RecipesUpdated} updated (RecipeDatabase: {RecipeDatabaseCount}).");
             sb.AppendLine($"Dishes: {DishesCreated} created, {DishesUpdated} updated.");
             sb.AppendLine($"Chefs: {ChefsCreated} created, {ChefsUpdated} updated.");
+            if (ObsoleteCount > 0) sb.AppendLine($"Not in CSV anymore: {ObsoleteCount} asset(s) (not deleted, see Console).");
             sb.Append(warnings.Count == 0 ? "No warnings." : $"{warnings.Count} warning(s). See Console.");
             return sb.ToString();
         }

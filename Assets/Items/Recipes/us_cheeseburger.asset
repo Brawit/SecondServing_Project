@@ -21,25 +21,28 @@ MonoBehaviour:
   isSecret: 0
   inDemo: 0
   dishItem: {fileID: 11400000, guid: b7331b42b81318c49a87cd7a701c4c87, type: 2}
-  ingredients:
-  - {fileID: 11400000, guid: f2709281db777f84c9abf12529a045d2, type: 2}
-  - {fileID: 11400000, guid: eba9bcb2df8988a429318bdc6cbfac95, type: 2}
-  - {fileID: 11400000, guid: 8753b40049e26ab41b0913307d3ad62e, type: 2}
-  - {fileID: 11400000, guid: 47b56aa4d7be21b4eb5ca20c6c6a19e5, type: 2}
-  fullIngredientsText: "\u0E02\u0E19\u0E21\u0E1B\u0E31\u0E07\u0E40\u0E1A\u0E2D\u0E23\u0E4C\u0E40\u0E01\u0E2D\u0E23\u0E4C,
-    \u0E40\u0E19\u0E37\u0E49\u0E2D\u0E27\u0E31\u0E27\u0E1A\u0E14, \u0E40\u0E0A\u0E14\u0E14\u0E32\u0E23\u0E4C\u0E0A\u0E35\u0E2A,
-    \u0E1C\u0E31\u0E01\u0E01\u0E32\u0E14\u0E2B\u0E2D\u0E21, \u0E21\u0E30\u0E40\u0E02\u0E37\u0E2D\u0E40\u0E17\u0E28,
-    \u0E2B\u0E2D\u0E21\u0E2B\u0E31\u0E27\u0E43\u0E2B\u0E0D\u0E48, \u0E41\u0E15\u0E07\u0E01\u0E27\u0E32\u0E14\u0E2D\u0E07,
-    \u0E0B\u0E2D\u0E2A\u0E21\u0E30\u0E40\u0E02\u0E37\u0E2D\u0E40\u0E17\u0E28, \u0E21\u0E31\u0E2A\u0E15\u0E32\u0E23\u0E4C\u0E14"
-  sellPrice: 215
+  slots:
+  - item: {fileID: 11400000, guid: f2709281db777f84c9abf12529a045d2, type: 2}
+    anyOfCategory: 0
+    category: 0
+  - item: {fileID: 11400000, guid: eba9bcb2df8988a429318bdc6cbfac95, type: 2}
+    anyOfCategory: 0
+    category: 0
+  - item: {fileID: 0}
+    anyOfCategory: 1
+    category: 26
+  ingredients: []
+  fullIngredientsText: 
+  sellPrice: 1185
+  baseRecipe: {fileID: 0}
   difficulty: 2
   cookingProfile: {fileID: 0}
   customSteps: []
   obtainSource: 1
   obtainNote: "\u0E40\u0E0A\u0E1F\u0E2D\u0E40\u0E21\u0E23\u0E34\u0E01\u0E31\u0E19
     \u0E09\u0E1A\u0E31\u0E1A\u0E41\u0E23\u0E01"
-  mailShopLevel: 1
-  mailReputation: 320
+  mailShopLevel: 2
+  mailReputation: 850
   chef: {fileID: 11400000, guid: d4ca161307a19ab499b5d49387c6380d, type: 2}
   letterBody: 'Hey there!
 

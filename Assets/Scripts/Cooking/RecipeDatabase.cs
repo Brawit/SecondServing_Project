@@ -13,6 +13,9 @@ public class RecipeDatabase : ScriptableObject
     // ตารางค้นหา รหัส -> สูตร สร้างตอนเรียกใช้ครั้งแรก
     private Dictionary<string, RecipeData> lookup;
 
+    // [v2] ตารางค้นหา ไอเทมจาน -> สูตร
+    private Dictionary<ItemData, RecipeData> dishLookup;
+
     public IReadOnlyList<RecipeData> Recipes => recipes;
 
     // หาสูตรจากรหัส คืนค่า null ถ้าไม่เจอ
@@ -32,6 +35,28 @@ public class RecipeDatabase : ScriptableObject
         return recipe;
     }
 
+    // [v2] หาสูตรจากไอเทมจานแม่ (dishItem) คืนค่า null ถ้าไม่เจอ (จานแบบใช้ DishPricing.RecipeOf / variantRecipe)
+    public RecipeData FindByDish(ItemData dish)
+    {
+        if (dish == null)
+        {
+            return null;
+        }
+
+        if (dish.variantRecipe != null)
+        {
+            return dish.variantRecipe;
+        }
+
+        if (lookup == null)
+        {
+            BuildLookup();
+        }
+
+        dishLookup.TryGetValue(dish, out RecipeData recipe);
+        return recipe;
+    }
+
     // กระเป๋ามีวัตถุดิบพอทำสูตรนี้ 1 จานหรือไม่
     public static bool CanCook(RecipeData recipe, Inventory inventory)
     {
@@ -46,25 +71,8 @@ public class RecipeDatabase : ScriptableObject
             return 0;
         }
 
-        Dictionary<ItemData, int> required = recipe.GetRequiredCounts();
-
-        // สูตรที่ไม่มีวัตถุดิบเลย ถือว่าทำไม่ได้ (น่าจะลืมใส่)
-        if (required.Count == 0)
-        {
-            return 0;
-        }
-
-        int maxServings = int.MaxValue;
-        foreach (KeyValuePair<ItemData, int> pair in required)
-        {
-            int servingsFromThis = inventory.GetCount(pair.Key) / pair.Value;
-            if (servingsFromThis < maxServings)
-            {
-                maxServings = servingsFromThis;
-            }
-        }
-
-        return maxServings;
+        // [v2] ช่องหมวดนับรวมทุกตัวในหมวด / สูตรที่ไม่มีวัตถุดิบเลย = ทำไม่ได้
+        return RecipeRequirements.CountServings(recipe, inventory, null);
     }
 
     // เติมรายการสูตรที่ทำได้ตอนนี้ลงใน result (ล้างของเดิมก่อน) includeSecret = รวมสูตรลับด้วย
@@ -100,12 +108,18 @@ public class RecipeDatabase : ScriptableObject
     private void BuildLookup()
     {
         lookup = new Dictionary<string, RecipeData>();
+        dishLookup = new Dictionary<ItemData, RecipeData>();
 
         foreach (RecipeData recipe in recipes)
         {
             if (recipe == null)
             {
                 continue;
+            }
+
+            if (recipe.dishItem != null && !dishLookup.ContainsKey(recipe.dishItem))
+            {
+                dishLookup.Add(recipe.dishItem, recipe);
             }
 
             if (string.IsNullOrWhiteSpace(recipe.recipeId))
@@ -132,7 +146,11 @@ public class RecipeDatabase : ScriptableObject
     private void OnEnable()
     {
         lookup = null;
+        Active = this;
     }
+
+    // [v2] ฐานข้อมูลสูตรที่โหลดอยู่ (ไฟล์เดียวในโปรเจกต์)
+    public static RecipeDatabase Active { get; private set; }
 
 #if UNITY_EDITOR
     [ContextMenu("Find All Recipes")]

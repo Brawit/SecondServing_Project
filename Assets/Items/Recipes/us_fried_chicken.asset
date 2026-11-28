@@ -13,24 +13,25 @@ MonoBehaviour:
   m_Name: us_fried_chicken
   m_EditorClassIdentifier: Assembly-CSharp::RecipeData
   recipeId: us_fried_chicken
-  recipeName: Southern Fried Chicken
-  nameTh: "\u0E44\u0E01\u0E48\u0E17\u0E2D\u0E14\u0E2A\u0E44\u0E15\u0E25\u0E4C\u0E2D\u0E40\u0E21\u0E23\u0E34\u0E01\u0E31\u0E19"
+  recipeName: Fried Chicken
+  nameTh: "\u0E44\u0E01\u0E48\u0E17\u0E2D\u0E14"
   icon: {fileID: 0}
   cuisine: 4
   course: 0
   isSecret: 0
   inDemo: 0
   dishItem: {fileID: 11400000, guid: 16139205652171c4cbc2706beaa65147, type: 2}
-  ingredients:
-  - {fileID: 11400000, guid: 15b6d027269e5cf45974e12659570eb8, type: 2}
-  - {fileID: 11400000, guid: 5fcf718d896f9b14493b3891b3e9993d, type: 2}
-  - {fileID: 11400000, guid: 9c822f12eace4b844801c6ed9d4bbd5d, type: 2}
-  - {fileID: 11400000, guid: 8e729bf9bf6496a48bb5d6f009d276fa, type: 2}
-  fullIngredientsText: "\u0E40\u0E19\u0E37\u0E49\u0E2D\u0E44\u0E01\u0E48, \u0E41\u0E1B\u0E49\u0E07\u0E2A\u0E32\u0E25\u0E35,
-    \u0E1A\u0E31\u0E15\u0E40\u0E15\u0E2D\u0E23\u0E4C\u0E21\u0E34\u0E25\u0E01\u0E4C,
-    \u0E44\u0E02\u0E48\u0E44\u0E01\u0E48, \u0E1B\u0E32\u0E1B\u0E23\u0E34\u0E01\u0E49\u0E32,
-    \u0E1C\u0E07\u0E01\u0E23\u0E30\u0E40\u0E17\u0E35\u0E22\u0E21, \u0E19\u0E49\u0E33\u0E21\u0E31\u0E19\u0E1E\u0E37\u0E0A"
-  sellPrice: 160
+  slots:
+  - item: {fileID: 11400000, guid: 15b6d027269e5cf45974e12659570eb8, type: 2}
+    anyOfCategory: 0
+    category: 0
+  - item: {fileID: 11400000, guid: 5fcf718d896f9b14493b3891b3e9993d, type: 2}
+    anyOfCategory: 0
+    category: 0
+  ingredients: []
+  fullIngredientsText: 
+  sellPrice: 370
+  baseRecipe: {fileID: 0}
   difficulty: 2
   cookingProfile: {fileID: 0}
   customSteps: []

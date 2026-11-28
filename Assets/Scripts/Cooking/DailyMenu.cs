@@ -328,14 +328,20 @@ public class DailyMenu : MonoBehaviour
 
     // ---------- คำนวณจำนวนจาน ----------
 
-    // จำนวนจานของสูตรนี้ที่ทำไว้แล้วในกระเป๋า
+    // จำนวนจานของสูตรนี้ที่ทำไว้แล้วในกระเป๋า ([v2] รวมจานแม่ + จานแบบทุกตัว ทุกคุณภาพ)
     public int GetDishesInBag(RecipeData recipe)
     {
-        if (recipe == null || recipe.dishItem == null || inventory == null)
+        if (recipe == null || inventory == null)
         {
             return 0;
         }
-        return inventory.GetCount(recipe.dishItem);
+
+        int total = 0;
+        foreach (ItemData dish in DishVariantRegistry.DishItemsIn(recipe, inventory))
+        {
+            total += inventory.GetCount(dish);
+        }
+        return total;
     }
 
     // ช่องนี้ตั้งได้สูงสุดกี่จาน (จานในกระเป๋า + ทำเพิ่มจากวัตถุดิบที่ช่องอื่นยังไม่ได้จอง)
@@ -399,11 +405,14 @@ public class DailyMenu : MonoBehaviour
         reserved.TryGetValue(item, out int count);
 
         // จานที่ทำไว้แล้วก็นับเป็นของที่จองด้วย
+        // [v2] จานแบบ: จองรวมทั้งสูตร จึงนับได้ไม่เกินจำนวนจานแบบนั้นที่มีจริง
+        RecipeData dishRecipe = DishVariantRegistry.RecipeOf(item);
         foreach (MenuEntry entry in entries)
         {
-            if (!entry.IsEmpty && entry.Recipe.dishItem == item)
+            if (!entry.IsEmpty && dishRecipe != null && entry.Recipe == dishRecipe)
             {
-                count += Mathf.Min(UsesRemaining() ? entry.Remaining : entry.Planned, GetDishesInBag(entry.Recipe));
+                int dishReserved = Mathf.Min(UsesRemaining() ? entry.Remaining : entry.Planned, GetDishesInBag(entry.Recipe));
+                count += Mathf.Min(dishReserved, inventory != null ? inventory.GetCount(item) : 0);
             }
         }
 
@@ -417,22 +426,11 @@ public class DailyMenu : MonoBehaviour
     }
 
     // ทำสูตรนี้เพิ่มจากวัตถุดิบได้กี่จาน โดยหักของที่จองไว้แล้ว
+    // [v2] ช่องหมวดนับรวมทุกตัวในหมวด (ใช้สำเนา ไม่แก้ของที่จองไว้)
     private int GetCookable(RecipeData recipe, Dictionary<ItemData, int> reserved)
     {
-        Dictionary<ItemData, int> required = recipe.GetRequiredCounts();
-        if (required.Count == 0)
-        {
-            return 0;
-        }
-
-        int max = int.MaxValue;
-        foreach (KeyValuePair<ItemData, int> pair in required)
-        {
-            reserved.TryGetValue(pair.Key, out int used);
-            int available = Mathf.Max(0, inventory.GetCount(pair.Key) - used);
-            max = Mathf.Min(max, available / pair.Value);
-        }
-        return max == int.MaxValue ? 0 : max;
+        Dictionary<ItemData, int> copy = reserved != null ? new Dictionary<ItemData, int>(reserved) : new Dictionary<ItemData, int>();
+        return RecipeRequirements.CountServings(recipe, inventory, copy);
     }
 
     // บวกวัตถุดิบที่ช่องนี้ต้องใช้ลงใน result (เฉพาะจานที่ต้องทำใหม่ ไม่นับจานที่ทำไว้แล้ว)
@@ -453,10 +451,16 @@ public class DailyMenu : MonoBehaviour
             return;
         }
 
-        foreach (KeyValuePair<ItemData, int> pair in entry.Recipe.GetRequiredCounts())
+        // [v2] จองวัตถุดิบ (ช่องหมวด = จองจากตัวที่มีมากสุดก่อน) สองสูตรที่ใช้หมวดเดียวกันจะไม่นับของชิ้นเดียวกันซ้ำ
+        int reservedServings = RecipeRequirements.CountServings(entry.Recipe, inventory, result, toCook);
+        if (reservedServings < toCook)
         {
-            result.TryGetValue(pair.Key, out int current);
-            result[pair.Key] = current + pair.Value * toCook;
+            // ของไม่พอทำครบ: จองช่องตายตัวส่วนที่ขาดไว้ด้วย ให้สูตรอื่นเห็นว่าของถูกใช้แล้ว (เหมือนเดิม)
+            foreach (KeyValuePair<ItemData, int> pair in RecipeRequirements.Resolve(entry.Recipe, null))
+            {
+                result.TryGetValue(pair.Key, out int current);
+                result[pair.Key] = current + pair.Value * (toCook - reservedServings);
+            }
         }
     }
 
@@ -545,9 +549,18 @@ public class DailyMenu : MonoBehaviour
     }
 
     // [2.5] เสิร์ฟ 1 จานจากกระเป๋าโดยเลือกคุณภาพ (null = ดีที่สุดที่มี) served = คุณภาพที่เสิร์ฟจริง
-    // [2.5 รอบ 2] ไม่มีจานในกระเป๋า = เสิร์ฟไม่ได้ (ต้องทำที่เตาก่อน)
     public bool TryTakeServing(RecipeData recipe, DishQuality? quality, out DishQuality served)
     {
+        return TryTakeServing(recipe, null, quality, out _, out served);
+    }
+
+    // [v2] เสิร์ฟ 1 จานจากกระเป๋า เลือกได้ทั้งแบบและคุณภาพ
+    // dish null = แบบใดก็ได้ / quality null = ดีที่สุด / ตัวที่เลือกหมดแล้ว = ใช้ตัวที่ดีที่สุดที่เหลือ
+    // ดีที่สุด = คุณภาพสูงสุดก่อน แล้วราคาขายสูงสุด / servedItem, served = จานและคุณภาพที่เสิร์ฟจริง
+    // [2.5 รอบ 2] ไม่มีจานในกระเป๋า = เสิร์ฟไม่ได้ (ต้องทำที่เตาก่อน)
+    public bool TryTakeServing(RecipeData recipe, ItemData dish, DishQuality? quality, out ItemData servedItem, out DishQuality served)
+    {
+        servedItem = null;
         served = DishQuality.Good;
 
         if (!CanServe(recipe) || inventory == null)
@@ -555,32 +568,84 @@ public class DailyMenu : MonoBehaviour
             return false;
         }
 
-        if (GetDishesInBag(recipe) <= 0)
+        if (!PickDish(recipe, dish, quality, out ItemData pickItem, out DishQuality pick))
         {
             Debug.Log($"DailyMenu: No {recipe.recipeName} in the bag. Cook it at the stove first.");
             return false;
         }
 
-        // คุณภาพที่เลือกหมดแล้ว (เช่น ถูกเสิร์ฟไปก่อน) = ใช้คุณภาพดีที่สุดที่เหลือ
-        DishQuality pick;
-        if (quality.HasValue && inventory.GetCount(recipe.dishItem, quality.Value) > 0)
+        if (!inventory.RemoveItem(pickItem, 1, pick))
         {
-            pick = quality.Value;
-        }
-        else
-        {
-            inventory.TryGetBestQuality(recipe.dishItem, out pick);
-        }
-
-        if (!inventory.RemoveItem(recipe.dishItem, 1, pick))
-        {
-            Debug.LogWarning($"DailyMenu: Could not remove {recipe.recipeName} ({DishQualityUtil.Label(pick)}) from the bag.");
+            Debug.LogWarning($"DailyMenu: Could not remove {pickItem.itemName} ({DishQualityUtil.Label(pick)}) from the bag.");
             return false;
         }
 
+        servedItem = pickItem;
         served = pick;
-        CountServing(recipe, pick, "bag");
+        CountServing(recipe, pick, $"bag, {pickItem.itemId}");
         return true;
+    }
+
+    // [v2] เลือกจาน (แบบ × คุณภาพ) ของสูตรนี้จากกระเป๋า คืนค่า false ถ้าไม่มีเลย
+    private bool PickDish(RecipeData recipe, ItemData dish, DishQuality? quality, out ItemData pickItem, out DishQuality pick)
+    {
+        pickItem = null;
+        pick = DishQuality.Good;
+
+        // ตรงตามที่เลือกทั้งแบบและคุณภาพ
+        if (dish != null && quality.HasValue && DishVariantRegistry.RecipeOf(dish) == recipe && inventory.GetCount(dish, quality.Value) > 0)
+        {
+            pickItem = dish;
+            pick = quality.Value;
+            return true;
+        }
+
+        // แบบที่เลือก คุณภาพดีที่สุดที่เหลือ
+        if (dish != null && DishVariantRegistry.RecipeOf(dish) == recipe && inventory.TryGetBestQuality(dish, out DishQuality bestOfDish))
+        {
+            pickItem = dish;
+            pick = bestOfDish;
+            return true;
+        }
+
+        List<ItemData> dishes = DishVariantRegistry.DishItemsIn(recipe, inventory);
+
+        // คุณภาพที่เลือก แบบไหนก็ได้ (ราคาสูงสุด)
+        if (quality.HasValue && TryPickHighestPrice(dishes, quality.Value, out pickItem))
+        {
+            pick = quality.Value;
+            return true;
+        }
+
+        // ดีที่สุด: คุณภาพสูงสุดก่อน แล้วราคาสูงสุด
+        foreach (DishQuality q in DishQualityUtil.BestFirst)
+        {
+            if (TryPickHighestPrice(dishes, q, out pickItem))
+            {
+                pick = q;
+                return true;
+            }
+        }
+
+        pickItem = null;
+        return false;
+    }
+
+    private bool TryPickHighestPrice(List<ItemData> dishes, DishQuality quality, out ItemData best)
+    {
+        best = null;
+        int bestPrice = -1;
+        foreach (ItemData candidate in dishes)
+        {
+            if (inventory.GetCount(candidate, quality) <= 0) continue;
+            int price = DishPricing.SalePrice(candidate, quality);
+            if (price > bestPrice)
+            {
+                best = candidate;
+                bestPrice = price;
+            }
+        }
+        return best != null;
     }
 
     // [2.5 รอบ 2] เสิร์ฟจานที่ถืออยู่ในมือ (จานไม่ได้อยู่ในกระเป๋า แค่นับยอด) Customer เรียกแล้วค่อยเคลียร์มือ

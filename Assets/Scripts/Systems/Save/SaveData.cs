@@ -14,7 +14,9 @@ public class SaveData
     // 6 = จานอาหารในกระเป๋าแยกจำนวนตามคุณภาพ (qualityOk / qualityGood / qualityPerfect ใน InventoryEntrySave)
     // 7 = เลเวลร้าน + ชื่อเสียง และจดหมาย (ได้แล้ว / วันที่ได้ / อ่านแล้ว / ของแนบที่รับแล้ว / รอส่ง)
     // 8 = เงิน, ชื่อเสียงรวมตลอดเกม, หลอดที่จ่ายไปอัปเกรดแล้ว, งานก่อสร้างที่ค้างอยู่
-    public const int CurrentVersion = 8;
+    // 9 = [Recipes v2] วัตถุดิบที่เลือกล่าสุดของสูตรที่มีช่องหมวด (จานแบบในกระเป๋าใช้รหัส <recipeId>__<itemId> ในรายการ inventory เดิม)
+    //     + คุณภาพของช่อง Hotbar (hotbarQualities)
+    public const int CurrentVersion = 9;
 
     public int version = CurrentVersion;
 
@@ -83,6 +85,13 @@ public class SaveData
 
     // [v8] จ้างแล้วแต่ช่างยังไม่เริ่ม (เริ่มเช้าถัดไป)
     public bool constructionStartsTomorrow = false;
+
+    // [v9] วัตถุดิบที่เลือกล่าสุดของสูตรที่มีช่องหมวด: รหัสสูตร กับรหัสวัตถุดิบ ลำดับเดียวกัน (เซฟเก่า = ไม่มี)
+    public List<string> lastChoiceRecipeIds = new List<string>();
+    public List<string> lastChoiceItemIds = new List<string>();
+
+    // [v9] คุณภาพของช่อง Hotbar ทีละช่อง ลำดับเดียวกับ hotbarItems (-1 = ไม่ระบุ / ไม่ใช่จาน) เซฟเก่า = ไม่มี → ไม่ระบุทุกช่อง
+    public List<int> hotbarQualities = new List<int>();
 }
 
 // ของหนึ่งชนิดในกระเป๋า

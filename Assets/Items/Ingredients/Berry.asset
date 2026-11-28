@@ -13,16 +13,20 @@ MonoBehaviour:
   m_Name: Berry
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   itemId: berry
-  itemName: Berry
-  nameTh: "\u0E40\u0E1A\u0E2D\u0E23\u0E4C\u0E23\u0E35"
+  itemName: Wild Berry
+  nameTh: "\u0E40\u0E1A\u0E2D\u0E23\u0E4C\u0E23\u0E35\u0E1B\u0E48\u0E32"
   icon: {fileID: 0}
   description: 
   itemType: 0
   category: 3
   source: 0
+  originType: 1
+  seasons: 2
+  inStore: 1
+  earlyGame: 1
   equipType: 0
-  sellPrice: 20
-  restoreHealth: 4
+  sellPrice: 25
+  restoreHealth: 7
   restoreStamina: 14
-  restoreMana: 6
+  restoreMana: 13
   restoreFever: 0

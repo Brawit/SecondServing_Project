@@ -126,7 +126,7 @@ public class HotbarUI : MonoBehaviour
         for (int i = 0; i < slots.Count; i++)
         {
             if (slots[i] == null) continue;
-            slots[i].SetItem(hotbar.GetSlot(i), hotbar.GetCount(i));
+            slots[i].SetItem(hotbar.GetSlot(i), hotbar.GetCount(i), hotbar.GetQuality(i));
             slots[i].SetSelected(i == hotbar.SelectedIndex);
         }
 
@@ -162,7 +162,12 @@ public class HotbarUI : MonoBehaviour
         }
 
         ItemData item = hotbar.SelectedItem;
-        selectedNameText.text = item != null ? item.itemName : "";
+        DishQuality? quality = hotbar.SelectedQuality;
+
+        // [v2] ช่องที่จำคุณภาพ = ต่อท้ายคุณภาพ เช่น "Sushi (Tilapia) · OK"
+        if (item == null) selectedNameText.text = "";
+        else if (quality.HasValue) selectedNameText.text = $"{item.itemName} · {DishQualityUtil.ColoredLabel(quality.Value)}";
+        else selectedNameText.text = item.itemName;
     }
 
     private static bool IsLocked()

@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56897c6864cfda9489a79f1ac3a363d1, type: 3}
+  m_Name: house_slime_coconut_jelly
+  m_EditorClassIdentifier: Assembly-CSharp::RecipeData
+  recipeId: house_slime_coconut_jelly
+  recipeName: Slime Coconut Jelly
+  nameTh: "\u0E27\u0E38\u0E49\u0E19\u0E01\u0E30\u0E17\u0E34\u0E2A\u0E44\u0E25\u0E21\u0E4C"
+  icon: {fileID: 0}
+  cuisine: 6
+  course: 1
+  isSecret: 0
+  inDemo: 0
+  dishItem: {fileID: 11400000, guid: 5c7eefdb3e784ac4a8ba47edae494cfa, type: 2}
+  slots:
+  - item: {fileID: 11400000, guid: 6f91d6c6dc304a446a9e1967d3b56bb1, type: 2}
+    anyOfCategory: 0
+    category: 0
+  - item: {fileID: 11400000, guid: d3cf91581ebc3594abfbbb726d73e552, type: 2}
+    anyOfCategory: 0
+    category: 0
+  ingredients: []
+  fullIngredientsText: 
+  sellPrice: 340
+  baseRecipe: {fileID: 0}
+  difficulty: 1
+  cookingProfile: {fileID: 0}
+  customSteps: []
+  obtainSource: 3
+  obtainNote: 
+  mailShopLevel: 0
+  mailReputation: 0
+  chef: {fileID: 0}
+  letterBody: 

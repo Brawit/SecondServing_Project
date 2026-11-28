@@ -14,14 +14,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   itemId: rice
   itemName: Rice
-  nameTh: "\u0E02\u0E49\u0E32\u0E27"
+  nameTh: "\u0E02\u0E49\u0E32\u0E27\u0E2A\u0E32\u0E23"
   icon: {fileID: 0}
   description: 
   itemType: 0
   category: 9
-  source: 2
+  source: 5
+  originType: 3
+  seasons: 1
+  inStore: 1
+  earlyGame: 0
   equipType: 0
-  sellPrice: 10
+  sellPrice: 20
   restoreHealth: 0
   restoreStamina: 0
   restoreMana: 0

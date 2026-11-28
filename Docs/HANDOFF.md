@@ -1,7 +1,7 @@
-# Second Serving – HANDOFF
+﻿# Second Serving – HANDOFF
 
 > ไฟล์นี้สรุปสถานะโปรเจกต์ให้ Claude ในแชทใหม่อ่านต่อได้ทันที
-> อัปเดตล่าสุด: 24 พฤศจิกายน 2026 (ขั้น 2.6b **เสร็จ**: ร้านค้า 3 ร้าน + กล่องขายข้ามคืน + ชื่อเสียงจากการขายจาน + กระเป๋า 3 ระดับ + สมุดสูตร 9 เล่ม + Mana/ค่าวัตถุดิบดิบใหม่ในตาราง / ถัดไป 2.6c ของป่าสำหรับสูตรเริ่มต้น)
+> อัปเดตล่าสุด: 28 พฤศจิกายน 2026 (Recipes v2 งาน 1: ขั้น 1A–1D **ผู้ใช้ทดสอบผ่านแล้ว** / **ขั้น 1E ✅ ผู้ใช้ทดสอบผ่าน** (กรอบไฮไลท์ + Sync ร้านค้า + เวลารอหลังแนะนำเมนู) / **งาน 1 จบ** (Task 13 เซฟ v8: ข้าม เพราะเซฟเก่าถูกเซฟทับเป็น v9 ตอนนอนแล้ว) → ถัดไปเขียนแผนงาน 2/3/4 — อ่านหัวข้อ 10 ก่อน)
 > ตำแหน่งไฟล์: `D:\SecondServing_Project\Docs\HANDOFF.md` (อยู่นอก Assets ตั้งใจไม่ให้ Unity import)
 
 ---
@@ -59,11 +59,24 @@
   - ✅ **Import Recipes & Ingredients** ตั้งใจให้กดซ้ำ (ทับชื่อ/วัตถุดิบ/ค่าฟื้น/ความยาก/ทางได้สูตร ไม่ทับ icon, description, ชุดท่า, portrait) ห้ามเปลี่ยนชื่อหัวคอลัมน์
   - ✅ Build Customer / Cooking / Daily Menu / Equipment / Service Timer / **Mail System**: มีอยู่แล้ว = kept (บางตัวหาวัตถุจากชื่อ เช่น ShopEntryFront / OutsideFront เปลี่ยนชื่อแล้วอาจสร้างซ้ำ)
   - ✅ [2.6] **Build Economy** มีแล้ว = kept
+  - ✅ [2.6c] **Build Forest Test Area** กดซ้ำได้: prefab ของป่า / โซนชื่อเดิม = kept (ไม่ทับค่าที่จูน) / ทาสี tile ผลเท่าเดิม (ถ้าผู้ใช้ทาแผนที่ป่าเองแล้ว กดซ้ำจะทาทับในขอบเขตป่า/ทุ่งหญ้า)
+  - ✅ [v2 28 พ.ย.] **Sync Shop Catalogs From Data** ตั้งใจให้กดซ้ำหลัง import ทุกครั้ง: ร้านของชำ = วัตถุดิบ In Store = Y ทั้งหมด (80) เรียงตามแถว CSV / ร้านหนังสือ = สูตร Obtain = Shop Book (10) เรียงราคา / ลบแถว missing / คง priceOverride / ไม่แตะ BagShop และแถวชนิดอื่น / Ctrl+Z ได้
   - ✅ [2.6b] **Build Shops** มีแล้ว = kept (รายการร้าน/เคาน์เตอร์/กล่อง/SalesLedger/UI) / ตั้งเพดานกระเป๋า Player เป็น {30,150,500} ทุกครั้งที่ยังไม่ตรง / อยากได้ layout หน้าต่างใหม่ = ลบ `ShopUI` / `ShippingBoxUI` ใต้ Canvas แล้วกดซ้ำ
   - ❌ **Build Inventory Window Layout / Build Stats HUD / Build Hotbar HUD / Build Day Summary Layout / Reset Cooking Tuning** ห้ามกดหลังขัดเกลา (จัด UI กลับ / ทับค่ามินิเกม) / เฟส 4 อาจลบตัวจัด UI ทิ้ง
 - **ตาราง Claude Sheets แก้ได้โดยตรง** ผ่าน Claude Docs connector (engine `workbook`): read project ด้วยลิงก์ → node `6ff77ff6-e2a8` / container `1b797e5d-8903-4602-9369-4747a7de916f` → `applyEdits` (ต้องส่ง `base` = revision ล่าสุด) / อ่าน `guide topic.sheets` ก่อน
 
 ## 5. ข้อมูลสูตรอาหารและวัตถุดิบ
+
+> **[v2 — ใช้อันนี้]** ชีต `Ingredients v2` (111 ชนิด) + `Recipes v2` (109 สูตร: ★1–3 = 95 / ★4 Fine-dining = 14) ใน Claude Sheets ลิงก์เดิม
+> - การตัดสินใจด้านเกมทั้งหมด: `Docs/recipes-v2-design.md` / ออกแบบโค้ด: `Docs/recipes-v2-code-design.md` / แผน: `Docs/recipes-v2-1-plan.md` / งานที่เหลือทั้งเกม: `Docs/remaining-work.md`
+> - Recipes v2 คอลัมน์: #, ชื่อเมนู, Name (EN), Country, Course, Secret, Key 1–5 (G:K), Vertical Slice, recipe_id, Sell Price, Health, Stamina, Mana, Fever, Difficulty (1–4), Difficulty Note, Obtain (+ `Mastery`), Obtain Note, Mail Shop Lv, Mail Reputation, Chef, Letter (Z), หมายเหตุ, Base Recipe (AB)
+> - Ingredients v2 คอลัมน์: item_id, ชื่อไทย, Name (EN), Category, Source, In Store, Early, ใช้ในกี่สูตร (สูตร), Sell Price, Health, Stamina, Mana, Fever, หมายเหตุ, Type, Season
+> - Key ขึ้นต้น `any_` = **ช่องหมวด** (any_fish / any_vegetable / any_fruit / any_cheese) สูตรละไม่เกิน 1 ช่อง
+> - ผู้ใช้จูนราคา/ค่าพลัง/ความยากในชีตเอง **ห้ามคำนวณทับ** / อ่านชีตก่อนเขียนทุกครั้ง (ผู้ใช้แก้บ่อย เช่นเคยย้าย Key 5 ไปคอลัมน์ K)
+> - CSV (`Assets/Data/*.csv`) สร้างจากชีต v2 แล้ว (26 พ.ย.) ตัดคอลัมน์โน้ตออก / จดหมายเชฟ 19 ฉบับอยู่ในคอลัมน์ Letter ของชีตแล้ว (Claude เขียน 14 ใช้ของเดิม 5)
+> - ชีต v1 (`Recipes` / `Ingredients`) เก็บไว้เป็นประวัติ ไม่ใช้แล้ว
+
+**ข้อมูล v1 (เก่า อ้างอิงเท่านั้น):**
 
 - **ตารางต้นฉบับ (Claude Sheets):** https://claude.ai/artifact/4PmyMFeRHbk51BCE1eq4eJ
   - ชีต `อ่านก่อน` / `Recipes` (87 สูตร) / `Ingredients` (83 ชนิด)
@@ -214,7 +227,7 @@
   - **ทางขายของ (2.6b)**: A ขายตรงกับ NPC ได้เงินทันที + **กล่องขายข้ามคืนแบบ Stardew** ขายตามราคา เงินขึ้นหน้าสรุปวัน = ที่ทิ้งของที่ไม่ใช้ (ผู้ใช้เลือกหลังคุย ภูต/ศาลเจ้าที่/รถพ่อค้าคนกลาง/กล่องคุณยาย ยังไม่กำหนดเหตุผลในเรื่อง) / ขายออนไลน์ผ่านคอม = ไม่เอา / ของแนบ**เงิน**ในจดหมายทำแล้ว
 - **ร้านค้า + กล่องขายข้ามคืน (ขั้น 2.6b) แบบร่าง: `Docs/2.6b-design.md` / แผน: `Docs/2.6b-plan.md`** (ผู้ใช้ทดสอบแล้วพอใจ)
   - กล่องขาย + ร้านของชำรับซื้อ **100% ของ sellPrice** แบบ Stardew / จาน × คุณภาพ **OK 1.0 / Good 1.1 / Perfect 1.25** (ปัดลงต่อชิ้น) / ขายได้เมื่อ sellPrice > 0
-  - ร้านขายให้ผู้เล่น **×2** ทุกอย่าง (ร้าน "ซื้อเวลา" ทั้งร้าน: ผู้ใช้ตั้งใจให้ทุกวัตถุดิบหาเองได้ในเกมเต็ม ปลูกข้าว→แป้ง, ตีมอนสเตอร์/ล่าสัตว์ได้เนื้อ, ตกปลา/ดักกุ้ง, ไข่หายากในป่า → เฟส 3 เปลี่ยนคอลัมน์ Source ของเนื้อ/ข้าว/แป้ง/ไข่ จาก Market)
+  - ร้านขายให้ผู้เล่น **×2** ทุกอย่าง (ร้าน "ซื้อเวลา" ทั้งร้าน: ผู้ใช้ตั้งใจให้ทุกวัตถุดิบหาเองได้ในเกมเต็ม ปลูกข้าว→แป้ง, ตีมอนสเตอร์/ล่าสัตว์ได้เนื้อ, ตกปลา/ดักกุ้ง, ไข่ (ไข่ธรรมดา) หาได้ในป่าแต่ยากพอประมาณ → เฟส 3 เปลี่ยนคอลัมน์ Source ของเนื้อ/ข้าว/แป้ง/ไข่ จาก Market)
   - **ชื่อเสียงจากการขายจาน** (ร้าน + กล่องนับรวม): ทุก 5 จานในวันเดียวกัน = **+2** ไม่สะสมข้ามวัน **สูงสุด +10/วัน** วัตถุดิบไม่นับ / คิดตอนจบวัน (ผู้ใช้: เงินเยอะแต่อัปเกรดร้านไม่ได้ถ้าไม่เปิดร้าน = ชื่อเสียงเป็นตัวกั้น) / เปิดร้านดีๆ ≈ +20–35/วัน
   - **ราคาตามความยาก ★ = ไม่เอาไปก่อน** (มินิเกมพลาดยังได้จาน → ★3 เป็นแค่เครื่องผลิตเงิน / รางวัลความยากอยู่ในร้านผ่านความพอใจ) ทบทวนตอนเล่นทดสอบทั้งวงจร
   - ร้าน 3 ร้าน (จุดชั่วคราว ยังไม่มี NPC) เปิด **09:00–17:00** ไม่จำกัดจำนวน: **General Store** วัตถุดิบ 34 ชนิด (สูตรเริ่มต้น 18 + สูตรในสมุด 16) + แท็บ Sell / **Bag Shop** อัปเกรดกระเป๋า (แสดงเฉพาะขั้นถัดไป) / **Bookstore** สมุดสูตร 9 เล่ม ราคา = ราคาจาน ×10 ซื้อ = รู้สูตรทันที รู้แล้ว = `Learned` / **ยังไม่ขายเมล็ด** (รอระบบปลูก เฟส 3 แค่เพิ่มในไฟล์รายการ)
@@ -223,6 +236,12 @@
   - กล่อง: ย้ายของออกจากกระเป๋าทันที **เอาคืนได้ทุกชิ้นจนกว่าจะนอน** (กระเป๋าเต็ม = คืนได้เท่าที่ใส่ได้) / ขายตอนจบวัน (นอนหรือสลบ) → `OvernightIncome` + ชื่อเสียงจากการขายบนหน้าสรุปวัน / หน้าสรุปมีบรรทัดยอดขายร้านของชำด้วย
   - ใช้ร้าน/กล่องไม่ได้ระหว่างเปิดร้านอาหาร (รวม Last call) / หน้าสรุปวัน / มีหน้าต่างอื่นเปิด / หน้าต่างเปิด = นาฬิกาหยุด เดินไม่ได้ / **ไม่เพิ่มเวอร์ชันเซฟ** (เซฟตอนจบวันหลังปิดยอดกล่องแล้ว)
   - ตาราง rev 114: Mana จากอาหาร 27 → **44 จาน** (เดิม ×2 ปัด 5 สูงสุด 40 / ใหม่ 15–30 รวมข้าวเหนียวมะม่วง + อากัวเฟรสกา) / วัตถุดิบกินดิบได้ 36 ชนิด HP/Stamina ×2 + ผลไม้/สมุนไพร Mana 3–10 / จานที่ฟื้นน้อยกว่าวัตถุดิบดิบ = ค่าวัตถุดิบ +5 / CSV สร้างใหม่ + import แล้ว
+- **ของป่า + ป่าทดลอง (ขั้น 2.6c) แบบร่าง: `Docs/2.6c-design.md` / แผน: `Docs/2.6c-plan.md`**
+  - **ไข่ = ไข่ธรรมดา (`egg` ตัวเดียวกับร้านของชำ)** ไม่ใช่ไอเทมพิเศษ ผู้ใช้แค่อยากให้หาในป่ายากพอประมาณ (Claude เคยเข้าใจผิดว่าเป็น "ไข่หายาก") / Source ในตารางยังเป็น Market
+  - ปริมาณ **แบบ B (ผู้ใช้เลือก)**: เก็บของป่า 1 วัน ≈ พอ 1–2 เมนู ที่ขาดซื้อเติม (×2) หรือเลือกเมนูตามของที่เจอ
+  - **ป่าทดลองใต้บ้าน (ผู้ใช้ขอ ไกลบ้านหน่อย ขัดเกลาจริงเฟส 3):** เจาะกำแพงล่างของลาน x −2..2 → ทุ่งหญ้า x −8..8 y −9..−29 (กว้างเท่าลาน กันกล้องแตก 2 เกาะ) ทางดิน x −1..0 → ป่า x −15..14 y −30..−49 กำแพงรอบ / CameraBoundsMap ต่อกันเป็นก้อนเดียว (พิกัด = ช่อง Tilemap)
+  - โซนแบ่งตามพื้นที่ (ผู้ใช้โอเค): `Zone_Field` ทุ่งผัก ซ้ายบน (พริก 2, มะเขือเทศ 1.5, ถั่วลิสง 1.5, กะหล่ำ, ข้าวโพด, โหระพา) / `Zone_Orchard` สวนผลไม้ ขวาบน (มะม่วง มะพร้าว เลมอน มะนาว มะละกอดิบ ผลไม้ตามฤดูกาล) ทั้งสองโซน สูงสุด 12 เริ่ม 8 งอก 7/วัน โอกาส 0.8 / `Zone_MushroomForest` เดิมย้ายลงป่าลึก / **`Zone_EggNest` มุมขวาล่าง สูงสุด 2 เริ่ม 1 งอก 1/วัน โอกาส 0.4 (≈ 1 ฟองต่อ 2–3 วัน ผู้ใช้เลือก A)** / `Zone_CornForest` ปิดไว้
+  - prefab `Assets/Prefabs/Forage/Pickup_<itemId>` 13 ชิ้น โคลนจาก Corn_Pickup สีต่างกัน
 - **ไอเดียเฟส 3 (ผู้ใช้, 24 พ.ย.):** งานครบรอบร้านให้ผู้เล่น (ใช้ชื่อเสียงรวม)
 - **ไอเดียเฟส 3 (ผู้ใช้, 24 พ.ย.) — กันเบื่อมินิเกมช่วงกลางเกม:** ผู้ใช้กังวลว่าเล่นนานๆ แล้วเบื่อมินิเกม (ไม่ลึกพอจะเล่นซ้ำได้ไม่จำกัดแบบระบบต่อสู้) → แนวทาง = **ลดจำนวนครั้งที่ต้องเล่นเมื่อเก่งแล้ว + ให้ผู้เล่นเลือก** (ทำเฟส 3 พร้อม proficiency)
   1. **ความชำนาญรายสูตร → Quick Cook:** ทำสูตรเดิมครบ N ครั้ง (เช่น 10 ครั้งที่ได้ Good+) ปลดล็อกทำเร็ว = ข้ามมินิเกม ได้ Good แน่นอน / **Perfect ยังต้องเล่นเอง** / สูตรต้นเกมปลดล็อกก่อน = ยังมีค่า
@@ -297,11 +316,14 @@ ItemData.cs           itemId, itemName (EN), nameTh, icon, description, itemType
 ItemDatabase.cs       GetById, RefreshFromProject (Editor)
 ForageItem.cs         IInteractable, Collect(Inventory)
 ForageSpawnZone.cs    โซนเกิดของ
+Editor/ForestAreaBuilder.cs  [2.6c] Tools > Second Serving > Build Forest Test Area (prefab ของป่า 13 + ทาสีป่าทดลอง + โซนงอก)
 PlayerController.cs   เดิน 8 ทิศ, CanMove, SetCanMove
 Player/PlayerStats.cs       Health/Stamina/Mana/Fever, Restore, TrySpend, TryUseFever, TakeDamage, RegisterCombatHit(CombatHitType),
                             TryEat(item, inventory), SetManaRegenSource, SetBonusMax, SetFever, RefillForNewDay (ฟัง OnDayEndFinished),
                             events OnStatsChanged/OnHealthDepleted/OnFeverFull, เมนู Debug หลายตัว (คลิกขวาหัวคอมโพเนนต์)
 Player/Hotbar.cs            10 ช่อง (ItemData), SelectedIndex, CanAssign, SetSlot (ย้ายถ้าซ้ำ), ClearSlot, SwapSlots, Select/SelectOffset,
+                            [v2] คุณภาพต่อช่อง (GetQuality / SelectedQuality / SetSlot(i, item, q) / IndexOf(item, q) / CaptureSlotQualities / SetAllSlots(items, q))
+                            [v2] PlayerActionController: กินตามคุณภาพช่อง + clearSlotWhenEatenUp
                             CaptureSlotIds / SetAllSlots (ใช้ตอนเซฟ/โหลด), Debug: Give Test Items + Fill Hotbar,
                             Debug: Give Item By Id (กรอกช่อง Debug Item Id / Debug Amount ใน Inspector ก่อน)
 Player/PlayerEquipment.cs   enum EquipSlot (Shoes, Ring1, Ring2, Necklace, Head, Top, Bottom, Back), GetSlot, CountEquipped,
@@ -352,7 +374,8 @@ UI/CookingMinigameView.cs [2.5 รอบ 2] แผงมินิเกม (Canv
                           [2.5b] ProgressBar แยก (SetProgress, ไม่มี = ใช้ Fill แทน), เข็ม needleOvershoot
 UI/CookingMenuUI.cs       [2.5 รอบ 2] หน้าต่างทำอาหารนอกร้าน (static IsAnyOpen) สูตรที่รู้และวัตถุดิบพอ คลิก = เริ่มทำ, Esc/Cancel ปิด, นาฬิกาเดิน
 UI/CookingRecipeItemUI.cs [2.5 รอบ 2] รายการสูตรในหน้าต่างทำอาหาร
-Shop/ServePicker.cs       [2.5] แถบเลือกคุณภาพในข้อความเหนือหัวลูกค้า (สร้างตัวเองตอนใช้ครั้งแรก GetOrCreate): Open/Close/Confirm/IsOpenFor,
+Shop/ServePicker.cs       [v2 1D] ตัวเลือก แบบ × คุณภาพ (Option, static BuildOptions เรียงดีสุด → ราคา) + carousel visibleOptions / positionFormat / ลูกศร prev next
+                          [2.5] แถบเลือกคุณภาพในข้อความเหนือหัวลูกค้า (สร้างตัวเองตอนใช้ครั้งแรก GetOrCreate): Open/Close/Confirm/IsOpenFor,
                           scroll / คลิกตัวเลือก (หาด้วย <link="q0"> + TMP_TextUtilities.FindIntersectingLink) / คลิกซ้ำ = เสิร์ฟ / Esc / เดินห่าง closeDistance 1.8
                           LeaveBecauseShopClosed, RemoveImmediately, ข้อความ TextMeshPro เหนือหัว (ชื่อจาน + วินาทีที่เหลือ)
 Shop/CustomerManager.cs   singleton: ปล่อยลูกค้าจาก entryPoint (ShopEntryFront) ทุก 8–14 วิ เมื่อมีที่นั่งว่าง + FreeServings > 0,
@@ -384,14 +407,22 @@ Systems/Save/SaveManager.cs  เซฟตอน OnDayEnded, โหลดตอ�
                              ผูก playerHotbar / playerStats / playerEquipment / dailyMenu (ว่างไว้จะหาเอง) โหลดแล้วตั้งโบนัส → FEVER → RefillForNewDay
                              ไม่เซฟค่าปัจจุบัน HP/ST/MP (โหลด = วันใหม่ เต็มเสมอ) / ไอเทม Hotbar ต้องอยู่ใน ItemDatabase
 UI/ClockUI.cs, NotificationUI.cs (NotificationUI.Post / [2.5c] หลายข้อความในเฟรมเดียว = ต่อบรรทัด), DaySummaryUI.cs
-UI/InventoryUI.cs      กระเป๋า 5 แท็บ: I เปิด/ปิด, Esc ปิด, Q/E เปลี่ยนแท็บ, คลิกช่องดูรายละเอียด,
+UI/InventoryUI.cs      กระเป๋า 5 แท็บ (Ingredients, Dishes, Crafting, Equipment, Accessory): I เปิด/ปิด, Esc ปิด, Q/E เปลี่ยนแท็บ, คลิกช่องดูรายละเอียด,
+                       [v2] hideUndiscovered (ไม่แสดงของไม่เคยเจอ / Dishes: รู้สูตร = แสดง) / Crafting ยังว่าง (DrawCrafting) /
+                       Dishes 1 ช่องต่อสูตร (GetDishGroupCount / IsDishGroupDiscovered / CollectDishGroup) / กล่องช่องจาน = ชื่อ → สูตร (AppendRecipeSection) → In bag /
+                       คลิก = แถว DishVariantRowUI ใน DishVariantList (สร้างด้วยโค้ดใต้ DetailPanel, Eat = PlayerStats.TryEat, กล่องค่าฟื้นตอนวางเมาส์บนแถว)
                        hideUnknownSecretRecipes (ซ่อนสูตรลับที่ยังไม่รู้ + จานของสูตรนั้นในแท็บ Dishes ผ่าน IsHiddenSecretDish)
                        [2.5] กล่องคุณภาพจานตอนวางเมาส์ (DishQualityTooltip สร้างเองบน Canvas) + บรรทัด Quality ในแผงรายละเอียด
-UI/InventorySlotUI.cs  SlotState (Owned/DiscoveredEmpty/Undiscovered), ตัวเลขมุมขวาบน, SelectionFrame, OnClicked,
+UI/DishVariantRowUI.cs [v2 1D] แถวจาน แบบ × คุณภาพ (สร้างด้วยโค้ด Create): ปุ่ม Eat (OnEatClicked), ลากลง Hotbar, OnHoverEnter/Exit
+UI/InventorySlotUI.cs  SlotState (Owned/DiscoveredEmpty/Undiscovered), ตัวเลขมุมขวาบน, SelectionFrame, OnClicked, [v2] AllowHotbarDrag, fadeNameWhenEmpty,
                        ลากไป Hotbar ได้ (ช่องที่ลากไม่ได้ ส่งการลากต่อให้ Scroll View), [2.5] OnHoverEnter / OnHoverExit
 UI/StatsUI.cs          แถบ HP/ST/MP/FEVER (ยืด/หดด้วย Anchor Max X ไม่ใช้ Image Filled), FEVER เต็มแล้วกะพริบ
 UI/HotbarUI.cs         แถบ 10 ช่อง + ชื่อไอเทมที่เลือก, [2.5] ซ่อนตอนเปิดร้าน (hideWhileServing, CanvasGroup alpha 0 + ไม่รับคลิก)
-UI/HotbarSlotUI.cs     ไอคอน/จำนวน/เลขปุ่ม/กรอบเลือก, คลิกเลือก, OnDrop (จากกระเป๋า = ใส่, จาก Hotbar = สลับ), ลากออก = เอาออก
+UI/HotbarSlotUI.cs     ไอคอน/จำนวน/เลขปุ่ม/กรอบเลือก, คลิกเลือก, OnDrop (จากกระเป๋า = ใส่, จาก Hotbar = สลับ, [v2] จากแถวจาน = ใส่ + คุณภาพ), ลากออก = เอาออก
+                       [v2] หมด = ไอคอนเทา (emptyGray/emptyAlpha), ตัวเลขสีตามคุณภาพ, ช่องรวมจานหลายแบบวางไม่ได้
+UI/HoverHighlight.cs   [v2 1E] กรอบไฮไลท์ตอนเมาส์วาง (สร้างลูก "HoverFrame" เส้น 4 ด้านเองตอนวางครั้งแรก, ignoreLayout, วาดบนสุด, แยกจาก SelectionFrame)
+                       HoverHighlight.Ensure(gameObject) + Interactable (ผู้เรียกตั้ง) / Inspector: Frame Color (ขาวนวล a 0.9), Thickness 3, Outset 0
+                       ใส่ด้วยโค้ดใน InventorySlotUI (highlightWhenEmpty), DishVariantRowUI, HotbarSlotUI, SellItemSlotUI, BoxEntryRowUI, CookingRecipeItemUI, ShopEntryRowUI / OnEnable ตรวจเมาส์เอง 1 ครั้ง
 UI/EquipmentPanelUI.cs แผงช่องสวมใส่ 8 ช่อง (แถวบน Stats แถวล่าง Fashion), OnSlotClicked, SetSelectedSlot
 UI/EquipmentSlotUI.cs  ช่องสวมใส่ 1 ช่อง: OnDrop (จากกระเป๋า = สวม, จากช่องอื่น = สลับ), ลากออก = ถอด, คลิก = ดูรายละเอียด
 UI/MenuSelectionUI.cs  หน้าต่างเลือกเมนู (static Instance / IsAnyOpen): Open, Close, ปุ่ม Open Shop / Cancel, Esc, Shift = ±5, [2.4b] popularText + เรียงเมนูนิยมขึ้นก่อน
@@ -399,6 +430,16 @@ UI/MenuSlotRowUI.cs    แถวช่องเมนู (ชื่อ, ready+co
 UI/MenuRecipeItemUI.cs รายการสูตรฝั่งขวา (คลิก = ใส่ช่องว่าง) สร้างจาก RecipeItemTemplate, [2.4b] เมนูนิยม = `*` + ชื่อสีทอง + "Popular today!"
 UI/ServiceTimerUI.cs   ซ่อน ClockPanel / แสดง ServiceTimerPanel ระหว่างเปิดร้าน (TimerText ใช้ <mspace>, StatusText)
 UI/DragIconUI.cs       ไอคอนลอยตามเมาส์ตอนลาก สร้างตัวเองบน Canvas หลัก (ไม่ต้องวางในฉาก)
+Cooking/RecipeRequirements.cs [v2] static: Resolve(recipe, choice), GetCandidates, DefaultChoice(recipe, inv, last), HasAll, CountServings(recipe, inv, reserved, limit)
+Systems/Season.cs         [v2] [Flags] Season + SeasonUtil.TryParse ("Fall, Winter" / "All")
+Cooking/CategoryStats.cs  [v2 1B] static: ค่าเฉลี่ยหมวด AveragePrice / AverageRestore (หลังกฎ "ทุกค่า 0 = H5 S20" + "ติดลบ = 0") / CookedRestore / Build / Invalidate
+Cooking/DishPricing.cs    [v2 1B] static: VariantPrice / VariantRestore / DishCaps / SalePrice(item, q) / PriceFor(base, stars, q) / PriceMultiplier /
+                          QualityStatMultiplier / EatValues(item, q?) / RecipeOf(dish) / Round5 — ค่าคงที่ใน CookingSettings > Economy (v2) (อ่านผ่าน CookingSettings.Active)
+Cooking/DishVariantRegistry.cs [v2 1B] static: จานแบบตอนรัน (ไม่มีไฟล์) GetOrCreate(recipe, ingredient) / TryResolve(itemId) / RecipeOf / DishItemsIn(recipe, inv) /
+                          MakeId "<recipeId>__<itemId>" / เมนู Tools > Second Serving > Debug > Print Variant Registry
+Editor/DishPriceDebugMenu.cs [v2 1B] Tools > Second Serving > Debug > Print Dish Price Table (ทุกสูตรมีช่องหมวด × วัตถุดิบในหมวด: ราคาแบบ H/S/M ราคาขาย OK/Good/Perfect)
+Cooking/RecipeData.cs     [v2] slots (List<RecipeSlot> ≤5, ช่องหมวด), Slots (fallback ingredients เก่า), CategorySlotIndex/HasCategorySlot/CategorySlot, baseRecipe, MaxDifficulty 4
+ItemData.cs               [v2] originType, seasons, inStore, earlyGame + runtime variantRecipe/variantIngredient/IsVariant / ItemDatabase.Active, RecipeDatabase.Active
 Cooking/RecipeSource.cs   [2.5c] enum RecipeSource (ทางได้สูตร ต่อท้ายเท่านั้น) + RecipeSourceUtil.TryParse ("Chef Mail" → ChefMail)
 Cooking/RecipeData.cs     [2.5c] เพิ่ม obtainSource, obtainNote, mailShopLevel, mailReputation, chef, letterBody, IsChefMail
 Mail/ChefData.cs          [2.5c] เชฟ (chefId, displayName, cuisine, signOff, portrait, bio) Assets/Chefs/
@@ -448,8 +489,11 @@ UI/SellPanelUI.cs, SellItemSlotUI.cs [2.6b] แผงขายคลิกเด
 UI/ShippingBoxUI.cs, BoxEntryRowUI.cs [2.6b] หน้าต่างกล่อง (ซ้ายแผงขาย ขวาของในกล่อง + Take 1 / Take all + ตัวนับชื่อเสียง)
 Editor/ShopSetupBuilder.cs   [2.6b] Tools > Second Serving > Build Shops: Assets/Shops/GeneralStore, BagShop, Bookstore + prefab ShopKeeperCounter / ShippingBox
                           + วางร้านซ้ายเคาน์เตอร์ช่าง (ห่าง 2.5) + กล่องขวาตู้จดหมาย + SalesLedger + ShopUI + ShippingBoxUI + เพดานกระเป๋า / kept
+Editor/ShopCatalogSync.cs         [v2] Tools > Second Serving > Sync Shop Catalogs From Data (รายการร้านของชำ/ร้านหนังสือ ← ItemData.inStore / RecipeData.obtainSource ShopBook)
+                                   (Build Shops ยังมีรายการ 34 ชนิดของ v1 ในโค้ด ใช้แค่ตอนสร้างร้านครั้งแรก → กด Sync ต่อทุกครั้ง)
 Editor/DaySummaryLayoutBuilder.cs [2.6] Tools > Second Serving > Build Day Summary Layout (จัดหน้าต่างสรุปวัน: พื้นเข้ม 900x660) ⚠️ ตัวจัด UI ห้ามกดหลังขัดเกลา
-Editor/RecipeImporter.cs           Tools > Second Serving > Import Recipes & Ingredients ([2.5b] อ่านคอลัมน์ Difficulty / [2.5c] Chefs.csv + Obtain/Chef/Letter)
+Editor/RecipeImporter.cs           [v2] อ่าน Key 5 / any_ / Base Recipe / In Store / Early / Type / Season + รายงานของเก่า + เมนู Move Obsolete Recipe Data To Trash
+                                   Tools > Second Serving > Import Recipes & Ingredients ([2.5b] อ่านคอลัมน์ Difficulty / [2.5c] Chefs.csv + Obtain/Chef/Letter)
 Editor/InventoryLayoutBuilder.cs   Tools > Second Serving > Build Inventory Window Layout (จัดหน้าต่างกระเป๋าอัตโนมัติ)
 Editor/CookingSetupBuilder.cs      [2.5 รอบ 2] Tools > Second Serving > Build Cooking System (CookingSettings + Profiles ตัวอย่าง + ตั้ง 8 สูตรเริ่มต้น
                                    (ไม่ทับที่ตั้งไว้) + prefab Stove + วางเตาข้าง ShopCounter ถ้ายังไม่มี + CookingSystem + CarriedDish + UI)
@@ -469,7 +513,7 @@ Editor/EquipmentLayoutBuilder.cs   Tools > Second Serving > Build Equipment Pane
 ## 8. การตั้งค่าในฉาก (SampleScene)
 
 - **Player:** Box Collider 2D, Rigidbody2D, Inventory, RecipeBook, PlayerController, PlayerInteractor, PlayerTeleporter, PlayerStats, Hotbar, PlayerActionController, PlayerEquipment
-- **กล้อง:** Main Camera (Cinemachine Brain) + PlayerFollowCam (Position Composer, Ortho 5, Confiner 2D)
+- **กล้อง:** Main Camera (Cinemachine Brain) + PlayerFollowCam (Position Composer, Ortho 7.5, Confiner 2D)
 - **Grid:** Ground, Obstacles, CameraBoundsMap, CameraBounds_Shop
 - **ร้าน:** ประตู 4 บาน (Door), ShopCounter, Bed และจุดวาร์ป ShopEntry_Front/Back, Outside_Front/Back, BedWakePoint, HospitalWakePoint
 - **[2.6b]** วัตถุ **SalesLedger** / เคาน์เตอร์ **GeneralStoreCounter, BagShopCounter, BookstoreCounter** (ซ้าย BuilderCounter) / **ShippingBox** (ขวาตู้จดหมาย) / Canvas มี **ShopUI** → ShopWindow + **ShippingBoxUI** → ShippingBoxWindow / Inventory บน Player เพดาน {30,150,500}
@@ -482,9 +526,9 @@ Editor/EquipmentLayoutBuilder.cs   Tools > Second Serving > Build Equipment Pane
   **MenuSelectionUI** → MenuWindow 1200x800 (TitleText, HintText, **PopularText**, SlotList + MenuSlotTemplate, RecipeScrollView + RecipeItemTemplate, TotalText, CancelButton, OpenShopButton) อยู่บนสุดของ Canvas
 - หน้าต่างกระเป๋า 1500x860 กลางจอ (ขอบล่างอยู่ที่ y=110) Hotbar สูง 72 ห่างขอบล่าง 16 จึงไม่ทับกัน
 - **ของทดสอบ:** ผู้ใช้สร้าง `TestSword` (Weapon) และ `TestHoe` (Tool) ไว้ใน `Assets/Items` / ของสวมใส่ทดสอบ 8 ชิ้นใน `Assets/Items/TestEquipment` (test_boots, test_ring_ruby, test_ring_jade, test_necklace, test_hat, test_top, test_bottom, test_wings)
-- **กล้อง:** Ortho Size 5 (จอประมาณ 17.8 x 10 หน่วย) Position Composer Damping 0.5, Confiner 2D Damping 0.5 / Slowing Distance 5
+- **กล้อง:** [2.6c] Ortho Size **7.5** (ผู้ใช้ขยายจาก 5 ให้เห็นกว้างขึ้น จอประมาณ 26.7 x 15 หน่วย) ตั้งที่ PlayerFollowCam → Lens Position Composer Damping 0.5, Confiner 2D Damping 0.5 / Slowing Distance 5
   - เคยมีปัญหากล้องกระโดดในร้าน เพราะ `CameraBounds_Shop` เป็น 2 ห้องเชื่อมด้วยช่องแคบกว่าจอ (Confiner แยกเป็น 2 เกาะ) ผู้ใช้รู้วิธีแก้และจัดการเอง
-  - `CameraBoundsMap` กว้าง 17 หน่วย แคบกว่าจอ กล้องข้างนอกจึงเลื่อนซ้ายขวาไม่ได้ ตอนขยายแผนที่ต้องกว้างกว่า 18 หน่วย
+  - `CameraBoundsMap` ลาน/ทุ่งหญ้ากว้าง 17 หน่วย แคบกว่าจอ กล้องจึงเลื่อนซ้ายขวาไม่ได้ ตอนวางแผนที่จริงต้องกว้างกว่า **27 หน่วย** (Ortho 7.5) / ป่าทดลองกว้าง 30 / ผู้ใช้: บั๊กมุมกล้องไว้แก้ตอนวาง Tilemap จริง
 - **Prefab:** `Assets/Prefabs/InventorySlot` (มี SelectionFrame), `Assets/Prefabs/Mushroom_Pickup`, `Assets/Prefabs/Customer` (Body sprite, Bubble TextMeshPro, Trigger + Kinematic), `Assets/Prefabs/Table_2Seats` (Collider ทึบ + Seat_Left/Seat_Right ไม่มี Collider), `Assets/Prefabs/Placeholder/WhiteSquare.png` (4x4, PPU 4)
 - **ร้าน:** ผู้ใช้วางโต๊ะ Table_2Seats ในร้านเองแล้ว / Player มี Rigidbody2D แบบ Dynamic (ตัวหาเส้นทางจึงไม่นับผู้เล่นเป็นสิ่งกีดขวาง)
 - Tilemap สิ่งกีดขวางในฉากชื่อ **`Obstables`** (สะกดผิด) / `CameraBoundsMap` และ `CameraBounds_Shop` มี TilemapCollider2D ทึบ (ใช้กับ Confiner)
@@ -514,6 +558,7 @@ UI ทั้งหมดตอนนี้เป็นแบบใช้งา�
 - **ขั้น 2.5c:** ทางได้สูตร (RecipeSource + คอลัมน์ Obtain) + จดหมายเชฟ 20 ฉบับ + จดหมายทั่วไป (LetterData, สลบ) + ตู้จดหมาย/โต๊ะคอม/ช่องของแนบแบบ Stardew + ShopProgress + กระดานเมนูนิยม + แจ้งเมนูนิยมตอนเช้า + เซฟ v7 (ผู้ใช้กด Build แล้ว คอมไพล์ผ่าน / ทดสอบละเอียดและขัดเกลาตอนมีภาพ+แผนที่จริง)
 - **ขั้น 2.6:** เงิน B (ตัวเลขวิ่ง) + ราคาวัตถุดิบ/จาน + ทิป + ชื่อเสียงแบบหลอดทีละเลเวล + ชื่อเสียงรวม + ระบบก่อสร้างกลาง + ช่างอัปเกรดร้าน 3 ขั้น (Yes/No, เริ่มวันถัดไป, ติดงาน = ยุ่ง) + หน้าสรุปวัน + เงินแนบจดหมาย + เซฟ v8 (ผู้ใช้ทดสอบการอัปเกรดแล้วโอเค)
 - **ขั้น 2.6b:** ร้านค้า 3 ร้าน (ของชำ ซื้อ/ขาย · กระเป๋า · หนังสือ) + กล่องขายข้ามคืน + ชื่อเสียงจากการขายจาน + กระเป๋า 30/150/500 + สมุดสูตร 9 เล่ม + ซื้อได้เท่าที่ได้ + Shift ×10 + ขายคลิกเดียว + Mana/ค่าวัตถุดิบดิบใหม่ (ผู้ใช้ทดสอบแล้วพอใจ)
+- **ขั้น 2.6c:** ป่าทดลองใต้บ้าน (Build Forest Test Area) + ของป่า 12 ชนิดสูตรเริ่มต้น 3 โซน + ไข่ธรรมดาในป่าลึก (≈ 1 ฟอง/2–3 วัน) + กล้อง Ortho 7.5 (ผู้ใช้ทดสอบแล้วไม่เจอบั๊ก)
 - **ขั้น C:** Equipment Slots 8 ช่อง (Stats 4 + Fashion 4) ในหน้าต่างกระเป๋า ลากใส่/ถอด/สลับ + เซฟ v4 (ผู้ใช้ทดสอบเบื้องต้นแล้ว ใช้งานได้)
 
 **⬜ เฟส 2 (เหลือประมาณ 6–8 สัปดาห์)**
@@ -526,8 +571,10 @@ UI ทั้งหมดตอนนี้เป็นแบบใช้งา�
 | – | ~~ปรับความยาวรอบขาย + ความถี่ลูกค้า~~ **เลื่อนไปช่วงเล่นทดสอบทั้งวงจร** (24 พ.ย. ต้นเกมว่างเป็นปกติ ขายหมด = ร้านปิดเอง / ท้ายเกมจะมีหุ่นทำอาหาร / รอราคาจาก 2.6) | 0.5 วัน |
 | **2.6** ✅ | เงิน (ต่อจาก CustomerManager.OnCustomerPaid / EarnedToday + ของแนบเงินในจดหมาย) ชื่อเสียง → **ShopProgress.AddReputation** (LeftUnhappyToday, Satisfaction/Mood รายวัน) + เลเวลร้าน **ShopProgress.SetLevel** ราคาจากต้นทุน ความชำนาญ โบนัสความหลากหลาย + จุดอัปเกรดร้านที่เรียก `PopularDishes.SetBonusCount` / `CustomerManager.SetLovedChanceBonus` | 3–4 วัน |
 | **2.6b** ✅ | ร้านค้าพื้นฐาน (ซื้อ/ขาย ขายตรงได้เงินทันที) + **กล่องขายข้ามคืนแบบ Stardew** (เงินเข้าหน้าสรุปวัน `DaySummaryData.OvernightIncome`) + อัปเกรดกระเป๋า + **สมุดสูตร (Obtain = Shop Book)** | 4–6 วัน |
-| **2.6c** ← ถัดไป | ของป่าสำหรับสูตรเริ่มต้น 12 ชนิด (prefab + โซนงอก) + **ไข่หายากในป่า** (ผู้ใช้) | 2–3 วัน |
-| 2.7 | ~~สรุปรายวัน~~ ส่วนใหญ่ทำแล้วใน 2.6 เหลือขัดเกลา | 0.5 วัน |
+| **2.6c** ✅ ทดสอบแล้ว | ของป่าสำหรับสูตรเริ่มต้น 12 ชนิด (prefab + โซนงอก) + **ไข่ธรรมดาในป่า หายากพอประมาณ** + ป่าทดลองใต้บ้าน | 2–3 วัน |
+| **v2 งาน 1** ✅ (1A–1E ผ่าน 28 พ.ย.) | ข้อมูลสูตร v2 + ช่องหมวด + จานแยกแบบ + ราคา/ตัวคูณ + UI เลือก + กรอบไฮไลท์ (แผน recipes-v2-1-plan.md) | 2–3 สัปดาห์ |
+| **v2 งาน 2–4** | Stamina แบบ Stardew / Fine-dining Mastery / ราคาอัปเกรด 40k/120k/200k + ร้านของชำ + ของป่า | 1–2 สัปดาห์ |
+| **2.7** | ~~สรุปรายวัน~~ ส่วนใหญ่ทำแล้วใน 2.6 เหลือขัดเกลา | 0.5 วัน |
 | – | เล่นทดสอบทั้งวงจร | 4–5 วัน |
 
 🎯 จบเฟส 2 = Vertical Slice เล่นครบวงจรด้วย 8 สูตรเริ่มต้น
@@ -538,22 +585,78 @@ NPC และบทสนทนา, ความสนิทและรสน�
 **⬜ เฟส 4 (ประมาณ 4–7 เดือน)**
 ภาพ (ไอคอนประมาณ 170 ชิ้น), polish UI ทั้งหมด (หน้าต่างเมนู ฯลฯ), ตัวบอกสถานะวิ่งบนจอ, เสียง, เมนูหลัก, ปรับสมดุล, ฟอนต์ไทย, เช็กภาพสั่น (Interpolate), เดโมเว็บ (SaveSync.jslib), หน้า Steam (ควรขึ้นช่วงกลางเฟส 3), ปล่อยเกม
 
-## 10. ขั้นถัดไป: 2.6c ของป่าสำหรับสูตรเริ่มต้น
+## 10. ขั้นถัดไป: Recipes v2 งาน 1 (แผน `Docs/recipes-v2-1-plan.md`)
 
-2.6b เสร็จ (24 พ.ย.) ผู้ใช้ทดสอบแล้วพอใจ → **2.6c** (ใช้ skill brainstorming ก่อนเขียนโค้ด):
-- ของป่าที่สูตรเริ่มต้น 8 สูตรใช้ (Source = Forage) ให้เก็บได้จริงในแผนที่: prefab แบบ Mushroom_Pickup / Corn_Pickup + ForageSpawnZone / ForageSpawner (มีระบบอยู่แล้วตั้งแต่เฟส 1)
-- **ไข่หายากในป่า** (ผู้ใช้: ช่วงแรกหาเก็บได้ในป่าแต่เจอยาก)
-- ตอนนี้ของเนื้อ/ข้าว/แป้ง/ไข่ ซื้อได้ที่ General Store ×2 ไปก่อน
-- ข้อควรถาม: ของป่าชนิดไหนงอกโซนไหน, จำนวนต่อวัน, ของหายาก (ไข่) โอกาสเท่าไร
+**[28 พ.ย. จบแชท] งาน 1 จบแล้ว → แชทใหม่เริ่ม "เขียนแผนงาน 2: Stamina แบบ Stardew"** (สเปกอยู่ใน `recipes-v2-code-design.md` หัวข้อ 5 + `recipes-v2-design.md` หัวข้อ Stamina) เขียนแผนแบบเดียวกับ `recipes-v2-1-plan.md` ให้ผู้ใช้อ่านก่อนลงมือ
 
-**2.6b ที่ยังไม่ได้ยืนยันว่าทดสอบครบ**: โหลดเซฟเก่าที่กระเป๋าระดับ 4, สลบตี 3 หลังใส่กล่อง, ชื่อเสียงจากการขายบนหน้าสรุปวัน → ถ้าเจอบั๊กระหว่าง 2.6c แก้ได้เลย
+**สิ่งที่ผู้ใช้ต้องทำ / ต้องตัดสิน (ยังค้าง)**
+- ทุกครั้งที่แก้ชีต v2: Claude สร้าง CSV ใหม่ → ผู้ใช้กด `Import Recipes & Ingredients` → `ItemDatabase > Find All Items` → **`Sync Shop Catalogs From Data`** (ใหม่ ไม่งั้นร้านขายรายการเก่า)
+- (ไม่บังคับ) จูน `Recommend Patience Bonus` ที่ prefab Customer (ตอนนี้ 20 วินาที) ระหว่างเล่นทดสอบทั้งวงจร
+- ตัดสิน: ปิดปุ่ม Debug ใน build + `README_Playtest.txt` สำหรับให้คนอื่นเล่น (เสนอไว้ ยังไม่ตอบ)
+- ตัดสินตอนถึงคิว: ระบบคราฟต์ (คราฟต์อะไร ใช้อะไร ได้ของไปแท็บไหน) / เขียน description ไอเทม-จาน (กล่องตอนวางเมาส์รองรับแล้ว)
+- ทดสอบที่ยังไม่ยืนยันของ 2.5c / 2.6 / 2.6b (รายการใน `remaining-work.md` หัวข้อ B)
+- เฟส 3: เขียนฉากระลึกถึงพ่อ (Father's Secret Grilled Chicken) ร่วมกับ Claude
 
-**2.6 ที่ยังไม่ได้ยืนยันว่าทดสอบครบ**: ตัวเลขวิ่ง, หน้าสรุปวัน (Build Day Summary Layout), จดหมายตามเกณฑ์ใหม่, โหลดเซฟระหว่างก่อสร้าง → ถ้าเจอบั๊กระหว่าง 2.6b แก้ได้เลย
 
-**2.5c ที่ยังไม่ได้ทดสอบละเอียด**: จดหมาย/ของแนบ/เซฟจดหมาย/จดหมายสลบ/กระดานเมนูนิยม (ขัดเกลาตอนมีภาพ+แผนที่จริง)
+**สถานะ 27 พ.ย. (จบแชท):** ขั้น **1A ✅ 1B ✅ 1C ✅ ผู้ใช้ทดสอบผ่านแล้ว** (คอมไพล์ผ่าน / import ผ่าน / ราคาตาม Print Dish Price Table / เซฟ-โหลดจานแบบ + ตัวเลือกล่าสุดผ่าน)
+→ **แชทใหม่เริ่มขั้น 1D (Task 8–11) ได้เลย** ทำเองทีละ Task แล้วหยุดให้ผู้ใช้ทดสอบตอนจบขั้น
+- **[28 พ.ย.] ขั้น 1D ✅ ผู้ใช้ทดสอบผ่านแล้ว** (ทำ 9 → 8 → 10 → 11) → ถัดไป **ขั้น 1E** (Task 12 กรอบไฮไลท์ + Task 13 ทดสอบรวม + HANDOFF)
+  - **[28 พ.ย.] ขั้น 1E ✅ ผู้ใช้ทดสอบผ่าน** (กรอบไฮไลท์ทุกจุด + แก้รอบ 2 + Sync Shop Catalogs ไม่มี missing + เวลารอหลังแนะนำเมนู)
+    - T12: ใหม่ `UI/HoverHighlight.cs` / แก้ `UI/InventorySlotUI.cs`, `UI/DishVariantRowUI.cs`, `UI/HotbarSlotUI.cs`, `UI/SellItemSlotUI.cs`, `UI/BoxEntryRowUI.cs`, `UI/CookingRecipeItemUI.cs` — ใส่ด้วยโค้ด ไม่แก้ prefab/ฉาก **ไม่ได้รัน Build Inventory Window Layout**
+    - Ruling (Claude): ช่องกระเป๋าที่เคยเจอแต่มี 0 ชิ้น = ขึ้นกรอบด้วย (คลิกดูรายละเอียดได้ ปิดได้ที่ `Highlight When Empty`) / ช่อง Hotbar สีเทา (หมด) = ขึ้น / สูตรในหน้าต่างทำอาหารที่ทำไม่ได้ = ไม่ขึ้น / ทุกแถวในกล่องขาย = ขึ้น / ช่องสวมใส่ (EquipmentSlotUI) ServePicker แถบเตา หน้าต่างเมนู ยังไม่ใส่ (ไม่อยู่ในแผน)
+    - [ผู้ใช้ทดสอบรอบ 1: ที่เหลือผ่าน] แก้ 2 จุด รอทดสอบซ้ำ: (1) สูตรที่เพิ่งคลิกทำในหน้าต่างทำอาหาร เปิดใหม่ไม่ขึ้นไฮไลท์ → `CookingRecipeItemUI` ล้างปุ่มที่ "ถูกเลือก" ค้าง (EventSystem.SetSelectedGameObject(null)) + `HoverHighlight.OnEnable` รอ 1 เฟรมแล้วยิงเมาส์ตรวจเอง (ช่องถูกซ่อนตอนเมาส์วาง Unity อาจไม่ส่ง OnPointerEnter ซ้ำ) (2) แถวซื้อร้านค้า `UI/ShopEntryRowUI.cs` ใส่กรอบ (เฉพาะแถวที่ซื้อได้)
+    - [ผู้ใช้พบ] ร้านของชำ/ร้านหนังสือยังใช้รายการ v1 (Build Shops = kept) มีแถว missing ของเก่าที่ย้ายลงถังขยะ → ใหม่ `Editor/ShopCatalogSync.cs` (ดึงงานส่วน "ร้านของชำขายตามข้อมูลใหม่" ของงาน 4 มาทำก่อน / ยังไม่มีราคานอกฤดู ×5)
+    - [ผู้ใช้ 28 พ.ย.] ลูกค้าถามหาเมนูนิยม → กด E แนะนำแล้ว **ได้เวลารอเพิ่ม** (ผู้ใช้เลือก จาก 3 ทาง: บวกเพิ่ม / เริ่มนับใหม่ / แยกเวลาช่วงถาม) `Shop/Customer.cs` ช่อง `Recommend Patience Bonus` = 20 วินาที (หลอดเวลายืดตาม / ตั้งที่ prefab Customer) — เดิมนับต่อจากเวลาที่เหลือ ผู้ใช้เล่นเองยังทำไม่ทัน
+    - T13: **ข้ามการทดสอบเซฟ v8** (ผู้ใช้: นอนทุกคืน = เซฟทับเป็น v9 แล้ว ไม่มีเซฟเก่าเหลือ / เกมยังไม่วางขาย จึงไม่มีผู้เล่นที่ถือเซฟเก่า) / โค้ดโหลด v8 ยังอยู่ (ไม่มีตัวเลือกล่าสุด, คุณภาพ Hotbar = null, itemId ที่ไม่รู้จัก = ข้าม + เตือน) แต่ยังไม่ได้ยืนยันด้วยเซฟจริง → งาน 1 จบ / ถัดไปเขียนแผนงาน 2 (Stamina) / 3 / 4
+  - **ผู้ใช้ขอเพิ่มหลังทดสอบ 1D (ทำแล้ว ผ่าน):**
+    - วางเมาส์บนแถวจาน (แผงรายละเอียด) = กล่องค่าฟื้นพลังแบบ Stardew: ชื่อ · คุณภาพ / description (ถ้ามี ตอนนี้ยังไม่มีไอเทมไหนมี) / Health Stamina Mana FEVER (ค่าจาก `DishPricing.EatValues`) — กล่องยังไม่จำกัดความกว้าง ทำตอนเริ่มเขียน description
+    - กินจาก Hotbar จนหมด = ล้างช่อง (`PlayerActionController` ติ๊ก Clear Slot When Eaten Up) / หมดทางอื่น (Eat ในกระเป๋า เสิร์ฟ ขาย) = ช่องยังอยู่ ไอคอนเทา
+    - กระเป๋า **Hide Undiscovered** (ค่าเริ่มต้นติ๊ก): ของที่ไม่เคยเจอไม่แสดงเลยทุกแท็บ (ไม่มีเงาดำ) / ความคืบหน้ายังนับจากของทั้งหมด / ชื่อจางด้วยเมื่อ 0 ชิ้น (`InventorySlotUI` Fade Name When Empty) / แท็บ Dishes: รู้สูตร = แสดงจาน (จางถ้ายังไม่มี)
+    - **แท็บ Recipes → Crafting** (`BagTab.Crafting` ลำดับ 2 เดิม / ยังว่าง "No crafting recipes yet." / ยังไม่มีระบบ+ข้อมูลคราฟต์) ผู้ใช้แก้ชื่อปุ่ม `Tab_Recipes` + Tab Titles ในฉากเอง
+    - สูตรอาหารย้ายมาที่แท็บ Dishes: กล่องตอนวางเมาส์บนช่องจาน = ชื่อ → สูตร (`Recipe (Cuisine · Course):` วัตถุดิบ + have, ขาด = แดง) → Can make now → `In bag:` แยกแบบ × คุณภาพ (เฉพาะที่มี) / แผงรายละเอียดมีส่วนสูตรด้วย / แสดงเฉพาะคุณภาพที่มีจริงทุกที่
+    - ผู้ใช้อยากให้กล่องตอนวางเมาส์บนสูตรคราฟต์บอกสูตรเหมือนกัน (ทำตอนมีระบบคราฟต์)
+  - T9: ใหม่ `UI/DishVariantRowUI.cs` / แก้ `UI/InventoryUI.cs` (แท็บ Dishes รวมกลุ่ม, กล่องแยกแบบ, รายการแถวสร้างด้วยโค้ดใต้ DetailPanel ชื่อ `DishVariantList` + ดันขอบล่าง DetailBody ขึ้น), `UI/InventorySlotUI.cs` (`AllowHotbarDrag`), `UI/HotbarSlotUI.cs` — **ไม่ได้รัน/แก้ Build Inventory Window Layout**
+  - T8: `Shop/ServePicker.cs` (ตัวเลือก แบบ × คุณภาพ + carousel แบบเตา + `BuildOptions` static), `Shop/Customer.cs` (ตัวเลือกเดียว = เสิร์ฟทันที)
+  - T10: `Player/Hotbar.cs` (คุณภาพต่อช่อง, จานเดียวกันคนละคุณภาพอยู่คนละช่องได้), `UI/HotbarSlotUI.cs` (สีเทาเมื่อหมด, ตัวเลขสีตามคุณภาพ), `UI/HotbarUI.cs` (ชื่อ + คุณภาพ), `Player/PlayerActionController.cs` (กินตามคุณภาพช่อง), `Systems/Save/SaveData.cs` + `SaveManager.cs` (v9 `hotbarQualities`, เวอร์ชันยัง 9)
+  - T11: `UI/SellItemSlotUI.cs`, `UI/BoxEntryRowUI.cs`, `UI/ShippingBoxUI.cs` (ชื่อ "Sushi (Salmon) · Perfect") / SalesLedger ไม่ต้องแก้
+  - Ruling: ช่องรวมของสูตรที่มีช่องหมวดลากลง Hotbar ไม่ได้ (ต้องลากแถว) / จานแม่ในสูตรที่มีช่องหมวด (เซฟเก่า/Debug) แสดงชื่อแบบว่า "Basic" / แถวกระเป๋าเรียงตามแบบ แล้วคุณภาพดีสุดก่อน
+- **ลำดับ 1D:** ผู้ใช้อยากเห็นจานแบบในกระเป๋าเร็วที่สุด → เสนอให้เริ่ม **Task 9 (กระเป๋า แท็บ Dishes รวมกลุ่ม)** ก่อน แล้ว 8 (ServePicker) → 10 (Hotbar) → 11 (แผงขาย/กล่องขาย) (Task 9 ไม่ขึ้นกับ Task อื่น) — ถามผู้ใช้ 1 ประโยคตอนเริ่ม หรือทำ 9 ก่อนถ้าไม่ตอบ
+- ⚠️ ก่อนรัน `Build Inventory Window Layout` ใน Task 9 ต้องถามผู้ใช้ก่อน (ห้ามกดหลังขัดเกลา ดูหัวข้อ 4) — ควรเพิ่มโหนดด้วยโค้ดตอน Awake แทน (แบบเดียวกับตัวเลือก `< >` ใน CookingRecipeItemUI)
+- **สิ่งที่ผู้ใช้เห็นแล้วถามซ้ำ:** จานแบบ (Sushi (Salmon)) ยังไม่ขึ้นในกระเป๋า เพราะแท็บ Dishes วนจาก ItemDatabase (มีแค่จานแม่) = Task 9 / ดูได้จาก Inventory > `Debug: Print Inventory` หรือแผงขายร้านของชำ
+- Unity Test Framework 1.6.0 **ติดตั้งอยู่แล้ว** ใน manifest / ผู้ใช้ไม่ได้ตอบเรื่องเขียนเทสต์ (ถามไป 2 ครั้ง) → ใช้เมนู Debug + ผู้ใช้เล่นทดสอบต่อ ไม่ต้องถามอีก
 
-**งานค้างไว้ขัดเกลา (ผู้ใช้ขอ)**
-- ช่วง Last call (หมดเวลาแต่ลูกค้ายังอยู่) ดูคล้ายโหมดสำรวจ → ทำให้ชัดขึ้น / แจ้งตอนร้านปิดจริงว่าเก็บจานในมือเข้ากระเป๋าแล้ว
+**ทำอะไรไปแล้วในงาน 1 (ไฟล์ที่แก้)**
+- **1A** (Task 1–3 ข้อมูลเข้าเกม): ItemData, ItemDatabase, Cooking/RecipeData, RecipeSource, CookingSession, DailyMenu, RecipeDatabase, RecipeBook, UI/InventoryUI, Editor/RecipeImporter / ใหม่: Systems/Season.cs, Cooking/RecipeRequirements.cs / Assets/Data/Ingredients.csv + Recipes.csv (จากชีต rev 386)
+- **1B** (Task 4–6 จานแบบ + ราคา): Cooking/CookingSettings (หัวข้อ Economy (v2) + `CookingSettings.Active`), Cooking/RecipeDatabase (`FindByDish`), ItemDatabase (GetById → TryResolve จานแบบ), Cooking/CookingSession (ได้จานแบบ), Cooking/DailyMenu (`GetDishesInBag` รวมทุกแบบ, `TryTakeServing(recipe, dish, q, out item, out q)`), Player/CarriedDish (ถือ `ItemData Item` + `Recipe => RecipeOf(Item)`), Player/PlayerStats (`TryEat(item, inv, q?)` ใช้ EatValues), Shop/Customer (`ServedItem`, จ่าย `DishPricing.SalePrice` × ดาว × คุณภาพ + ทิปจากราคานี้), Shop/Stove, Shop/Commerce/SalesLedger (`UnitSellPrice` → DishPricing / `QualityMultiplier` [Obsolete]) / ใหม่: CategoryStats, DishPricing, DishVariantRegistry, Editor/DishPriceDebugMenu
+  - ราคาจริงตรงที่คาด: ปลาเฉลี่ย 71.7 → Sushi (Tilapia) 220 / (Salmon) 365 / Mac and Cheese (Cheese) 610 (★1: 610/671/762)
+- **1C** (Task 7 เลือกวัตถุดิบ + เซฟ v9): UI/CookingRecipeItemUI (ตัวเลือก `< Salmon x3 >` มุมขวาบน สร้างด้วยโค้ดตอน Awake ไม่แก้ฉาก, ปรับ `Choice Width`), UI/CookingMenuUI (ค่าเริ่ม = เลื่อนไว้ → ตัวล่าสุด → มีมากสุด / ช่อง In bag รวมจานแบบ), Cooking/RecipeBook (`Get/SetLastChoice`, `Capture/RestoreChoices`, `Debug: Print Last Ingredient Choices`), Shop/Stove (แถบ 2 ชั้นแบบ carousel ดูด้านล่าง), Systems/Save/SaveData (**v9** `lastChoiceRecipeIds` / `lastChoiceItemIds`), Systems/Save/SaveManager (เซฟ v8 โหลดได้ = ไม่มีตัวล่าสุด)
+- **[1C ผู้ใช้ 27 พ.ย.] เตาตอนเปิดร้าน = แถบ 2 ชั้นแบบ carousel** (เปลี่ยนจากแบบร่างเดิมที่ใช้ตัวล่าสุดอัตโนมัติ ไม่ถาม — แก้ `recipes-v2-code-design.md` 4.5 แล้ว):
+  - ชั้นแรก = ชื่อเมนูอย่างเดียว ตามลำดับช่องในเมนูที่ตั้งก่อนเปิดร้าน (ไม่เรียงตามลูกค้าที่รอแล้ว ข้อความ "(n waiting)" ยังแสดง)
+  - เลือกเมนูที่มีช่องหมวด + วัตถุดิบในหมวด ≥ 2 ชนิด → ชั้นสอง `Sushi: < [Salmon x1 B401] Tuna x2 … >` เรียงราคาจานที่จะได้ (OK × ดาว) แพงสุดก่อน (เท่ากัน = มีมากกว่าก่อน) / Esc = กลับชั้นแรก
+  - ไม่มีช่องหมวด หรือวัตถุดิบชนิดเดียว = เริ่มทำทันที / เมนูเดียวที่มีหลายวัตถุดิบ = ข้ามไปชั้นสองเลย
+  - carousel: แสดงทีละ `Visible Options` (3) รอบตัวที่เลือก + ตำแหน่ง `4/12` (เฉพาะเมื่อเกิน) / ลูกศร < > คลิกได้ / ฝั่งที่สุดแล้ว = จาง / ช่องใน Inspector: `Choice Option Format`, `Choice Header Format`, `Choice Hint`, `Position Format`
+  - เริ่มทำสำเร็จ (ทั้งหน้าต่างนอกร้านและเตาในร้าน) = จำเป็นตัวล่าสุดของสูตร
+
+**ถัดไปหลัง 1D:** 1E (Task 12 กรอบไฮไลท์ตอนวางเมาส์ + Task 13 ทดสอบรวม/เซฟ v8 เก่า + อัปเดตเอกสาร) → เขียนแผนงาน 2 (Stamina แบบ Stardew) / 3 (Fine-dining Mastery) / 4 (ราคาอัปเกรด ร้านของชำ ของป่า)
+- วิธีทำงาน: Claude ทำเองทีละ Task (ผู้ใช้เลือก) หยุดให้ผู้ใช้ทดสอบทุกจบขั้น / แก้ไฟล์ด้วย python read-modify-write บนเครื่องผู้ใช้ผ่าน device_bash (UTF-8 BOM + CRLF) แล้วเทียบ md5 / บอกรายชื่อไฟล์ที่แก้ทุกครั้ง / อธิบายขั้นทดสอบแบบละเอียด (ผู้ใช้เคยงงคำย่อ เช่น "x/y", "แถบ", "เตาในร้าน" → อธิบายเต็มคำ)
+
+**Ruling ที่ Claude ตัดสินระหว่างทำ (ผู้ใช้แก้ได้)**
+- ไม่ทำ branch/worktree (ผู้ใช้ commit เองทุกหัวข้อ)
+- ไม่มีเทสต์อัตโนมัติ → ตรวจด้วยคอมไพล์ + Debug menu + ผู้ใช้เล่นทดสอบ
+- ItemDatabase.Active / RecipeDatabase.Active (static ตั้งตอน OnEnable) ให้ระบบที่ไม่มีช่องอ้างอิงใช้
+- RecipeData.Slots ใช้ ingredients เก่าแทนถ้ายังไม่ import
+- CSV ตัดคอลัมน์โน้ต / จดหมายเชฟใหม่ 14 ฉบับ
+- เมนู Move Obsolete Recipe Data To Trash (ย้ายลงถังขยะ กู้คืนได้ ถามก่อน)
+- [1B] DishPricing อ่านค่าผ่าน `CookingSettings.Active` (ตั้งตอน OnEnable) ไม่มี = ค่าตั้งต้นใน `CookingSettings.Default*`
+- [1B] `RecipeDatabase.FindByDish` ทำใน Task 4 (DishPricing ต้องหาดาวของจานแม่) / Registry หาสูตร/วัตถุดิบผ่าน RecipeDatabase.Active / ItemDatabase.Active
+- [1B] จานแบบ: hideFlags DontSave / ล้าง registry + CategoryStats ตอนเริ่ม Play (RuntimeInitializeOnLoadMethod) / ปัด 5 แบบครึ่งปัดขึ้น (ROUND ในชีต)
+- [1B] กินจาน: ไม่ระบุคุณภาพ = กินต่ำสุดก่อน / แจ้งเตือนแสดงคุณภาพที่กิน
+- [1B ชั่วคราว จน Task 8] เสิร์ฟจากกระเป๋าเมื่อมีจานแบบ = เสิร์ฟตัวดีสุด (คุณภาพสูงสุด แล้วราคาสูงสุด) ไม่เปิดแถบเลือก / จานแม่อย่างเดียว = แถบเลือกคุณภาพเหมือนเดิม
+- [1B] DailyMenu.GetReservedCount ของจานแบบ = ยอดจองทั้งสูตร แต่ไม่เกินจำนวนจานแบบนั้นที่มี
+- [1B] จานแบบยังไม่แสดงในกระเป๋า (แท็บ Dishes วนจาก ItemDatabase) จนกว่าจะทำ Task 9 / แผงขายวนจากกระเป๋า จึงเห็นจานแบบแล้ว
+- [1C] เลื่อนลูกศรในหน้าต่างทำอาหารเฉยๆ (ไม่กดทำ) = จำแค่ตอนหน้าต่างเปิด / ตัวเลือกที่สร้างเองตอน Awake ทำให้ชื่อสูตรหลบไปซ้าย
+
+**งานค้างจากก่อนหน้า (ยังไม่ทำ):** 2.7 ขัดเกลาหน้าสรุปวัน / Last call ให้ชัด / ทดสอบที่ยังไม่ยืนยันของ 2.5c 2.6 2.6b / เล่นทดสอบทั้งวงจร / ปิดปุ่ม Debug ใน build + README_Playtest (เสนอไว้ ยังไม่ตอบ) — ดู `Docs/remaining-work.md`
 
 **วิธีทดสอบที่ใช้อยู่**
 - [2.6b] ร้าน/กล่อง: SalesLedger คลิกขวา `Debug: Print Status`, `Debug: Sell Box Now` (ขายกล่องทันทีไม่ต้องนอน) / เคาน์เตอร์ร้าน ติ๊ก `Ignore Hours` = เปิดทุกเวลา / ร้านเปิด 09:00–17:00
@@ -569,4 +672,4 @@ NPC และบทสนทนา, ความสนิทและรสน�
 - ข้ามมินิเกม: CookingSystem → CookingSession → ติ๊ก `Skip Minigames` (ได้จานตาม `Skip Quality` ทันที)
 - จานหลายคุณภาพ: คลิกขวาหัว Inventory (บน Player) > `Debug: Give Known Dishes (2 of each quality)` / `Debug: Print Inventory` แสดงจำนวนแยกคุณภาพ
 - เมนูนิยม: คลิกขวาหัว PopularDishes > `Debug: Reroll Popular Dishes` / `Debug: Print Popular Dishes` / ให้เจอลูกค้าถามหาเร็วๆ ตั้ง CustomerManager → `Ask For Popular Chance` = 1 ชั่วคราว
-- ค่าที่ปรับบ่อย: ShopManager → Service Duration Seconds, CustomerManager → Min/Max Spawn Interval / Popular Order Weight / Ask For Popular Chance / Base Loved Chance / Satisfaction, prefab Customer → Min/Max Patience / Eat Duration / Leave Speed Multiplier, Player → PlayerController → Run
+- ค่าที่ปรับบ่อย: ShopManager → Service Duration Seconds, CustomerManager → Min/Max Spawn Interval / Popular Order Weight / Ask For Popular Chance / Base Loved Chance / Satisfaction, prefab Customer → Min/Max Patience / Recommend Patience Bonus / Eat Duration / Leave Speed Multiplier, Player → PlayerController → Run

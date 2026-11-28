@@ -16,6 +16,7 @@ public class ItemDatabase : ScriptableObject
     public IReadOnlyList<ItemData> Items => items;
 
     // หาไอเทมจากรหัส คืนค่า null ถ้าไม่เจอ
+    // [v2] ไม่เจอในรายการ + รหัสเป็นจานแบบ (มี "__") → ให้ DishVariantRegistry สร้าง/คืนไอเทมแบบ
     public ItemData GetById(string itemId)
     {
         if (string.IsNullOrWhiteSpace(itemId))
@@ -28,8 +29,17 @@ public class ItemDatabase : ScriptableObject
             BuildLookup();
         }
 
-        lookup.TryGetValue(itemId, out ItemData item);
-        return item;
+        if (lookup.TryGetValue(itemId, out ItemData item))
+        {
+            return item;
+        }
+
+        if (itemId.Contains(DishVariantRegistry.Separator) && DishVariantRegistry.TryResolve(itemId, out ItemData variant))
+        {
+            return variant;
+        }
+
+        return null;
     }
 
     // สร้างตารางค้นหาใหม่ และเตือนถ้ามีรหัสว่างหรือซ้ำ
@@ -70,7 +80,11 @@ public class ItemDatabase : ScriptableObject
     private void OnEnable()
     {
         lookup = null;
+        Active = this;
     }
+
+    // [v2] ฐานข้อมูลที่โหลดอยู่ (ไฟล์เดียวในโปรเจกต์) ให้ระบบที่ไม่มีช่องอ้างอิงใช้ เช่น ค่าเฉลี่ยหมวด / จานแยกแบบ
+    public static ItemDatabase Active { get; private set; }
 
 #if UNITY_EDITOR
     // ดึง ItemData ทุกตัวในโปรเจกต์เข้ามาในรายการ (ใช้ได้เฉพาะใน Editor)

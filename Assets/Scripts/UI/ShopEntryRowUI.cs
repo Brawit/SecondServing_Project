@@ -7,6 +7,7 @@ using UnityEngine.UI;
 // [2.6b] แถวสินค้าหนึ่งแถวในหน้าต่างร้าน (ShopUI สร้างจากแถวต้นแบบ)
 // ชื่อ / ราคา / จำนวนที่มี / ปุ่ม Buy 1 + Buy 5 (ไอเทม) หรือ Buy (กระเป๋า, สมุด) / ซื้อไม่ได้ = ปุ่มจาง + เหตุผล
 // ค้าง Shift = ×10 (Buy 10 / Buy 50) / ที่ว่างหรือเงินไม่พอ = ได้เท่าที่ได้ (ShopPurchase จัดการ)
+// [v2] กรอบไฮไลท์ตอนเมาส์วาง (HoverHighlight ใส่ด้วยโค้ด) เฉพาะแถวที่ซื้อได้ตอนนี้
 public class ShopEntryRowUI : MonoBehaviour
 {
     [Header("References")]
@@ -44,6 +45,10 @@ public class ShopEntryRowUI : MonoBehaviour
     private Action<ShopEntry, int> onBuy;
 
     private bool shiftShown;
+
+    // [v2] กรอบไฮไลท์ตอนเมาส์วาง (ใส่ด้วยโค้ด)
+    private HoverHighlight hover;
+    private HoverHighlight Hover => hover != null ? hover : (hover = HoverHighlight.Ensure(gameObject));
 
     public ShopEntry Entry => entry;
 
@@ -112,6 +117,9 @@ public class ShopEntryRowUI : MonoBehaviour
         bool canOne = ShopPurchase.CanBuy(catalog, entry, 1, inventory, recipeBook, out string reason);
 
         if (buyOneButton != null) buyOneButton.interactable = canOne;
+
+        // [v2] กรอบไฮไลท์: แถวที่ซื้อได้ = ขึ้น / ซื้อไม่ได้ (เงินไม่พอ กระเป๋าเต็ม รู้สูตรแล้ว) = ไม่ขึ้น
+        Hover.Interactable = canOne;
         if (buyOneLabel != null) buyOneLabel.text = isItem ? string.Format(buyItemFormat, smallAmount * multiplier) : buySingleLabel;
         if (buyFiveButton != null)
         {

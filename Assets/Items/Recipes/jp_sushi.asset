@@ -19,23 +19,23 @@ MonoBehaviour:
   cuisine: 1
   course: 0
   isSecret: 0
-  inDemo: 0
+  inDemo: 1
   dishItem: {fileID: 11400000, guid: ff86c327f4c72b041b00426d4cb32489, type: 2}
-  ingredients:
-  - {fileID: 11400000, guid: c586b1e0d2bb8464799139217f0d0f3a, type: 2}
-  - {fileID: 11400000, guid: 30f9c4f82a4d30b44953bf96e7a9b8bf, type: 2}
-  - {fileID: 11400000, guid: b2fca3c5186b35d49bb65ad3f136259f, type: 2}
-  - {fileID: 11400000, guid: 5f1b3b50286c22d469e88e655601f592, type: 2}
-  fullIngredientsText: "\u0E02\u0E49\u0E32\u0E27\u0E0D\u0E35\u0E48\u0E1B\u0E38\u0E48\u0E19,
-    \u0E19\u0E49\u0E33\u0E2A\u0E49\u0E21\u0E2A\u0E32\u0E22\u0E0A\u0E39\u0E02\u0E49\u0E32\u0E27,
-    \u0E19\u0E49\u0E33\u0E15\u0E32\u0E25, \u0E40\u0E01\u0E25\u0E37\u0E2D, \u0E1B\u0E25\u0E32\u0E41\u0E0B\u0E25\u0E21\u0E2D\u0E19,
-    \u0E1B\u0E25\u0E32\u0E17\u0E39\u0E19\u0E48\u0E32, \u0E2A\u0E32\u0E2B\u0E23\u0E48\u0E32\u0E22\u0E42\u0E19\u0E23\u0E34,
-    \u0E27\u0E32\u0E0B\u0E32\u0E1A\u0E34, \u0E42\u0E0A\u0E22\u0E38"
-  sellPrice: 300
-  difficulty: 3
+  slots:
+  - item: {fileID: 11400000, guid: c586b1e0d2bb8464799139217f0d0f3a, type: 2}
+    anyOfCategory: 0
+    category: 0
+  - item: {fileID: 0}
+    anyOfCategory: 1
+    category: 18
+  ingredients: []
+  fullIngredientsText: 
+  sellPrice: 295
+  baseRecipe: {fileID: 0}
+  difficulty: 2
   cookingProfile: {fileID: 0}
   customSteps: []
-  obtainSource: 6
+  obtainSource: 0
   obtainNote: "\u0E1B\u0E25\u0E32\u0E14\u0E34\u0E1A \u0E40\u0E02\u0E49\u0E32\u0E01\u0E31\u0E1A\u0E17\u0E30\u0E40\u0E25"
   mailShopLevel: 0
   mailReputation: 0

@@ -21,13 +21,14 @@ MonoBehaviour:
   isSecret: 0
   inDemo: 1
   dishItem: {fileID: 11400000, guid: 87ec31398362b37459940ae37cf3c63f, type: 2}
-  ingredients:
-  - {fileID: 11400000, guid: ca1cd1b77ef27b34fbd2e1261ff98492, type: 2}
-  - {fileID: 11400000, guid: 308ae2a319dd0cc42b2e3794adce0d5d, type: 2}
-  fullIngredientsText: "\u0E1C\u0E25\u0E44\u0E21\u0E49\u0E2A\u0E14\u0E15\u0E32\u0E21\u0E24\u0E14\u0E39\u0E01\u0E32\u0E25,
-    \u0E19\u0E49\u0E33, \u0E19\u0E49\u0E33\u0E15\u0E32\u0E25, \u0E21\u0E30\u0E19\u0E32\u0E27,
-    \u0E19\u0E49\u0E33\u0E41\u0E02\u0E47\u0E07"
-  sellPrice: 50
+  slots:
+  - item: {fileID: 0}
+    anyOfCategory: 1
+    category: 3
+  ingredients: []
+  fullIngredientsText: 
+  sellPrice: 195
+  baseRecipe: {fileID: 0}
   difficulty: 1
   cookingProfile: {fileID: 11400000, guid: dd549a9ce2dc94c42b8e798169a0b545, type: 2}
   customSteps: []

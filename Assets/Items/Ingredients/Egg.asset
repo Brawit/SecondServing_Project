@@ -18,11 +18,15 @@ MonoBehaviour:
   icon: {fileID: 0}
   description: 
   itemType: 0
-  category: 8
-  source: 2
+  category: 20
+  source: 6
+  originType: 6
+  seasons: 15
+  inStore: 1
+  earlyGame: 1
   equipType: 0
-  sellPrice: 8
-  restoreHealth: 0
-  restoreStamina: 0
+  sellPrice: 40
+  restoreHealth: 5
+  restoreStamina: 10
   restoreMana: 0
   restoreFever: 0

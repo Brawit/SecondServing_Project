@@ -19,22 +19,44 @@ MonoBehaviour:
   cuisine: 0
   course: 1
   isSecret: 0
-  inDemo: 1
+  inDemo: 0
   dishItem: {fileID: 11400000, guid: 39dfd94c05e0beb4ca312f5c89641613, type: 2}
-  ingredients:
-  - {fileID: 11400000, guid: 7c6c2f24c5827544ab7604887aad0655, type: 2}
-  - {fileID: 11400000, guid: 417c01008de3452418a592329cd83921, type: 2}
-  - {fileID: 11400000, guid: d3cf91581ebc3594abfbbb726d73e552, type: 2}
-  fullIngredientsText: "\u0E02\u0E49\u0E32\u0E27\u0E40\u0E2B\u0E19\u0E35\u0E22\u0E27,
-    \u0E21\u0E30\u0E21\u0E48\u0E27\u0E07\u0E2A\u0E38\u0E01, \u0E01\u0E30\u0E17\u0E34,
-    \u0E19\u0E49\u0E33\u0E15\u0E32\u0E25, \u0E40\u0E01\u0E25\u0E37\u0E2D, \u0E16\u0E31\u0E48\u0E27\u0E17\u0E2D\u0E07"
-  sellPrice: 85
-  difficulty: 1
+  slots:
+  - item: {fileID: 11400000, guid: 7c6c2f24c5827544ab7604887aad0655, type: 2}
+    anyOfCategory: 0
+    category: 0
+  - item: {fileID: 11400000, guid: 417c01008de3452418a592329cd83921, type: 2}
+    anyOfCategory: 0
+    category: 0
+  ingredients: []
+  fullIngredientsText: 
+  sellPrice: 270
+  baseRecipe: {fileID: 0}
+  difficulty: 2
   cookingProfile: {fileID: 11400000, guid: 198fe469936f0804380c0471a06de225, type: 2}
   customSteps: []
-  obtainSource: 0
+  obtainSource: 1
   obtainNote: "\u0E2A\u0E39\u0E15\u0E23\u0E40\u0E23\u0E34\u0E48\u0E21\u0E15\u0E49\u0E19"
-  mailShopLevel: 0
-  mailReputation: 0
-  chef: {fileID: 0}
-  letterBody: 
+  mailShopLevel: 1
+  mailReputation: 50
+  chef: {fileID: 11400000, guid: 9027734d34a03bb43947e2332bd51243, type: 2}
+  letterBody: 'Dear young owner,
+
+
+    My niece showed me the reviews of your little
+    restaurant on her phone. A countryside shop serving food from six countries?
+    I had to write.
+
+
+    I''m Malai. I''ve run a kitchen in Bangkok for thirty years,
+    but I started at my mother''s dessert cart. Mango sticky rice was what children
+    begged for, and what tired mothers bought to say "you did well today."
+
+
+    Steam
+    the sticky rice until it shines, pour warm coconut cream over it, and let it
+    rest. Slice the mango just before serving.
+
+
+    Sweet things are a small kindness.
+    Give them often.'

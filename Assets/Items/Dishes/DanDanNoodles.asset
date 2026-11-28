@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c14e69943c50aa441ab4cd930afdd6c8, type: 3}
   m_Name: DanDanNoodles
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
-  itemId: cn_dan_dan_noodles
+  itemId: cn_dan_dan
   itemName: Dan Dan Noodles
   nameTh: "\u0E1A\u0E30\u0E2B\u0E21\u0E35\u0E48\u0E15\u0E31\u0E19\u0E15\u0E31\u0E19"
   icon: {fileID: 0}
@@ -20,9 +20,13 @@ MonoBehaviour:
   itemType: 1
   category: 0
   source: 0
+  originType: 0
+  seasons: -1
+  inStore: 0
+  earlyGame: 0
   equipType: 0
-  sellPrice: 135
-  restoreHealth: 32
-  restoreStamina: 38
-  restoreMana: 15
-  restoreFever: 10
+  sellPrice: 655
+  restoreHealth: 62
+  restoreStamina: 145
+  restoreMana: 26
+  restoreFever: 0

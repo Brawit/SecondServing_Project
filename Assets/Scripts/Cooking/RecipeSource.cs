@@ -15,7 +15,8 @@ public enum RecipeSource
     RequestBoard,   // [เฟส 3] กระดานคำขอของชาวบ้าน
     Story,          // [เฟส 3] สูตรลับ: side story
     Event,          // [เฟส 3] สูตรลับ: อีเวนต์ลับ
-    Festival        // [เฟส 3] สูตรลับ: ชนะแข่งทำอาหารในเทศกาล
+    Festival,       // [เฟส 3] สูตรลับ: ชนะแข่งทำอาหารในเทศกาล
+    Mastery         // [v2] Fine-dining ★4: เสิร์ฟเมนูต้นทางครบจำนวน + ร้านเลเวล 4
 }
 
 public static class RecipeSourceUtil

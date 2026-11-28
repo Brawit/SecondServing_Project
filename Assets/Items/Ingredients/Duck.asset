@@ -14,15 +14,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   itemId: duck
   itemName: Duck
-  nameTh: "\u0E40\u0E1B\u0E47\u0E14"
+  nameTh: "\u0E40\u0E19\u0E37\u0E49\u0E2D\u0E40\u0E1B\u0E47\u0E14"
   icon: {fileID: 0}
   description: 
   itemType: 0
   category: 7
-  source: 2
+  source: 7
+  originType: 7
+  seasons: 15
+  inStore: 1
+  earlyGame: 0
   equipType: 0
-  sellPrice: 50
-  restoreHealth: 0
-  restoreStamina: 0
-  restoreMana: 0
+  sellPrice: 120
+  restoreHealth: 16
+  restoreStamina: 32
+  restoreMana: 14
   restoreFever: 0

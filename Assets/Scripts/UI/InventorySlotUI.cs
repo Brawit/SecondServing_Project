@@ -44,6 +44,13 @@ public class InventorySlotUI : MonoBehaviour, IPointerClickHandler, IBeginDragHa
     [Tooltip("สีเงาของไอเทมที่ยังไม่เคยเจอ")]
     [SerializeField] private Color undiscoveredColor = new Color(0.08f, 0.08f, 0.1f, 1f);
 
+    [Tooltip("[v2] ทำให้ชื่อจางด้วย เมื่อเคยเจอแต่มี 0 ชิ้น / รู้สูตรแต่วัตถุดิบไม่พอ")]
+    [SerializeField] private bool fadeNameWhenEmpty = true;
+
+    [Header("Hover (v2)")]
+    [Tooltip("ขึ้นกรอบไฮไลท์ด้วยเมื่อเคยเจอแต่มี 0 ชิ้น (คลิกดูรายละเอียดได้) / ช่องว่างกับยังไม่ค้นพบไม่ขึ้นเสมอ")]
+    [SerializeField] private bool highlightWhenEmpty = true;
+
     [Header("Text")]
     [Tooltip("ชื่อที่แสดงแทนไอเทมที่ยังไม่เคยเจอ")]
     [SerializeField] private string unknownName = "???";
@@ -61,6 +68,14 @@ public class InventorySlotUI : MonoBehaviour, IPointerClickHandler, IBeginDragHa
     public event Action<InventorySlotUI> OnHoverExit;
 
     private bool isHovered;
+
+    // [v2] กรอบไฮไลท์ตอนเมาส์วาง (ใส่ด้วยโค้ดตอนวาดครั้งแรก)
+    private HoverHighlight hover;
+    private HoverHighlight Hover => hover != null ? hover : (hover = HoverHighlight.Ensure(gameObject));
+
+    // [v2] สีเดิมของชื่อ (จำไว้ตอนวาดครั้งแรก)
+    private Color baseNameColor = Color.white;
+    private bool nameColorCached;
 
     // ---------- ตั้งค่าการแสดงผล ----------
 
@@ -130,6 +145,7 @@ public class InventorySlotUI : MonoBehaviour, IPointerClickHandler, IBeginDragHa
         }
 
         SetSelected(false);
+        UpdateHover();
     }
 
     // แสดง/ซ่อนกรอบเลือก
@@ -173,12 +189,34 @@ public class InventorySlotUI : MonoBehaviour, IPointerClickHandler, IBeginDragHa
         if (nameText != null)
         {
             nameText.text = state == SlotState.Undiscovered ? unknownName : label;
+
+            if (!nameColorCached)
+            {
+                baseNameColor = nameText.color;
+                nameColorCached = true;
+            }
+            Color nameColor = baseNameColor;
+            if (fadeNameWhenEmpty && state == SlotState.DiscoveredEmpty)
+            {
+                nameColor.a *= emptyAlpha;
+            }
+            nameText.color = nameColor;
         }
 
         if (countText != null)
         {
             countText.text = state != SlotState.Undiscovered && count > 0 ? count.ToString() : "";
         }
+
+        UpdateHover();
+    }
+
+    // [v2] กรอบไฮไลท์: ขึ้นเฉพาะช่องที่มีของ (หรือเคยเจอแต่หมด ถ้าติ๊ก Highlight When Empty) / ช่องว่าง + ยังไม่ค้นพบ = ไม่ขึ้น
+    private void UpdateHover()
+    {
+        bool hasContent = CurrentItem != null || CurrentRecipe != null;
+        bool usable = CurrentState == SlotState.Owned || (CurrentState == SlotState.DiscoveredEmpty && highlightWhenEmpty);
+        Hover.Interactable = hasContent && usable;
     }
 
     // ---------- คลิก ----------
@@ -216,8 +254,12 @@ public class InventorySlotUI : MonoBehaviour, IPointerClickHandler, IBeginDragHa
     private bool isDraggingItem;
     private GameObject forwardedDragTarget;
 
+    // [v2] ผู้เรียกปิดการลากลง Hotbar ได้ (เช่น ช่องรวมของจานที่มีหลายแบบ ให้ลากจากแถวในแผงรายละเอียดแทน)
+    public bool AllowHotbarDrag { get; set; } = true;
+
     // ช่องนี้ลากไปใส่ Hotbar ได้หรือไม่
     public bool CanDragToHotbar =>
+        AllowHotbarDrag &&
         CurrentItem != null &&
         CurrentState != SlotState.Undiscovered &&
         Hotbar.CanAssign(CurrentItem);

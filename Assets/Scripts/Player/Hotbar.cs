@@ -5,6 +5,8 @@ using UnityEngine;
 // Hotbar ด้านล่างจอ (ข้อมูล): 10 ช่อง แต่ละช่องเป็น "ทางลัด" ที่ชี้ไปยัง ItemData
 // ของไม่ได้ถูกย้ายออกจากกระเป๋า จำนวนที่แสดงอ่านจากกระเป๋าเสมอ
 // ไอเทมชนิดเดียวกันอยู่ได้ทีละช่อง (ใส่ซ้ำช่องอื่น = ย้ายมาช่องใหม่)
+// [v2] ช่องที่เป็นจานจำคุณภาพได้ด้วย (เช่น "Sushi (Tilapia) · OK") → จานเดียวกันคนละคุณภาพอยู่คนละช่องได้
+//   คุณภาพ null = ไม่ระบุ (กินต่ำสุดก่อน) / ของในช่องหมด = ช่องยังอยู่ (HotbarSlotUI แสดงไอคอนสีเทา)
 // การรับปุ่มอยู่ที่ PlayerActionController
 public class Hotbar : MonoBehaviour
 {
@@ -23,6 +25,9 @@ public class Hotbar : MonoBehaviour
     [Min(1)] [SerializeField] private int debugAmount = 1;
 
     private readonly ItemData[] slots = new ItemData[SlotCount];
+
+    // [v2] คุณภาพที่ช่องนี้จำไว้ (เฉพาะจาน / null = ไม่ระบุ)
+    private readonly DishQuality?[] qualities = new DishQuality?[SlotCount];
     private int selectedIndex;
 
     // ---------- Events ----------
@@ -38,6 +43,9 @@ public class Hotbar : MonoBehaviour
     public Inventory Inventory => inventory;
     public int SelectedIndex => selectedIndex;
     public ItemData SelectedItem => slots[selectedIndex];
+
+    // [v2] คุณภาพของช่องที่เลือก (null = ไม่ระบุ)
+    public DishQuality? SelectedQuality => qualities[selectedIndex];
 
     // จำนวนของในกระเป๋าของช่องที่เลือก
     public int SelectedCount => GetCount(selectedIndex);
@@ -60,14 +68,26 @@ public class Hotbar : MonoBehaviour
         return IsValidIndex(index) ? slots[index] : null;
     }
 
-    // จำนวนในกระเป๋าของไอเทมในช่องนี้ (ช่องว่าง = 0)
+    // [v2] คุณภาพที่ช่องนี้จำไว้ (null = ไม่ระบุ / ไม่ใช่จาน)
+    public DishQuality? GetQuality(int index)
+    {
+        return IsValidIndex(index) ? qualities[index] : null;
+    }
+
+    // จำนวนในกระเป๋าของไอเทมในช่องนี้ (ช่องว่าง = 0) / [v2] ช่องที่จำคุณภาพ = นับเฉพาะคุณภาพนั้น
     public int GetCount(int index)
     {
         ItemData item = GetSlot(index);
-        return item != null && inventory != null ? inventory.GetCount(item) : 0;
+        if (item == null || inventory == null)
+        {
+            return 0;
+        }
+
+        DishQuality? quality = qualities[index];
+        return quality.HasValue ? inventory.GetCount(item, quality.Value) : inventory.GetCount(item);
     }
 
-    // ไอเทมนี้อยู่ช่องไหน (-1 = ไม่อยู่ใน Hotbar)
+    // ไอเทมนี้อยู่ช่องไหน (คุณภาพใดก็ได้) (-1 = ไม่อยู่ใน Hotbar)
     public int IndexOf(ItemData item)
     {
         if (item == null)
@@ -78,6 +98,24 @@ public class Hotbar : MonoBehaviour
         for (int i = 0; i < SlotCount; i++)
         {
             if (slots[i] == item)
+            {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    // [v2] ไอเทมนี้ + คุณภาพนี้อยู่ช่องไหน (-1 = ไม่อยู่)
+    public int IndexOf(ItemData item, DishQuality? quality)
+    {
+        if (item == null)
+        {
+            return -1;
+        }
+
+        for (int i = 0; i < SlotCount; i++)
+        {
+            if (slots[i] == item && qualities[i] == quality)
             {
                 return i;
             }
@@ -101,8 +139,14 @@ public class Hotbar : MonoBehaviour
                item.IsEdible;
     }
 
-    // ใส่ไอเทมลงช่อง ถ้าไอเทมนี้อยู่ช่องอื่นอยู่แล้ว จะย้ายมา (ช่องเดิมว่าง)
+    // ใส่ไอเทมลงช่อง ถ้าไอเทมนี้อยู่ช่องอื่นอยู่แล้ว จะย้ายมา (ช่องเดิมว่าง) / คุณภาพ = ไม่ระบุ
     public void SetSlot(int index, ItemData item)
+    {
+        SetSlot(index, item, null);
+    }
+
+    // [v2] ใส่ไอเทมพร้อมคุณภาพ (เฉพาะจาน ของอื่นไม่จำคุณภาพ) ถ้าไอเทม + คุณภาพเดียวกันอยู่ช่องอื่น จะย้ายมา
+    public void SetSlot(int index, ItemData item, DishQuality? quality)
     {
         if (!IsValidIndex(index))
         {
@@ -117,7 +161,12 @@ public class Hotbar : MonoBehaviour
                 return;
             }
 
-            int existing = IndexOf(item);
+            if (!Inventory.TracksQuality(item))
+            {
+                quality = null;
+            }
+
+            int existing = IndexOf(item, quality);
             if (existing == index)
             {
                 return;
@@ -126,10 +175,16 @@ public class Hotbar : MonoBehaviour
             if (existing >= 0)
             {
                 slots[existing] = null;
+                qualities[existing] = null;
             }
+        }
+        else
+        {
+            quality = null;
         }
 
         slots[index] = item;
+        qualities[index] = quality;
         OnSlotsChanged?.Invoke();
     }
 
@@ -141,6 +196,7 @@ public class Hotbar : MonoBehaviour
         }
 
         slots[index] = null;
+        qualities[index] = null;
         OnSlotsChanged?.Invoke();
     }
 
@@ -155,6 +211,10 @@ public class Hotbar : MonoBehaviour
         ItemData temp = slots[a];
         slots[a] = slots[b];
         slots[b] = temp;
+
+        DishQuality? tempQuality = qualities[a];
+        qualities[a] = qualities[b];
+        qualities[b] = tempQuality;
         OnSlotsChanged?.Invoke();
     }
 
@@ -191,8 +251,25 @@ public class Hotbar : MonoBehaviour
         return ids;
     }
 
-    // ตั้งทุกช่องใหม่ (ใช้ตอนโหลดเซฟ) ช่องที่หาไอเทมไม่เจอจะว่าง
+    // [v9] คุณภาพทุกช่อง (-1 = ไม่ระบุ / ไม่ใช่จาน / ช่องว่าง) ใช้เขียนลงเซฟ
+    public List<int> CaptureSlotQualities()
+    {
+        List<int> list = new List<int>(SlotCount);
+        for (int i = 0; i < SlotCount; i++)
+        {
+            list.Add(slots[i] != null && qualities[i].HasValue ? (int)qualities[i].Value : -1);
+        }
+        return list;
+    }
+
+    // ตั้งทุกช่องใหม่ (ใช้ตอนโหลดเซฟ) ช่องที่หาไอเทมไม่เจอจะว่าง / คุณภาพ = ไม่ระบุ
     public void SetAllSlots(IList<ItemData> items)
+    {
+        SetAllSlots(items, null);
+    }
+
+    // [v9] ตั้งทุกช่องใหม่พร้อมคุณภาพ (qualityValues null หรือ -1 = ไม่ระบุ เช่น เซฟ v8 ลงมา)
+    public void SetAllSlots(IList<ItemData> items, IList<int> qualityValues)
     {
         for (int i = 0; i < SlotCount; i++)
         {
@@ -200,15 +277,23 @@ public class Hotbar : MonoBehaviour
 
             // ข้ามของที่ใส่ Hotbar ไม่ได้แล้ว (เช่น แก้ตารางจนกินไม่ได้)
             slots[i] = CanAssign(item) ? item : null;
+
+            int q = qualityValues != null && i < qualityValues.Count ? qualityValues[i] : -1;
+            bool validQuality = q >= 0 && q < DishQualityUtil.Count;
+            qualities[i] = slots[i] != null && validQuality && Inventory.TracksQuality(slots[i]) ? (DishQuality)q : (DishQuality?)null;
         }
 
-        // กันไอเทมซ้ำ (เก็บช่องแรกที่เจอไว้)
+        // กันช่องซ้ำ (ไอเทม + คุณภาพเดียวกัน เก็บช่องแรกที่เจอไว้)
         for (int i = 0; i < SlotCount; i++)
         {
             if (slots[i] == null) continue;
             for (int j = i + 1; j < SlotCount; j++)
             {
-                if (slots[j] == slots[i]) slots[j] = null;
+                if (slots[j] == slots[i] && qualities[j] == qualities[i])
+                {
+                    slots[j] = null;
+                    qualities[j] = null;
+                }
             }
         }
 

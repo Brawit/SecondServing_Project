@@ -43,6 +43,7 @@ public enum CustomerMood
 
 // ลูกค้า 1 คน: เดินไปที่นั่ง → สั่งอาหารจากเมนูประจำวัน → รอ → (ผู้เล่นกด E เสิร์ฟ + จ่ายเงิน) → กิน → เดินออก
 // [2.5] กด E ตอนมีจานที่สั่งในกระเป๋ามากกว่า 1 คุณภาพ = เปิดแถบเลือกคุณภาพ (ServePicker) เหนือหัว
+// [v2] ตัวเลือก = แบบ × คุณภาพ (เช่น Salmon · Perfect / Tilapia · OK) มีตัวเลือกเดียว = เสิร์ฟทันที
 // [2.5 รอบ 2] ถือจานที่ลูกค้าสั่ง + E = เสิร์ฟจานในมือ / ถือจานอื่น = แจ้งเตือน / ไม่มีจานเลย = บอกให้ไปทำที่เตา
 // [2.4b] บางคนถามหาเมนูนิยมที่ร้านไม่มี → ผู้เล่นกด E แนะนำเมนูวันนี้ → ลูกค้าเปลี่ยนจาน → รอ → เสิร์ฟ → กิน → อารมณ์หลังกิน
 // ถ้ารอนานเกินไป หรือไม่มีเมนูเหลือ จะเดินออกเลย
@@ -70,6 +71,9 @@ public class Customer : MonoBehaviour, IInteractable
 
     [Tooltip("เวลารออาหารสูงสุด")]
     [Min(1f)] [SerializeField] private float maxPatience = 50f;
+
+    [Tooltip("[v2] เวลารอที่บวกเพิ่ม เมื่อผู้เล่นกด E แนะนำเมนูให้ลูกค้าที่ถามหาเมนูนิยม (ชดเชยเวลาที่ใช้เดินไปคุย) / 0 = ไม่บวก")]
+    [Min(0f)] [SerializeField] private float recommendPatienceBonus = 20f;
 
     [Tooltip("เวลากิน")]
     [Min(0f)] [SerializeField] private float eatDuration = 5f;
@@ -146,6 +150,9 @@ public class Customer : MonoBehaviour, IInteractable
 
     // [2.5] คุณภาพจานที่ได้ (ตั้งตอนเสิร์ฟ)
     public DishQuality ServedQuality { get; private set; } = DishQuality.Good;
+
+    // [v2] ไอเทมจานที่ได้จริง (จานแม่ หรือจานแบบ เช่น "Sushi (Salmon)") ใช้คิดเงิน
+    public ItemData ServedItem { get; private set; }
 
     // สั่งไปแล้วหรือยัง (ใช้ให้ CustomerManager นับลูกค้าที่ยังไม่ได้สั่ง)
     public bool HasOrdered { get; private set; }
@@ -384,13 +391,22 @@ public class Customer : MonoBehaviour, IInteractable
         }
 
         StartWaiting(recipe, kind);
+
+        // [v2] ผู้เล่นมาขอโทษแล้ว = ลูกค้าใจเย็นลง ได้เวลารอเพิ่ม (หลอดเวลายืดตาม)
+        if (recommendPatienceBonus > 0f)
+        {
+            patienceLeft += recommendPatienceBonus;
+            patienceMax += recommendPatienceBonus;
+            UpdateWaitingBubble();
+        }
+
         acceptTextTimer = acceptTextDuration;
         SetBubble(string.Format(acceptFormat, recipe.recipeName));
         Debug.Log($"Customer '{name}': Asked for {AskedFor?.recipeName}, switched to {recipe.recipeName} ({patienceLeft:0}s patience left).");
         return true;
     }
 
-    // เริ่มนับความอดทน (ครั้งเดียวต่อคน ถามหาแล้วเปลี่ยนจาน = นับต่อจากเดิม ไม่รีเซ็ต)
+    // เริ่มนับความอดทน (ครั้งเดียวต่อคน ถามหาแล้วเปลี่ยนจาน = นับต่อจากเดิม ไม่รีเซ็ต แต่ได้ Recommend Patience Bonus เพิ่ม)
     private void StartPatience()
     {
         if (patienceMax > 0f)
@@ -498,19 +514,25 @@ public class Customer : MonoBehaviour, IInteractable
     // [2.5] เสิร์ฟจานจากกระเป๋าด้วยคุณภาพที่เลือก (null = ดีที่สุดที่มี)
     public bool TryServe(DishQuality? quality)
     {
+        return TryServe(null, quality);
+    }
+
+    // [v2] เสิร์ฟจานจากกระเป๋า เลือกแบบและคุณภาพ (dish null = แบบใดก็ได้ / quality null = ดีที่สุด)
+    public bool TryServe(ItemData dish, DishQuality? quality)
+    {
         if (State != CustomerState.WaitingForFood || Order == null)
         {
             return false;
         }
 
         DailyMenu menu = DailyMenu.Instance;
-        if (menu == null || !menu.TryTakeServing(Order, quality, out DishQuality served))
+        if (menu == null || !menu.TryTakeServing(Order, dish, quality, out ItemData servedItem, out DishQuality served))
         {
             NotificationUI.Post(string.Format(cannotServeFormat, Order.recipeName));
             return false;
         }
 
-        ApplyServed(served);
+        ApplyServed(servedItem, served);
         return true;
     }
 
@@ -524,6 +546,7 @@ public class Customer : MonoBehaviour, IInteractable
 
         DailyMenu menu = DailyMenu.Instance;
         DishQuality quality = hand.Quality;
+        ItemData dish = hand.Item;
         if (menu == null || !menu.TryTakeServingFromHand(Order, quality))
         {
             NotificationUI.Post(string.Format(cannotServeFormat, Order.recipeName));
@@ -531,14 +554,16 @@ public class Customer : MonoBehaviour, IInteractable
         }
 
         hand.Clear();
-        ApplyServed(quality);
+        ApplyServed(dish, quality);
         return true;
     }
 
     // ได้อาหารแล้ว: ปิดแถบเลือก สุ่มอารมณ์ จ่ายเงิน เริ่มกิน
-    private void ApplyServed(DishQuality served)
+    // [v2] servedItem = จานที่ได้จริง (null = ใช้จานแม่ของสูตรที่สั่ง)
+    private void ApplyServed(ItemData servedItem, DishQuality served)
     {
         ServedQuality = served;
+        ServedItem = servedItem != null ? servedItem : (Order != null ? Order.dishItem : null);
         if (ServePicker.Instance != null && ServePicker.Instance.IsOpenFor(this))
         {
             ServePicker.Instance.Close();
@@ -565,7 +590,8 @@ public class Customer : MonoBehaviour, IInteractable
             manager.ReleasePending(Order);
             manager.ReportServed(this, Order);
             // [2.6] ราคาจาน + ทิปตามความพอใจ (ตั้งค่าใน CustomerManager)
-            int price = Order.sellPrice;
+            // [v2] ราคาจานที่ได้จริง (จานแบบ) × ตัวคูณ ดาว × คุณภาพ / ทิปคิดจากราคานี้
+            int price = ServedItem != null ? DishPricing.SalePrice(ServedItem, served) : Order.sellPrice;
             manager.ReportPaid(this, price, manager.ComputeTip(price, Satisfaction));
         }
 
@@ -659,7 +685,7 @@ public class Customer : MonoBehaviour, IInteractable
 
     // [2.5] กด E ที่ลูกค้าที่รออาหาร:
     // แถบเลือกเปิดอยู่ = เสิร์ฟตัวที่เลือก / [รอบ 2] ถือจานตรง = เสิร์ฟจานในมือ / ถือจานอื่น = แจ้งเตือน
-    // มือว่าง: มีจานในกระเป๋า 2 คุณภาพขึ้นไป = เปิดแถบเลือก / คุณภาพเดียว = เสิร์ฟเลย / ไม่มี = บอกให้ไปทำที่เตา
+    // มือว่าง: มีจานในกระเป๋า 2 ตัวเลือกขึ้นไป (แบบ × คุณภาพ) = เปิดแถบเลือก / ตัวเลือกเดียว = เสิร์ฟเลย / ไม่มี = บอกให้ไปทำที่เตา
     private void HandleServeInteract(PlayerInteractor interactor)
     {
         ServePicker picker = ServePicker.Instance;
@@ -678,7 +704,7 @@ public class Customer : MonoBehaviour, IInteractable
             }
             else
             {
-                NotificationUI.Post(string.Format(wrongDishFormat, Order.recipeName, hand.Recipe.recipeName));
+                NotificationUI.Post(string.Format(wrongDishFormat, Order.recipeName, hand.Item.itemName));
             }
             return;
         }
@@ -686,10 +712,13 @@ public class Customer : MonoBehaviour, IInteractable
         Inventory bag = interactor != null && interactor.Inventory != null ? interactor.Inventory :
                         DailyMenu.Instance != null ? DailyMenu.Instance.Inventory : null;
 
-        if (bag != null && Order != null && Order.dishItem != null && interactor != null)
+        if (bag != null && Order != null && interactor != null)
         {
-            List<DishQuality> qualities = new List<DishQuality>();
-            if (bag.GetAvailableQualities(Order.dishItem, qualities) >= 2)
+            // [v2] ตัวเลือก = แบบ × คุณภาพ ของสูตรนี้ที่มีในกระเป๋า (จานแม่ + จานแบบ)
+            List<ServePicker.Option> options = new List<ServePicker.Option>();
+            int optionCount = ServePicker.BuildOptions(Order, bag, options);
+
+            if (optionCount >= 2)
             {
                 // แถบเลือกของเตาใช้ scroll เหมือนกัน ปิดก่อน
                 Stove.CloseAnyPicker();
@@ -697,9 +726,10 @@ public class Customer : MonoBehaviour, IInteractable
                 return;
             }
 
-            if (qualities.Count == 1)
+            // ตัวเลือกเดียว = เสิร์ฟทันที
+            if (optionCount == 1)
             {
-                TryServe(qualities[0]);
+                TryServe(options[0].dish, options[0].quality);
                 return;
             }
         }

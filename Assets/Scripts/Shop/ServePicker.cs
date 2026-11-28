@@ -4,9 +4,12 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-// [2.5] แถบเลือกคุณภาพจานตอนเสิร์ฟ (แสดงในข้อความเหนือหัวลูกค้า)
-// - เปิดเมื่อกด E ที่ลูกค้าตอนมือว่าง และในกระเป๋ามีจานที่ลูกค้าสั่งมากกว่า 1 คุณภาพ
-// - เลือกคุณภาพดีที่สุดไว้ให้ก่อน / scroll เมาส์ = เลื่อน / คลิกซ้ายที่ตัวเลือก = เลือกตัวนั้น
+// [2.5] แถบเลือกจานตอนเสิร์ฟ (แสดงในข้อความเหนือหัวลูกค้า)
+// - เปิดเมื่อกด E ที่ลูกค้าตอนมือว่าง และในกระเป๋ามีจานที่ลูกค้าสั่งให้เลือกมากกว่า 1 ตัวเลือก
+// - [v2] ตัวเลือก = แบบ × คุณภาพ เช่น "Salmon · Perfect x1" (จานที่ไม่มีแบบ = "Perfect x1" เหมือนเดิม)
+//   เรียงคุณภาพดีสุดก่อน แล้วตามราคาที่ลูกค้าจะจ่าย (แพงก่อน) / ตัวเลือกเดียว = เสิร์ฟทันที (Customer ตัดสิน)
+// - [v2] แบบ carousel เหมือนแถบของเตา: แสดงทีละ Visible Options ตัวรอบตัวที่เลือก + ตำแหน่ง "4/12" / คลิกลูกศร < > = เลื่อนไป 1 ตัว
+// - เลือกตัวดีที่สุดไว้ให้ก่อน / scroll เมาส์ = เลื่อน / คลิกซ้ายที่ตัวเลือก = เลือกตัวนั้น
 // - กด E หรือคลิกซ้ายซ้ำที่ตัวที่เลือกอยู่แล้ว = เสิร์ฟ
 // - กด Esc / เดินออกห่างจากลูกค้า / ลูกค้าไม่ได้รออาหารแล้ว = ปิด
 // ไม่ต้องวางในฉาก: Customer สร้างให้เองตอนใช้ครั้งแรก (วางเองก็ได้ ถ้าอยากปรับค่าใน Inspector)
@@ -14,23 +17,56 @@ public class ServePicker : MonoBehaviour
 {
     public static ServePicker Instance { get; private set; }
 
+    // [v2] ตัวเลือก 1 ตัว = จาน 1 แบบ × 1 คุณภาพ
+    public struct Option
+    {
+        public ItemData dish;
+        public DishQuality quality;
+
+        public Option(ItemData dish, DishQuality quality)
+        {
+            this.dish = dish;
+            this.quality = quality;
+        }
+
+        public bool SameAs(Option other)
+        {
+            return dish == other.dish && quality == other.quality;
+        }
+    }
+
     [Header("Close")]
     [Tooltip("เดินห่างจากลูกค้าเกินระยะนี้ (หน่วย) = ปิดแถบเลือก")]
     [Min(0.5f)] [SerializeField] private float closeDistance = 1.8f;
 
     [Header("Input")]
-    [Tooltip("ปกติ scroll ขึ้น = เลื่อนไปทางซ้าย (คุณภาพดีกว่า) ติ๊กเพื่อกลับทิศ")]
+    [Tooltip("ปกติ scroll ขึ้น = เลื่อนไปทางซ้าย (ตัวที่ดีกว่า) ติ๊กเพื่อกลับทิศ")]
     [SerializeField] private bool invertScroll = false;
 
     [Header("Text")]
     [Tooltip("ข้อความบอกวิธีใช้ใต้ตัวเลือก (เว้นว่าง = ไม่แสดง)")]
     [SerializeField] private string hintText = "Scroll / click to pick · Click again or E to serve · Esc to cancel";
 
+    [Tooltip("[v2] ข้อความตัวเลือกของจานแบบ {0} = ชื่อวัตถุดิบ, {1} = คุณภาพ, {2} = จำนวน")]
+    [SerializeField] private string variantOptionFormat = "{0} · {1} x{2}";
+
+    [Tooltip("[v2] ข้อความตัวเลือกของจานที่ไม่มีแบบ {0} = คุณภาพ, {1} = จำนวน")]
+    [SerializeField] private string plainOptionFormat = "{0} x{1}";
+
+    [Tooltip("[v2] ชื่อแทนวัตถุดิบ ของจานแม่ในสูตรที่มีช่องหมวด (เช่น จานจากเซฟเก่า)")]
+    [SerializeField] private string baseDishLabel = "Basic";
+
+    [Tooltip("[v2] จำนวนตัวเลือกที่แสดงพร้อมกัน (ที่เหลือเลื่อนดูด้วย scroll หรือคลิกลูกศร)")]
+    [Min(1)] [SerializeField] private int visibleOptions = 3;
+
+    [Tooltip("[v2] ตัวบอกตำแหน่งเมื่อมีตัวเลือกมากกว่าที่แสดง ({0} = ลำดับที่เลือก, {1} = ทั้งหมด) เว้นว่าง = ไม่แสดง")]
+    [SerializeField] private string positionFormat = "{0}/{1}";
+
     // ลูกค้าที่เปิดแถบเลือกอยู่ (null = ปิด)
     public Customer Target { get; private set; }
     public bool IsOpen => Target != null;
 
-    private readonly List<DishQuality> options = new List<DishQuality>();
+    private readonly List<Option> options = new List<Option>();
     private int selectedIndex;
     private Transform player;
     private Inventory inventory;
@@ -71,18 +107,55 @@ public class ServePicker : MonoBehaviour
         }
     }
 
+    // ---------- [v2] ตัวเลือก ----------
+
+    // ใส่ตัวเลือก แบบ × คุณภาพ ของสูตรนี้ที่มีในกระเป๋าลง result (ดีสุดก่อน แล้วราคาแพงก่อน) คืนค่าจำนวน
+    public static int BuildOptions(RecipeData recipe, Inventory bag, List<Option> result)
+    {
+        result.Clear();
+        if (recipe == null || bag == null)
+        {
+            return 0;
+        }
+
+        List<DishQuality> qualities = new List<DishQuality>();
+        foreach (ItemData dish in DishVariantRegistry.DishItemsIn(recipe, bag))
+        {
+            bag.GetAvailableQualities(dish, qualities);
+            foreach (DishQuality q in qualities)
+            {
+                result.Add(new Option(dish, q));
+            }
+        }
+
+        // คุณภาพดีกว่าก่อน → ราคาที่ลูกค้าจ่ายแพงกว่าก่อน → มีมากกว่าก่อน → ตามรหัส (ให้ลำดับคงที่)
+        result.Sort((a, b) =>
+        {
+            int c = ((int)b.quality).CompareTo((int)a.quality);
+            if (c != 0) return c;
+            c = DishPricing.SalePrice(b.dish, b.quality).CompareTo(DishPricing.SalePrice(a.dish, a.quality));
+            if (c != 0) return c;
+            c = bag.GetCount(b.dish, b.quality).CompareTo(bag.GetCount(a.dish, a.quality));
+            if (c != 0) return c;
+            return string.CompareOrdinal(a.dish.itemId, b.dish.itemId);
+        });
+
+        return result.Count;
+    }
+
     // ---------- เปิด / ปิด ----------
 
-    // เปิดแถบเลือกให้ลูกค้าคนนี้ คืนค่า false ถ้ามีจานไม่ถึง 2 คุณภาพ (ไม่ต้องเลือก)
+    // เปิดแถบเลือกให้ลูกค้าคนนี้ คืนค่า false ถ้ามีตัวเลือกไม่ถึง 2 ตัว (ไม่ต้องเลือก)
     public bool Open(Customer customer, Transform playerTransform, Inventory bag)
     {
-        if (customer == null || customer.Order == null || customer.Order.dishItem == null || bag == null)
+        if (customer == null || customer.Order == null || bag == null)
         {
             return false;
         }
 
-        if (bag.GetAvailableQualities(customer.Order.dishItem, options) < 2)
+        if (BuildOptions(customer.Order, bag, options) < 2)
         {
+            options.Clear();
             return false;
         }
 
@@ -111,11 +184,15 @@ public class ServePicker : MonoBehaviour
         return customer != null && Target == customer;
     }
 
-    // คุณภาพที่เลือกอยู่
-    public DishQuality? SelectedQuality =>
-        IsOpen && selectedIndex >= 0 && selectedIndex < options.Count ? options[selectedIndex] : (DishQuality?)null;
+    private bool HasSelection => IsOpen && selectedIndex >= 0 && selectedIndex < options.Count;
 
-    // เสิร์ฟด้วยคุณภาพที่เลือก (กด E หรือคลิกซ้ำที่ตัวที่เลือก)
+    // คุณภาพที่เลือกอยู่
+    public DishQuality? SelectedQuality => HasSelection ? options[selectedIndex].quality : (DishQuality?)null;
+
+    // [v2] จานแบบที่เลือกอยู่
+    public ItemData SelectedDish => HasSelection ? options[selectedIndex].dish : null;
+
+    // เสิร์ฟตัวที่เลือก (กด E หรือคลิกซ้ำที่ตัวที่เลือก)
     public void Confirm()
     {
         if (!IsOpen)
@@ -124,12 +201,13 @@ public class ServePicker : MonoBehaviour
         }
 
         Customer customer = Target;
+        ItemData dish = SelectedDish;
         DishQuality? quality = SelectedQuality;
         Close();
 
         if (customer != null)
         {
-            customer.TryServe(quality);
+            customer.TryServe(dish, quality);
         }
     }
 
@@ -150,15 +228,27 @@ public class ServePicker : MonoBehaviour
             return;
         }
 
-        // จานอาจถูกเสิร์ฟให้คนอื่นไประหว่างนี้ ตรวจตัวเลือกใหม่ทุกเฟรม (จำคุณภาพที่เลือกไว้)
-        DishQuality? previous = SelectedQuality;
-        if (inventory == null || inventory.GetAvailableQualities(Target.Order.dishItem, options) == 0)
+        // จานอาจถูกเสิร์ฟให้คนอื่นไประหว่างนี้ ตรวจตัวเลือกใหม่ทุกเฟรม (จำตัวที่เลือกไว้)
+        bool hadSelection = HasSelection;
+        Option previous = hadSelection ? options[selectedIndex] : default;
+        if (inventory == null || BuildOptions(Target.Order, inventory, options) == 0)
         {
             Close();
             return;
         }
 
-        selectedIndex = previous.HasValue ? Mathf.Max(0, options.IndexOf(previous.Value)) : 0;
+        selectedIndex = 0;
+        if (hadSelection)
+        {
+            for (int i = 0; i < options.Count; i++)
+            {
+                if (options[i].SameAs(previous))
+                {
+                    selectedIndex = i;
+                    break;
+                }
+            }
+        }
 
         // Esc = ยกเลิก
         Keyboard keyboard = Keyboard.current;
@@ -184,7 +274,7 @@ public class ServePicker : MonoBehaviour
             Target.RefreshBubble();
         }
 
-        // คลิกซ้ายที่ตัวเลือกในข้อความเหนือหัว: ตัวใหม่ = เลือกตัวนั้น / ตัวที่เลือกอยู่แล้ว = เสิร์ฟ
+        // คลิกซ้ายที่ตัวเลือกในข้อความเหนือหัว: ตัวใหม่ = เลือกตัวนั้น / ตัวที่เลือกอยู่แล้ว = เสิร์ฟ / ลูกศร = เลื่อน 1 ตัว
         if (mouse.leftButton.wasPressedThisFrame)
         {
             int clicked = FindClickedOption(mouse.position.ReadValue());
@@ -202,7 +292,7 @@ public class ServePicker : MonoBehaviour
         }
     }
 
-    // หาว่าคลิกโดนตัวเลือกไหน (ตัวเลือกแต่ละตัวห่อด้วย <link="q0">, <link="q1"> ...) คืนค่า -1 ถ้าไม่โดน
+    // หาว่าคลิกโดนตัวเลือกไหน (ตัวเลือกห่อด้วย <link="q0">, <link="q1"> ... / ลูกศร = "prev" / "next") คืนค่า -1 ถ้าไม่โดน
     private int FindClickedOption(Vector2 screenPosition)
     {
         TMP_Text bubble = Target != null ? Target.BubbleText : null;
@@ -223,6 +313,8 @@ public class ServePicker : MonoBehaviour
         }
 
         string id = bubble.textInfo.linkInfo[linkIndex].GetLinkID();
+        if (id == "prev") return selectedIndex > 0 ? selectedIndex - 1 : -1;
+        if (id == "next") return selectedIndex < options.Count - 1 ? selectedIndex + 1 : -1;
         if (id != null && id.Length > 1 && id[0] == 'q' && int.TryParse(id.Substring(1), out int option))
         {
             return option;
@@ -232,25 +324,64 @@ public class ServePicker : MonoBehaviour
 
     // ---------- ข้อความ ----------
 
-    // บรรทัดตัวเลือก เช่น "< [Perfect x2]  Good x5  OK x1 >" (ตัวที่เลือกอยู่ในวงเล็บและตัวหนา)
+    // ข้อความของตัวเลือก 1 ตัว เช่น "Salmon · Perfect x1" / จานที่ไม่มีแบบ = "Perfect x1"
+    private string OptionText(Option option)
+    {
+        int count = inventory != null ? inventory.GetCount(option.dish, option.quality) : 0;
+        string quality = DishQualityUtil.ColoredLabel(option.quality);
+
+        string variantName = "";
+        if (option.dish != null && option.dish.variantIngredient != null)
+        {
+            variantName = option.dish.variantIngredient.itemName;
+        }
+        else if (Target != null && Target.Order != null && Target.Order.HasCategorySlot)
+        {
+            variantName = baseDishLabel;
+        }
+
+        return string.IsNullOrEmpty(variantName)
+            ? string.Format(plainOptionFormat, quality, count)
+            : string.Format(variantOptionFormat, variantName, quality, count);
+    }
+
+    // บรรทัดตัวเลือก เช่น "< [Salmon · Perfect x1]  Tilapia · OK x2 >" (ตัวที่เลือกอยู่ในวงเล็บและตัวหนา)
     public string GetLine(Customer customer)
     {
-        if (!IsOpenFor(customer) || customer.Order == null || inventory == null)
+        if (!IsOpenFor(customer) || customer.Order == null || inventory == null || options.Count == 0)
         {
             return "";
         }
 
-        StringBuilder sb = new StringBuilder("< ");
-        for (int i = 0; i < options.Count; i++)
+        // carousel: แสดงเฉพาะช่วงรอบตัวที่เลือก (ตัวที่เลือกอยู่กลาง ถ้าทำได้) ลูกศรบอกว่ายังมีอีกด้านไหน
+        int visible = Mathf.Clamp(visibleOptions, 1, Mathf.Max(1, options.Count));
+        int first = Mathf.Clamp(selectedIndex - visible / 2, 0, Mathf.Max(0, options.Count - visible));
+        int last = Mathf.Min(options.Count, first + visible);
+        bool moreLeft = first > 0;
+        bool moreRight = last < options.Count;
+
+        // ลูกศรคลิกได้ (เลื่อนไป 1 ตัว) / ฝั่งที่ไม่มีแล้ว = จาง
+        StringBuilder sb = new StringBuilder();
+        sb.Append(moreLeft
+            ? "<link=\"prev\"><b><noparse><</noparse></b></link> "
+            : "<alpha=#40><noparse><</noparse><alpha=#FF> ");
+        for (int i = first; i < last; i++)
         {
-            DishQuality q = options[i];
-            string text = $"{DishQualityUtil.ColoredLabel(q)} x{inventory.GetCount(customer.Order.dishItem, q)}";
+            string text = OptionText(options[i]);
             if (i == selectedIndex) text = $"<b>[{text}]</b>";
             text = $"<link=\"q{i}\">{text}</link>";
-            if (i > 0) sb.Append("  ");
+            if (i > first) sb.Append("  ");
             sb.Append(text);
         }
-        sb.Append(" >");
+        sb.Append(moreRight
+            ? " <link=\"next\"><b><noparse>></noparse></b></link>"
+            : " <alpha=#40><noparse>></noparse><alpha=#FF>");
+
+        // ตำแหน่ง เช่น "4/12" (เฉพาะตอนมีตัวเลือกมากกว่าที่แสดง)
+        if (options.Count > visible && !string.IsNullOrEmpty(positionFormat))
+        {
+            sb.Append($"  <size=70%>{string.Format(positionFormat, selectedIndex + 1, options.Count)}</size>");
+        }
 
         if (!string.IsNullOrEmpty(hintText))
         {

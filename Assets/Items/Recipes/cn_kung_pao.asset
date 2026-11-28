@@ -1,0 +1,63 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56897c6864cfda9489a79f1ac3a363d1, type: 3}
+  m_Name: cn_kung_pao
+  m_EditorClassIdentifier: Assembly-CSharp::RecipeData
+  recipeId: cn_kung_pao
+  recipeName: Kung Pao Chicken
+  nameTh: "\u0E44\u0E01\u0E48\u0E1C\u0E31\u0E14\u0E01\u0E07\u0E40\u0E1B\u0E48\u0E32"
+  icon: {fileID: 0}
+  cuisine: 2
+  course: 0
+  isSecret: 0
+  inDemo: 0
+  dishItem: {fileID: 11400000, guid: 50e6e9c89872cfe4a86d7871bf0050a6, type: 2}
+  slots:
+  - item: {fileID: 11400000, guid: 15b6d027269e5cf45974e12659570eb8, type: 2}
+    anyOfCategory: 0
+    category: 0
+  - item: {fileID: 11400000, guid: 62cf83cf547412348acf94b2ce26b42b, type: 2}
+    anyOfCategory: 0
+    category: 0
+  - item: {fileID: 11400000, guid: 6927defbe6e78ed489831dd7668ded99, type: 2}
+    anyOfCategory: 0
+    category: 0
+  ingredients: []
+  fullIngredientsText: 
+  sellPrice: 430
+  baseRecipe: {fileID: 0}
+  difficulty: 2
+  cookingProfile: {fileID: 0}
+  customSteps: []
+  obtainSource: 1
+  obtainNote: 
+  mailShopLevel: 2
+  mailReputation: 600
+  chef: {fileID: 11400000, guid: 3edf825c44ba8994197fd4cca4373a22, type: 2}
+  letterBody: 'Hello, my friend,
+
+
+    May I call you that now? Lin Wei here.
+
+
+    Kung
+    pao chicken is loud food. Chili, peanuts, a hot wok shouting at you. My wife
+    says it is the only time I raise my voice.
+
+
+    Cut the chicken small, toast
+    the chilies until they darken but never burn, and add the peanuts last so they
+    stay crisp.
+
+
+    When your shop gets busy and noisy, do not be afraid of it.
+    A loud kitchen is a living kitchen.'

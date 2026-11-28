@@ -21,22 +21,44 @@ MonoBehaviour:
   isSecret: 0
   inDemo: 0
   dishItem: {fileID: 11400000, guid: 28a49470366d16741b6d9250f16f484a, type: 2}
-  ingredients:
-  - {fileID: 11400000, guid: 53b41677c6af8e742bc752a377829aa9, type: 2}
-  - {fileID: 11400000, guid: 2db10c1ee7d62054eae50fced28855ca, type: 2}
-  - {fileID: 11400000, guid: fd18cc5cd819b524fb996abc9f14d69f, type: 2}
-  - {fileID: 11400000, guid: 308ae2a319dd0cc42b2e3794adce0d5d, type: 2}
-  fullIngredientsText: "\u0E01\u0E38\u0E49\u0E07, \u0E40\u0E2B\u0E47\u0E14\u0E1F\u0E32\u0E07,
-    \u0E15\u0E30\u0E44\u0E04\u0E23\u0E49, \u0E02\u0E48\u0E32, \u0E43\u0E1A\u0E21\u0E30\u0E01\u0E23\u0E39\u0E14,
-    \u0E1E\u0E23\u0E34\u0E01, \u0E19\u0E49\u0E33\u0E1B\u0E25\u0E32, \u0E19\u0E49\u0E33\u0E21\u0E30\u0E19\u0E32\u0E27,
-    \u0E19\u0E49\u0E33\u0E1E\u0E23\u0E34\u0E01\u0E40\u0E1C\u0E32, \u0E19\u0E21\u0E02\u0E49\u0E19\u0E08\u0E37\u0E14"
-  sellPrice: 135
+  slots:
+  - item: {fileID: 11400000, guid: 53b41677c6af8e742bc752a377829aa9, type: 2}
+    anyOfCategory: 0
+    category: 0
+  - item: {fileID: 11400000, guid: fd18cc5cd819b524fb996abc9f14d69f, type: 2}
+    anyOfCategory: 0
+    category: 0
+  - item: {fileID: 11400000, guid: 308ae2a319dd0cc42b2e3794adce0d5d, type: 2}
+    anyOfCategory: 0
+    category: 0
+  ingredients: []
+  fullIngredientsText: 
+  sellPrice: 360
+  baseRecipe: {fileID: 0}
   difficulty: 2
   cookingProfile: {fileID: 0}
   customSteps: []
-  obtainSource: 6
+  obtainSource: 1
   obtainNote: "\u0E21\u0E35\u0E01\u0E38\u0E49\u0E07 \u0E40\u0E02\u0E49\u0E32\u0E01\u0E31\u0E1A\u0E17\u0E30\u0E40\u0E25"
-  mailShopLevel: 0
-  mailReputation: 0
-  chef: {fileID: 0}
-  letterBody: 
+  mailShopLevel: 2
+  mailReputation: 150
+  chef: {fileID: 11400000, guid: 9027734d34a03bb43947e2332bd51243, type: 2}
+  letterBody: 'Dear owner,
+
+
+    Malai again. I hear your mango sticky rice makes
+    people smile. Good. Now something with a little fire.
+
+
+    Tom yum was my father''s
+    cure for everything. A cold, a bad day, a broken heart. He would stand over the
+    pot and say, "If your nose doesn''t run, it isn''t tom yum."
+
+
+    Lemongrass
+    bruised so it gives everything, lime added at the very end, and shrimp that only
+    just turn pink. Never let them boil too long.
+
+
+    Sour, spicy, salty, a little
+    sweet. Life is never only one taste.'

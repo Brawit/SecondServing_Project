@@ -14,16 +14,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   itemId: mx_birria_tacos
   itemName: Birria Tacos
-  nameTh: "\u0E40\u0E1A\u0E2D\u0E23\u0E4C\u0E40\u0E23\u0E35\u0E22\u0E17\u0E32\u0E42\u0E01\u0E49
-    (Birria Tacos)"
+  nameTh: "\u0E40\u0E1A\u0E2D\u0E23\u0E4C\u0E40\u0E23\u0E35\u0E22\u0E17\u0E32\u0E42\u0E01\u0E49"
   icon: {fileID: 0}
   description: 
   itemType: 1
   category: 0
   source: 0
+  originType: 0
+  seasons: -1
+  inStore: 0
+  earlyGame: 0
   equipType: 0
-  sellPrice: 275
-  restoreHealth: 35
-  restoreStamina: 51
-  restoreMana: 0
-  restoreFever: 24
+  sellPrice: 1570
+  restoreHealth: 79
+  restoreStamina: 213
+  restoreMana: 72
+  restoreFever: 25

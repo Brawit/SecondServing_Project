@@ -1,0 +1,52 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56897c6864cfda9489a79f1ac3a363d1, type: 3}
+  m_Name: fd_cn_peking_duck
+  m_EditorClassIdentifier: Assembly-CSharp::RecipeData
+  recipeId: fd_cn_peking_duck
+  recipeName: Peking Duck
+  nameTh: "\u0E40\u0E1B\u0E47\u0E14\u0E1B\u0E31\u0E01\u0E01\u0E34\u0E48\u0E07"
+  icon: {fileID: 0}
+  cuisine: 2
+  course: 0
+  isSecret: 0
+  inDemo: 0
+  dishItem: {fileID: 11400000, guid: b5d6b57dd212d4c44b778db01bf10796, type: 2}
+  slots:
+  - item: {fileID: 11400000, guid: 004ceb8a9e27ab743bfa57c5955ddd1b, type: 2}
+    anyOfCategory: 0
+    category: 0
+  - item: {fileID: 11400000, guid: 0496d1580eb958943a674e54dee23063, type: 2}
+    anyOfCategory: 0
+    category: 0
+  - item: {fileID: 11400000, guid: 5fcf718d896f9b14493b3891b3e9993d, type: 2}
+    anyOfCategory: 0
+    category: 0
+  - item: {fileID: 11400000, guid: d8d5c16ae60f88d40a7297aea67368b8, type: 2}
+    anyOfCategory: 0
+    category: 0
+  - item: {fileID: 11400000, guid: 038877d1cfd9c8646a71bd6ac8d1bac0, type: 2}
+    anyOfCategory: 0
+    category: 0
+  ingredients: []
+  fullIngredientsText: 
+  sellPrice: 1850
+  baseRecipe: {fileID: 11400000, guid: c5c44d9ea205faa48b38fbe1c792aeba, type: 2}
+  difficulty: 4
+  cookingProfile: {fileID: 0}
+  customSteps: []
+  obtainSource: 12
+  obtainNote: 
+  mailShopLevel: 0
+  mailReputation: 0
+  chef: {fileID: 11400000, guid: 3edf825c44ba8994197fd4cca4373a22, type: 2}
+  letterBody: 

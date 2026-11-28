@@ -6,6 +6,7 @@ using UnityEngine;
 // - ค่าปกติของมินิเกมแต่ละแบบ (ใช้เมื่อค่าใน CookingStep เป็น 0)
 // - ภาพตั้งต้นตามชนิดมินิเกม และเกณฑ์คิดคุณภาพจาน
 // - [2.5b] ค่า Hold / Stir / Shake / Whisk และตัวคูณตามความยาก ★1–3 (มินิเกมยากขึ้น + ลูกค้าพอใจมากขึ้น)
+// - [v2] ค่าเศรษฐกิจ: ราคาจานแยกแบบ ตัวคูณราคาขาย ดาว × คุณภาพ ค่าพลังตามคุณภาพ เพดานค่าพลังจาน (DishPricing อ่านผ่าน CookingSettings.Active)
 // สร้างได้จาก Assets > Create > Cozy > Cooking Settings หรือ Tools > Second Serving > Build Cooking System
 [CreateAssetMenu(fileName = "CookingSettings", menuName = "Cozy/Cooking Settings")]
 public class CookingSettings : ScriptableObject
@@ -173,6 +174,38 @@ public class CookingSettings : ScriptableObject
     [Tooltip("คะแนนเฉลี่ยตั้งแต่ค่านี้ = Good (ต่ำกว่า = OK)")]
     [Range(0f, 2f)] public float goodAverage = 0.6f;
 
+    [Header("Economy (v2)")]
+    [Tooltip("จานแบบ: ส่วนต่างราคาวัตถุดิบจริงกับค่าเฉลี่ยหมวด คูณเท่านี้ (เท่ากับตัวคูณวัตถุดิบในสูตรราคาจาน)")]
+    [Min(0f)] public float variantPriceFactor = DefaultVariantPriceFactor;
+
+    [Tooltip("จานแบบของสูตรลับ: คูณส่วนต่างราคาเพิ่มเท่านี้")]
+    [Min(0f)] public float secretPriceFactor = DefaultSecretPriceFactor;
+
+    [Tooltip("จานแบบของ ★4 Fine-dining: คูณส่วนต่างราคาเพิ่มเท่านี้ (ใช้แทนตัวคูณสูตรลับ)")]
+    [Min(0f)] public float fineDiningPriceFactor = DefaultFineDiningPriceFactor;
+
+    [Tooltip("จานแบบ: ส่วนต่างค่าพลังวัตถุดิบกับค่าเฉลี่ยหมวด คูณเท่านี้ (x = Health, y = Stamina, z = Mana)")]
+    public Vector3 variantStatFactors = DefaultVariantStatFactors;
+
+    [Tooltip("จานแบบของสูตรลับ: คูณส่วนต่างค่าพลังเพิ่มเท่านี้")]
+    [Min(0f)] public float secretStatFactor = DefaultSecretStatFactor;
+
+    [Tooltip("เพดานค่าพลังของจาน (x = Health, y = Stamina, z = Mana)")]
+    public Vector3Int dishCaps = DefaultDishCaps;
+
+    [Tooltip("เพดาน Health ของจาน ★4 Fine-dining (แทน x ของ Dish Caps)")]
+    [Min(0)] public int fineDiningHealthCap = DefaultFineDiningHealthCap;
+
+    [Tooltip("วัตถุดิบที่กินดิบไม่ได้ (ทุกค่าเป็น 0) นับเป็นค่าเท่านี้ตอนทำสุก (x = Health, y = Stamina)")]
+    public Vector2Int cookedZeroValues = DefaultCookedZeroValues;
+
+    [Tooltip("ตัวคูณราคาขายจาน ดาว × คุณภาพ เรียงเป็น ★1 OK, ★1 Good, ★1 Perfect, ★2 OK, ... ★4 Perfect (12 ค่า)\n" +
+             "ใช้ทั้งขายที่ร้านของชำ กล่องขาย และลูกค้าในร้านจ่าย")]
+    public float[] priceMultipliers = (float[])DefaultPriceMultipliers.Clone();
+
+    [Tooltip("ตัวคูณค่า Health / Stamina / Mana ตอนกินจาน ตามคุณภาพ OK, Good, Perfect (ไม่คูณ FEVER)")]
+    public float[] qualityStatMultipliers = (float[])DefaultQualityStatMultipliers.Clone();
+
     [Header("Feedback")]
     [Tooltip("แถบกระพริบสีตามผลกี่วินาที ก่อนไปขั้นถัดไป/ปิด")]
     [Min(0f)] public float resultFlashDuration = 0.5f;
@@ -197,6 +230,75 @@ public class CookingSettings : ScriptableObject
     public string stirLabel = "Stir!";
     public string shakeLabel = "Shake!";
     public string whiskLabel = "Whisk!";
+
+    // ---------- [v2] ค่าตั้งต้นเศรษฐกิจ (ใช้เมื่อยังไม่มี CookingSettings โหลดอยู่) ----------
+
+    public const float DefaultVariantPriceFactor = 2.4f;
+    public const float DefaultSecretPriceFactor = 1.3f;
+    public const float DefaultFineDiningPriceFactor = 2.0f;
+    public const float DefaultSecretStatFactor = 1.2f;
+    public const int DefaultFineDiningHealthCap = 100;
+    public static readonly Vector3 DefaultVariantStatFactors = new Vector3(1.5f, 1.5f, 1.2f);
+    public static readonly Vector3Int DefaultDishCaps = new Vector3Int(80, 250, 150);
+    public static readonly Vector2Int DefaultCookedZeroValues = new Vector2Int(5, 20);
+
+    // ★1–★4 × OK / Good / Perfect
+    public static readonly float[] DefaultPriceMultipliers =
+    {
+        1.00f, 1.10f, 1.25f,
+        1.10f, 1.275f, 1.50f,
+        1.20f, 1.45f, 1.75f,
+        1.30f, 1.625f, 2.00f
+    };
+
+    public static readonly float[] DefaultQualityStatMultipliers = { 1f, 1.15f, 1.3f };
+
+    // [v2] ไฟล์ตั้งค่าที่โหลดอยู่ (มีไฟล์เดียวในโปรเจกต์) ให้ DishPricing ใช้
+    public static CookingSettings Active { get; private set; }
+
+    private void OnEnable()
+    {
+        Active = this;
+    }
+
+    private void OnValidate()
+    {
+        priceMultipliers = FixLength(priceMultipliers, DefaultPriceMultipliers);
+        qualityStatMultipliers = FixLength(qualityStatMultipliers, DefaultQualityStatMultipliers);
+    }
+
+    // อาร์เรย์ยาวไม่ตรง: เติมค่าตั้งต้นให้ครบ (เก็บค่าที่จูนไว้)
+    private static float[] FixLength(float[] values, float[] defaults)
+    {
+        if (values != null && values.Length == defaults.Length) return values;
+        float[] fixedArray = (float[])defaults.Clone();
+        if (values != null)
+        {
+            for (int i = 0; i < Mathf.Min(values.Length, fixedArray.Length); i++) fixedArray[i] = values[i];
+        }
+        return fixedArray;
+    }
+
+    // ตัวคูณราคาขาย ดาว (1–4) × คุณภาพ
+    public float PriceMultiplier(int stars, DishQuality quality) => PickPriceMultiplier(priceMultipliers, stars, quality);
+
+    // ตัวคูณค่าพลังตามคุณภาพจาน
+    public float QualityStatMultiplier(DishQuality quality) => PickQualityStat(qualityStatMultipliers, quality);
+
+    public static float PickPriceMultiplier(float[] table, int stars, DishQuality quality)
+    {
+        if (table == null || table.Length < DishQualityUtil.Count) table = DefaultPriceMultipliers;
+        int rows = table.Length / DishQualityUtil.Count;
+        int row = Mathf.Clamp(stars - 1, 0, rows - 1);
+        int index = row * DishQualityUtil.Count + Mathf.Clamp((int)quality, 0, DishQualityUtil.Count - 1);
+        return Mathf.Max(0f, table[index]);
+    }
+
+    public static float PickQualityStat(float[] table, DishQuality quality)
+    {
+        if (table == null || table.Length == 0) table = DefaultQualityStatMultipliers;
+        return Mathf.Max(0f, table[Mathf.Clamp((int)quality, 0, table.Length - 1)]);
+    }
 
     // ---------- [2.5b] ความยาก ----------
 

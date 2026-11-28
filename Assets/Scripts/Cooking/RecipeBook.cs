@@ -4,6 +4,7 @@ using UnityEngine;
 
 // สมุดสูตรของผู้เล่น: จำว่ารู้สูตรไหนแล้วบ้าง
 // เริ่มเกมด้วยสูตรที่ติ๊ก In Demo (ชุดสูตรเริ่มต้น) และสูตรใน Extra Starter Recipes
+// [v2] จำ "วัตถุดิบที่เลือกล่าสุด" ของสูตรที่มีช่องหมวด (recipe → item) ใช้เป็นค่าเริ่มต้นในหน้าต่างทำอาหาร และตอนทำสดในร้าน / เซฟ v9
 // ใส่คอมโพเนนต์นี้บนตัว Player (ข้าง Inventory)
 public class RecipeBook : MonoBehaviour
 {
@@ -24,6 +25,9 @@ public class RecipeBook : MonoBehaviour
 
     // สูตรที่รู้แล้ว
     private readonly HashSet<RecipeData> known = new HashSet<RecipeData>();
+
+    // [v2] วัตถุดิบที่เลือกล่าสุดของสูตรที่มีช่องหมวด
+    private readonly Dictionary<RecipeData, ItemData> lastChoices = new Dictionary<RecipeData, ItemData>();
 
     // ---------- Events ----------
 
@@ -88,6 +92,75 @@ public class RecipeBook : MonoBehaviour
         OnChanged?.Invoke();
     }
 
+    // ---------- [v2] วัตถุดิบที่เลือกล่าสุด ----------
+
+    // ตัวที่เลือกล่าสุดของสูตรนี้ (ไม่เคยเลือก = null) ผู้เรียกต้องเช็กเองว่ายังมีพอไหม (RecipeRequirements.DefaultChoice)
+    public ItemData GetLastChoice(RecipeData recipe)
+    {
+        return recipe != null && lastChoices.TryGetValue(recipe, out ItemData item) ? item : null;
+    }
+
+    // จำตัวที่เลือก (ต้องใส่ช่องหมวดของสูตรได้ / item null = ลืม)
+    public void SetLastChoice(RecipeData recipe, ItemData item)
+    {
+        if (recipe == null || !recipe.HasCategorySlot)
+        {
+            return;
+        }
+
+        if (item == null)
+        {
+            lastChoices.Remove(recipe);
+            return;
+        }
+
+        if (!recipe.CategorySlot.Accepts(item))
+        {
+            Debug.LogWarning($"RecipeBook: {item.itemName} doesn't fit the category slot of {recipe.recipeName}. Not remembered.", this);
+            return;
+        }
+
+        lastChoices[recipe] = item;
+    }
+
+    // เขียนตัวที่เลือกล่าสุดลงรายการรหัส (ใช้ตอนเซฟ) สองรายการลำดับเดียวกัน
+    public void CaptureChoices(List<string> recipeIds, List<string> itemIds)
+    {
+        recipeIds.Clear();
+        itemIds.Clear();
+        foreach (KeyValuePair<RecipeData, ItemData> pair in lastChoices)
+        {
+            if (pair.Key == null || pair.Value == null) continue;
+            if (string.IsNullOrWhiteSpace(pair.Key.recipeId) || string.IsNullOrWhiteSpace(pair.Value.itemId)) continue;
+            recipeIds.Add(pair.Key.recipeId);
+            itemIds.Add(pair.Value.itemId);
+        }
+    }
+
+    // ตั้งตัวที่เลือกล่าสุดจากรายการรหัส (ใช้ตอนโหลดเซฟ / null = ล้าง) รหัสที่หาไม่เจอหรือใส่ช่องไม่ได้ = ข้ามพร้อมเตือน
+    public void RestoreChoices(IList<string> recipeIds, IList<string> itemIds)
+    {
+        lastChoices.Clear();
+        if (recipeIds == null || itemIds == null)
+        {
+            return;
+        }
+
+        ItemDatabase items = ItemDatabase.Active;
+        int count = Mathf.Min(recipeIds.Count, itemIds.Count);
+        for (int i = 0; i < count; i++)
+        {
+            RecipeData recipe = recipeDatabase != null ? recipeDatabase.GetById(recipeIds[i]) : null;
+            ItemData item = items != null ? items.GetById(itemIds[i]) : null;
+            if (recipe == null || item == null || !recipe.HasCategorySlot || !recipe.CategorySlot.Accepts(item))
+            {
+                Debug.LogWarning($"RecipeBook: Skipped saved ingredient choice '{recipeIds[i]}' -> '{itemIds[i]}' (not found or doesn't fit).", this);
+                continue;
+            }
+            lastChoices[recipe] = item;
+        }
+    }
+
     // กลับไปรู้แค่สูตรเริ่มต้น
     public void ResetToStarterRecipes()
     {
@@ -119,6 +192,18 @@ public class RecipeBook : MonoBehaviour
     }
 
     // ---------- Debug ----------
+
+    // [v2] คลิกขวาระหว่าง Play: พิมพ์วัตถุดิบที่เลือกล่าสุดของทุกสูตร
+    [ContextMenu("Debug: Print Last Ingredient Choices")]
+    private void DebugPrintChoices()
+    {
+        List<string> lines = new List<string>();
+        foreach (KeyValuePair<RecipeData, ItemData> pair in lastChoices)
+        {
+            if (pair.Key != null && pair.Value != null) lines.Add($"{pair.Key.recipeId} -> {pair.Value.itemId}");
+        }
+        Debug.Log($"RecipeBook: {lines.Count} last ingredient choice(s). {string.Join(", ", lines)}");
+    }
 
     // คลิกขวาที่หัวคอมโพเนนต์ใน Inspector ระหว่าง Play เพื่อเรียนรู้ทุกสูตร
     [ContextMenu("Debug: Learn All Recipes")]
@@ -247,6 +332,20 @@ public class RecipeBook : MonoBehaviour
         GiveIngredientsFor(recipes, type.ToString(), true);
     }
 
+    // [v2] Debug: หาวัตถุดิบตัวแรก (เรียงตาม itemId) ที่ใส่ช่องหมวดนี้ได้
+    private static ItemData FindAnyInCategory(RecipeSlot slot)
+    {
+        ItemDatabase database = ItemDatabase.Active;
+        if (database == null) return null;
+
+        ItemData best = null;
+        foreach (ItemData item in database.Items)
+        {
+            if (slot.Accepts(item) && (best == null || string.CompareOrdinal(item.itemId, best.itemId) < 0)) best = item;
+        }
+        return best;
+    }
+
     // รวมวัตถุดิบที่ทุกสูตรต้องใช้ × จำนวนจาน แล้วใส่กระเป๋า (ใส่ได้ไม่เกินเพดานต่อชนิด ส่วนที่เกินจะแจ้งใน Console)
     // upgradeBagIfNeeded = อัปเกรดกระเป๋าให้เองจนใส่พอ (ใช้กับ Debug ที่ให้ของเยอะ ระดับกระเป๋าจะติดไปในเซฟถ้านอน)
     private void GiveIngredientsFor(List<RecipeData> recipes, string label, bool upgradeBagIfNeeded = false)
@@ -267,7 +366,9 @@ public class RecipeBook : MonoBehaviour
         Dictionary<ItemData, int> totals = new Dictionary<ItemData, int>();
         foreach (RecipeData recipe in recipes)
         {
-            foreach (KeyValuePair<ItemData, int> pair in recipe.GetRequiredCounts())
+            // [v2] ช่องหมวด: ให้ตัวแรกที่เจอในฐานข้อมูลของหมวดนั้น (Debug)
+            ItemData debugChoice = recipe.HasCategorySlot ? FindAnyInCategory(recipe.CategorySlot) : null;
+            foreach (KeyValuePair<ItemData, int> pair in RecipeRequirements.Resolve(recipe, debugChoice))
             {
                 totals.TryGetValue(pair.Key, out int current);
                 totals[pair.Key] = current + pair.Value * debugServings;

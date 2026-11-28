@@ -19,23 +19,46 @@ MonoBehaviour:
   cuisine: 5
   course: 0
   isSecret: 0
-  inDemo: 1
+  inDemo: 0
   dishItem: {fileID: 11400000, guid: 966915bb12a0f2d44abec936e1015644, type: 2}
-  ingredients:
-  - {fileID: 11400000, guid: 7cddff7e87c767a40b3ab37d917be18b, type: 2}
-  - {fileID: 11400000, guid: 202d5895fbfdc1349871e02af866bebd, type: 2}
-  - {fileID: 11400000, guid: 6927defbe6e78ed489831dd7668ded99, type: 2}
-  fullIngredientsText: "\u0E41\u0E1B\u0E49\u0E07\u0E02\u0E49\u0E32\u0E27\u0E42\u0E1E\u0E14\u0E21\u0E32\u0E0B\u0E32,
-    \u0E43\u0E1A\u0E02\u0E49\u0E32\u0E27\u0E42\u0E1E\u0E14\u0E41\u0E2B\u0E49\u0E07,
-    \u0E40\u0E19\u0E37\u0E49\u0E2D\u0E2B\u0E21\u0E39, \u0E1E\u0E23\u0E34\u0E01\u0E41\u0E2B\u0E49\u0E07,
-    \u0E19\u0E49\u0E33\u0E2A\u0E15\u0E47\u0E2D\u0E01\u0E44\u0E01\u0E48"
-  sellPrice: 105
-  difficulty: 1
+  slots:
+  - item: {fileID: 11400000, guid: 7cddff7e87c767a40b3ab37d917be18b, type: 2}
+    anyOfCategory: 0
+    category: 0
+  - item: {fileID: 11400000, guid: 202d5895fbfdc1349871e02af866bebd, type: 2}
+    anyOfCategory: 0
+    category: 0
+  - item: {fileID: 11400000, guid: 6927defbe6e78ed489831dd7668ded99, type: 2}
+    anyOfCategory: 0
+    category: 0
+  ingredients: []
+  fullIngredientsText: 
+  sellPrice: 490
+  baseRecipe: {fileID: 0}
+  difficulty: 3
   cookingProfile: {fileID: 11400000, guid: 3220b8e6d2e31514d96180d328b3fd67, type: 2}
   customSteps: []
-  obtainSource: 0
+  obtainSource: 1
   obtainNote: "\u0E2A\u0E39\u0E15\u0E23\u0E40\u0E23\u0E34\u0E48\u0E21\u0E15\u0E49\u0E19"
-  mailShopLevel: 0
-  mailReputation: 0
-  chef: {fileID: 0}
-  letterBody: 
+  mailShopLevel: 2
+  mailReputation: 1150
+  chef: {fileID: 11400000, guid: cd96477d5695e8349a71dcd12e8bd8d2, type: 2}
+  letterBody: 'Hola again,
+
+
+    Rosa here. My grandson says your shop is busier
+    now. Bueno! Then you are ready for tamales.
+
+
+    Tamales are never made alone.
+    At Christmas my whole family sits around the table, spreading corn dough on husks,
+    filling, folding, laughing, arguing. Three hundred tamales in one afternoon.
+
+
+    Spread
+    the dough thin, fill with pork and chili, fold tight, and steam them standing
+    up.
+
+
+    If you ever make tamales alone, invite someone next time. They taste
+    better that way.'

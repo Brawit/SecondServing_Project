@@ -1,0 +1,52 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56897c6864cfda9489a79f1ac3a363d1, type: 3}
+  m_Name: fd_th_kra_pao
+  m_EditorClassIdentifier: Assembly-CSharp::RecipeData
+  recipeId: fd_th_kra_pao
+  recipeName: Duck Kra Pao with Truffle Egg
+  nameTh: "\u0E1C\u0E31\u0E14\u0E01\u0E30\u0E40\u0E1E\u0E23\u0E32\u0E40\u0E1B\u0E47\u0E14\u0E44\u0E02\u0E48\u0E14\u0E32\u0E27\u0E17\u0E23\u0E31\u0E1F\u0E40\u0E1F\u0E34\u0E25"
+  icon: {fileID: 0}
+  cuisine: 0
+  course: 0
+  isSecret: 0
+  inDemo: 0
+  dishItem: {fileID: 11400000, guid: c083a0590e7391741bd4afe86ebbcc40, type: 2}
+  slots:
+  - item: {fileID: 11400000, guid: 004ceb8a9e27ab743bfa57c5955ddd1b, type: 2}
+    anyOfCategory: 0
+    category: 0
+  - item: {fileID: 11400000, guid: 9e1c495cc3b560448b51b1d3c2eac8d9, type: 2}
+    anyOfCategory: 0
+    category: 0
+  - item: {fileID: 11400000, guid: 6927defbe6e78ed489831dd7668ded99, type: 2}
+    anyOfCategory: 0
+    category: 0
+  - item: {fileID: 11400000, guid: 22c8dce062c87d643ab8243a5150f6d2, type: 2}
+    anyOfCategory: 0
+    category: 0
+  - item: {fileID: 11400000, guid: 9994fe492f145174abe004bf62408072, type: 2}
+    anyOfCategory: 0
+    category: 0
+  ingredients: []
+  fullIngredientsText: 
+  sellPrice: 3145
+  baseRecipe: {fileID: 11400000, guid: 2522d8a2577d039499899d485530770e, type: 2}
+  difficulty: 4
+  cookingProfile: {fileID: 0}
+  customSteps: []
+  obtainSource: 12
+  obtainNote: 
+  mailShopLevel: 0
+  mailReputation: 0
+  chef: {fileID: 11400000, guid: 9027734d34a03bb43947e2332bd51243, type: 2}
+  letterBody: 

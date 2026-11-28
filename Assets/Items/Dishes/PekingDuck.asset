@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c14e69943c50aa441ab4cd930afdd6c8, type: 3}
   m_Name: PekingDuck
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
-  itemId: cn_peking_duck
+  itemId: fd_cn_peking_duck
   itemName: Peking Duck
   nameTh: "\u0E40\u0E1B\u0E47\u0E14\u0E1B\u0E31\u0E01\u0E01\u0E34\u0E48\u0E07"
   icon: {fileID: 0}
@@ -20,9 +20,13 @@ MonoBehaviour:
   itemType: 1
   category: 0
   source: 0
+  originType: 0
+  seasons: -1
+  inStore: 0
+  earlyGame: 0
   equipType: 0
-  sellPrice: 195
-  restoreHealth: 25
-  restoreStamina: 47
-  restoreMana: 0
-  restoreFever: 0
+  sellPrice: 1850
+  restoreHealth: 70
+  restoreStamina: 177
+  restoreMana: 52
+  restoreFever: 10

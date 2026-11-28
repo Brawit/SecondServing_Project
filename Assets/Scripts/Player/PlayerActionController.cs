@@ -43,6 +43,10 @@ public class PlayerActionController : MonoBehaviour
     [Min(0f)] [SerializeField] private float toolCooldown = 0.5f;
     [Min(0f)] [SerializeField] private float eatCooldown = 0.5f;
 
+    [Header("Hotbar")]
+    [Tooltip("[v2] กินจากช่อง Hotbar จนของในช่องหมด = เอาของออกจากช่องนั้นเลย (ไม่ติ๊ก = ช่องยังอยู่ ไอคอนสีเทา)")]
+    [SerializeField] private bool clearSlotWhenEatenUp = true;
+
     [Header("Scroll")]
     [Tooltip("กลับทิศลูกกลิ้งเมาส์ (เลื่อนลง = ช่องซ้าย)")]
     [SerializeField] private bool invertScroll = false;
@@ -298,10 +302,18 @@ public class PlayerActionController : MonoBehaviour
 
         if (!IsReady()) return;
 
-        if (stats.TryEat(food, hotbar.Inventory))
+        // [v2] ช่องที่จำคุณภาพไว้ = กินคุณภาพนั้น / ไม่ระบุ = ต่ำสุดก่อน
+        if (stats.TryEat(food, hotbar.Inventory, hotbar.SelectedQuality))
         {
             SetCooldown(eatCooldown);
             OnItemEaten?.Invoke(food);
+
+            // [v2] กินชิ้นสุดท้ายของช่องนี้แล้ว = ล้างช่อง
+            if (clearSlotWhenEatenUp && hotbar.SelectedItem == food && hotbar.SelectedCount <= 0)
+            {
+                Debug.Log($"PlayerAction: Ate the last {food.itemName}. Cleared hotbar slot {hotbar.SelectedIndex + 1}.");
+                hotbar.ClearSlot(hotbar.SelectedIndex);
+            }
         }
     }
 

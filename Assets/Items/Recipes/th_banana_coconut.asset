@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56897c6864cfda9489a79f1ac3a363d1, type: 3}
+  m_Name: th_banana_coconut
+  m_EditorClassIdentifier: Assembly-CSharp::RecipeData
+  recipeId: th_banana_coconut
+  recipeName: Bananas in Coconut Milk
+  nameTh: "\u0E01\u0E25\u0E49\u0E27\u0E22\u0E1A\u0E27\u0E0A\u0E0A\u0E35"
+  icon: {fileID: 0}
+  cuisine: 0
+  course: 1
+  isSecret: 0
+  inDemo: 0
+  dishItem: {fileID: 11400000, guid: 9c5d046609d6fdf43b829a3f7efd381c, type: 2}
+  slots:
+  - item: {fileID: 11400000, guid: 2e074d10e48096949a48cf356715891c, type: 2}
+    anyOfCategory: 0
+    category: 0
+  - item: {fileID: 11400000, guid: d3cf91581ebc3594abfbbb726d73e552, type: 2}
+    anyOfCategory: 0
+    category: 0
+  ingredients: []
+  fullIngredientsText: 
+  sellPrice: 290
+  baseRecipe: {fileID: 0}
+  difficulty: 1
+  cookingProfile: {fileID: 0}
+  customSteps: []
+  obtainSource: 8
+  obtainNote: 
+  mailShopLevel: 0
+  mailReputation: 0
+  chef: {fileID: 0}
+  letterBody: 

@@ -20,9 +20,13 @@ MonoBehaviour:
   itemType: 1
   category: 0
   source: 0
+  originType: 0
+  seasons: -1
+  inStore: 0
+  earlyGame: 0
   equipType: 0
-  sellPrice: 90
-  restoreHealth: 14
-  restoreStamina: 33
-  restoreMana: 20
+  sellPrice: 280
+  restoreHealth: 23
+  restoreStamina: 90
+  restoreMana: 5
   restoreFever: 0

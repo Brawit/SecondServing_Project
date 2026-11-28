@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56897c6864cfda9489a79f1ac3a363d1, type: 3}
+  m_Name: th_grilled_fish
+  m_EditorClassIdentifier: Assembly-CSharp::RecipeData
+  recipeId: th_grilled_fish
+  recipeName: Grilled Fish
+  nameTh: "\u0E1B\u0E25\u0E32\u0E40\u0E1C\u0E32"
+  icon: {fileID: 0}
+  cuisine: 0
+  course: 0
+  isSecret: 0
+  inDemo: 1
+  dishItem: {fileID: 11400000, guid: 7d870f5f64dcf5d479d3d1f4d2b1bc58, type: 2}
+  slots:
+  - item: {fileID: 0}
+    anyOfCategory: 1
+    category: 18
+  ingredients: []
+  fullIngredientsText: 
+  sellPrice: 250
+  baseRecipe: {fileID: 0}
+  difficulty: 1
+  cookingProfile: {fileID: 0}
+  customSteps: []
+  obtainSource: 0
+  obtainNote: 
+  mailShopLevel: 0
+  mailReputation: 0
+  chef: {fileID: 0}
+  letterBody: 

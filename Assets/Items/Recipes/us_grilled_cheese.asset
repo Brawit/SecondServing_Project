@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56897c6864cfda9489a79f1ac3a363d1, type: 3}
+  m_Name: us_grilled_cheese
+  m_EditorClassIdentifier: Assembly-CSharp::RecipeData
+  recipeId: us_grilled_cheese
+  recipeName: Grilled Cheese Sandwich
+  nameTh: "\u0E41\u0E0B\u0E19\u0E14\u0E4C\u0E27\u0E34\u0E0A\u0E0A\u0E35\u0E2A\u0E22\u0E48\u0E32\u0E07"
+  icon: {fileID: 0}
+  cuisine: 4
+  course: 0
+  isSecret: 0
+  inDemo: 0
+  dishItem: {fileID: 11400000, guid: d4b39811352c0e241ba03c25ffdffd14, type: 2}
+  slots:
+  - item: {fileID: 11400000, guid: f2709281db777f84c9abf12529a045d2, type: 2}
+    anyOfCategory: 0
+    category: 0
+  - item: {fileID: 0}
+    anyOfCategory: 1
+    category: 26
+  ingredients: []
+  fullIngredientsText: 
+  sellPrice: 825
+  baseRecipe: {fileID: 0}
+  difficulty: 1
+  cookingProfile: {fileID: 0}
+  customSteps: []
+  obtainSource: 7
+  obtainNote: 
+  mailShopLevel: 0
+  mailReputation: 0
+  chef: {fileID: 0}
+  letterBody: 

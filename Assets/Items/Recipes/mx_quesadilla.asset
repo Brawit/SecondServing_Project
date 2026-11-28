@@ -21,15 +21,17 @@ MonoBehaviour:
   isSecret: 0
   inDemo: 0
   dishItem: {fileID: 11400000, guid: 89e79bf38dfe39f4685f2d46a1a8c704, type: 2}
-  ingredients:
-  - {fileID: 11400000, guid: 8a7f4db5ee21f2643bd7113c2dc6b6cc, type: 2}
-  - {fileID: 11400000, guid: 8753b40049e26ab41b0913307d3ad62e, type: 2}
-  - {fileID: 11400000, guid: 15b6d027269e5cf45974e12659570eb8, type: 2}
-  - {fileID: 11400000, guid: 87c3815a9acd46a469663cfa907c1cf5, type: 2}
-  fullIngredientsText: "\u0E41\u0E1C\u0E48\u0E19\u0E15\u0E2D\u0E23\u0E4C\u0E15\u0E34\u0E0D\u0E32\u0E41\u0E1B\u0E49\u0E07\u0E2A\u0E32\u0E25\u0E35,
-    \u0E0A\u0E35\u0E2A, \u0E40\u0E19\u0E37\u0E49\u0E2D\u0E44\u0E01\u0E48, \u0E1E\u0E23\u0E34\u0E01\u0E2B\u0E27\u0E32\u0E19,
-    \u0E2B\u0E2D\u0E21\u0E2B\u0E31\u0E27\u0E43\u0E2B\u0E0D\u0E48"
-  sellPrice: 215
+  slots:
+  - item: {fileID: 11400000, guid: 8a7f4db5ee21f2643bd7113c2dc6b6cc, type: 2}
+    anyOfCategory: 0
+    category: 0
+  - item: {fileID: 0}
+    anyOfCategory: 1
+    category: 26
+  ingredients: []
+  fullIngredientsText: 
+  sellPrice: 780
+  baseRecipe: {fileID: 0}
   difficulty: 1
   cookingProfile: {fileID: 0}
   customSteps: []

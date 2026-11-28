@@ -14,15 +14,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   itemId: octopus
   itemName: Octopus
-  nameTh: "\u0E1B\u0E25\u0E32\u0E2B\u0E21\u0E36\u0E01"
+  nameTh: "\u0E1B\u0E25\u0E32\u0E2B\u0E21\u0E36\u0E01\u0E22\u0E31\u0E01\u0E29\u0E4C"
   icon: {fileID: 0}
   description: 
   itemType: 0
-  category: 6
+  category: 19
   source: 1
+  originType: 5
+  seasons: 2
+  inStore: 0
+  earlyGame: 0
   equipType: 0
-  sellPrice: 55
-  restoreHealth: 0
-  restoreStamina: 0
-  restoreMana: 0
+  sellPrice: 130
+  restoreHealth: 12
+  restoreStamina: 22
+  restoreMana: 10
   restoreFever: 0

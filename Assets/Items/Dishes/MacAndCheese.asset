@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c14e69943c50aa441ab4cd930afdd6c8, type: 3}
   m_Name: MacAndCheese
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
-  itemId: us_mac_and_cheese
+  itemId: us_mac_cheese
   itemName: Mac and Cheese
   nameTh: "\u0E41\u0E21\u0E04\u0E41\u0E2D\u0E19\u0E14\u0E4C\u0E0A\u0E35\u0E2A"
   icon: {fileID: 0}
@@ -20,9 +20,13 @@ MonoBehaviour:
   itemType: 1
   category: 0
   source: 0
+  originType: 0
+  seasons: -1
+  inStore: 0
+  earlyGame: 0
   equipType: 0
-  sellPrice: 250
-  restoreHealth: 40
-  restoreStamina: 43
-  restoreMana: 0
+  sellPrice: 800
+  restoreHealth: 35
+  restoreStamina: 102
+  restoreMana: 8
   restoreFever: 0
